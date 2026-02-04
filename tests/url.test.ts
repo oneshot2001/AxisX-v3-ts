@@ -12,9 +12,10 @@ describe('URL Resolver', () => {
 
   describe('Verified URLs', () => {
     it('returns verified URL for known models', () => {
-      const result = resolver.resolve('P3265-LVE');
+      // Use P3275-LVE (ARTPEC-9, Q1 2026 current) instead of P3265-LVE (phasing out)
+      const result = resolver.resolve('P3275-LVE');
       expect(result.confidence).toBe('verified');
-      expect(result.url).toContain('p3265-lve');
+      expect(result.url).toContain('p3275-lve');
       expect(result.isDiscontinued).toBe(false);
     });
 
@@ -102,7 +103,8 @@ describe('URL Resolver', () => {
       if (DISCONTINUED_MODELS.length > 0) {
         expect(resolver.isDiscontinued(DISCONTINUED_MODELS[0]!)).toBe(true);
       }
-      expect(resolver.isDiscontinued('P3265-LVE')).toBe(false);
+      // Use P3275-LVE (ARTPEC-9, Q1 2026 current) - P3265-LVE is now phasing out
+      expect(resolver.isDiscontinued('P3275-LVE')).toBe(false);
     });
 
     it('getVerifiedUrls returns map', () => {

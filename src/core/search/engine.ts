@@ -25,7 +25,7 @@ import type {
 } from '@/types';
 
 import { scoreMatch, sortByScore, THRESHOLDS, normalizeStrict } from './fuzzy';
-import { parseQuery, parseBatchInput, ParsedQuery } from './queryParser';
+import { parseQuery } from './queryParser';
 
 // =============================================================================
 // DEFAULT CONFIG
@@ -265,7 +265,6 @@ export class SearchEngine implements ISearchEngine {
       }
     }
 
-    const firstMapping = competitors[0]!;
     const cleanModel = model.toUpperCase().replace(/^AXIS\s*/i, '');
 
     return {
@@ -360,6 +359,14 @@ export class SearchEngine implements ISearchEngine {
   private handleAxisModel(model: string): SearchResult[] {
     const normalized = normalizeStrict(model);
     const competitors = this.axisModelIndex.get(normalized) ?? [];
+
+    // If no competitor mappings found, check if it's a legacy Axis model
+    if (competitors.length === 0) {
+      const legacyResults = this.searchLegacy(model);
+      if (legacyResults.length > 0) {
+        return legacyResults;
+      }
+    }
 
     return competitors.map(mapping =>
       this.createResult(mapping, 100, 'exact')

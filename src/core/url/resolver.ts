@@ -11,7 +11,7 @@
  * 4. Search fallback (axis.com/products?q=)
  */
 
-import type { ResolvedURL, URLConfidence, IURLResolver } from '@/types';
+import type { ResolvedURL, IURLResolver } from '@/types';
 import { VERIFIED_URLS } from './verified';
 import { MODEL_ALIASES, DISCONTINUED_MODELS } from './aliases';
 

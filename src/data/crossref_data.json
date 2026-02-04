@@ -1,173 +1,2542 @@
 {
   "mappings": [
     {
-      "competitor_model": "DS-2CD2143G2-I",
-      "competitor_manufacturer": "Hikvision",
-      "axis_replacement": "P3265-LVE",
-      "match_confidence": 95,
-      "competitor_type": "4MP Fixed Dome",
-      "competitor_resolution": "4MP",
-      "axis_features": ["Lightfinder 2.0", "Forensic WDR", "Zipstream"]
+      "competitor_model": "2N Indoor View",
+      "competitor_manufacturer": "2N",
+      "axis_replacement": "I8016-LVE",
+      "match_confidence": 85,
+      "competitor_type": "indoor answering unit",
+      "competitor_resolution": "N/A",
+      "axis_features": [
+        "two-way audio",
+        "WDR",
+        "PoE",
+        "SIP",
+        "DLPU"
+      ],
+      "notes": "2N indoor unit. Axis I-line + third-party indoor station for full solution."
     },
     {
-      "competitor_model": "DS-2CD2183G2-I",
-      "competitor_manufacturer": "Hikvision",
-      "axis_replacement": "P3268-LVE",
+      "competitor_model": "Arecont Vision AV12585PM",
+      "competitor_manufacturer": "Arecont Vision",
+      "axis_replacement": "Q6300-E",
       "match_confidence": 92,
-      "competitor_type": "8MP Fixed Dome",
-      "competitor_resolution": "4K"
+      "competitor_type": "panoramic dome",
+      "competitor_resolution": "12MP",
+      "axis_features": [
+        "ARTPEC-8",
+        "Deep Learning",
+        "360° coverage",
+        "Corridor Format"
+      ],
+      "notes": "360° panoramic camera with 4x 5MP sensors. ARTPEC-8, deep learning analytics, perfect for open spaces."
+    },
+    {
+      "competitor_model": "Arecont Vision AV2256PMIR",
+      "competitor_manufacturer": "Arecont Vision",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 85,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IK10",
+        "PoE",
+        "IR"
+      ],
+      "notes": "Arecont bankrupt. Direct 1080p replacement."
+    },
+    {
+      "competitor_model": "Arecont Vision AV3256PMIR-S",
+      "competitor_manufacturer": "Arecont Vision",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 85,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "3MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IK10",
+        "PoE",
+        "IR"
+      ],
+      "notes": "Arecont bankrupt 2019. No support available. Urgent replacement recommended."
+    },
+    {
+      "competitor_model": "Arecont Vision AV5585PM",
+      "competitor_manufacturer": "Arecont Vision",
+      "axis_replacement": "P3737-PLE",
+      "match_confidence": 92,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "5MP",
+      "axis_features": [
+        "ARTPEC-8",
+        "Deep Learning",
+        "180° coverage"
+      ],
+      "notes": "15MP multisensor panoramic with 3x sensors. ARTPEC-8, 180° coverage, perfect for wide area monitoring."
+    },
+    {
+      "competitor_model": "Arecont Vision AV8365DN-HB",
+      "competitor_manufacturer": "Arecont Vision",
+      "axis_replacement": "Q6300-E",
+      "match_confidence": 92,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "8MP",
+      "axis_features": [
+        "ARTPEC-8",
+        "Deep Learning",
+        "360° coverage",
+        "Corridor Format"
+      ],
+      "notes": "360° panoramic camera with 4x 5MP sensors. ARTPEC-8, deep learning analytics, perfect for open spaces."
+    },
+    {
+      "competitor_model": "Alta-A5-Bullet",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "Alta-A5-Dome",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "P3278-LVE",
+      "match_confidence": 88,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "Avigilon 2.0C-H5A-DO1",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "Q3558-LVE",
+      "match_confidence": 92,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "ARTPEC-9",
+        "Lightfinder 3.0",
+        "Forensic WDR",
+        "DLPU",
+        "IR"
+      ],
+      "notes": "Premium 4K outdoor dome. Q-line flagship with ARTPEC-9, Lightfinder 3.0, Forensic WDR, DLPU deep learning. Best-in-class low light."
+    },
+    {
+      "competitor_model": "Avigilon H4SL-BO-IR",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "P1485-LE",
+      "match_confidence": 92,
+      "competitor_type": "bullet",
+      "competitor_resolution": "3MP",
+      "axis_features": [
+        "ARTPEC-9",
+        "AV1 codec",
+        "DLPU",
+        "Lightfinder 2.0",
+        "Forensic WDR"
+      ],
+      "notes": "NEW 2MP AI-powered outdoor bullet. ARTPEC-9 with AV1 codec, DLPU deep learning, fully featured. Replaces discontinued P1455-LE."
+    },
+    {
+      "competitor_model": "Avigilon H5A-DO-IR",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 85,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "2MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IK10",
+        "PoE",
+        "IR"
+      ],
+      "notes": "Avigilon H5 series swap. Common in enterprise/campus deployments."
+    },
+    {
+      "competitor_model": "Avigilon H5Pro-BO",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "Q1808-LE",
+      "match_confidence": 92,
+      "competitor_type": "bullet",
+      "competitor_resolution": "8MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IR",
+        "PoE",
+        "DLPU"
+      ],
+      "notes": "Avigilon Pro series. Q-line for analytics parity with ARTPEC-8. [Updated Jan 2026: Q1798-LE is discontinued, replaced by Q1808-LE]"
+    },
+    {
+      "competitor_model": "H5A-MH",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "F9114-B",
+      "match_confidence": 88,
+      "competitor_type": "Modular",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "H5A-MT",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "P3719-PLE",
+      "match_confidence": 90,
+      "competitor_type": "Multi-sensor",
+      "competitor_resolution": "4x5MP"
+    },
+    {
+      "competitor_model": "H6A-BO-IR",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 92,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "H6A-CD",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "Q9216-SLV",
+      "match_confidence": 90,
+      "competitor_type": "Dome",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "H6A-DO-IR",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "Q3558-LVE",
+      "match_confidence": 92,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "H6SL-BO-IR",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "P1487-LE",
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "H6SL-DO-IR",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "P3277-LVE",
+      "match_confidence": 88,
+      "competitor_type": "Dome",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "H6XP-BO-IR",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "H6XP-DO-IR",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "Q3558-LVE",
+      "match_confidence": 88,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "L6A-LPR",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "P1465-LE-3",
+      "match_confidence": 88,
+      "competitor_type": "LPR",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "Motorola Solutions H4A-DP-DOME",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 85,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "4MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IK10",
+        "PoE",
+        "IR"
+      ],
+      "notes": "Moto fixed video line. Common in public safety alongside radio infrastructure."
+    },
+    {
+      "competitor_model": "Motorola Solutions H5A-BO",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "P1485-LE",
+      "match_confidence": 92,
+      "competitor_type": "bullet",
+      "competitor_resolution": "5MP",
+      "axis_features": [
+        "ARTPEC-9",
+        "AV1 codec",
+        "DLPU",
+        "Lightfinder 2.0",
+        "Forensic WDR"
+      ],
+      "notes": "NEW 2MP AI-powered outdoor bullet. ARTPEC-9 with AV1 codec, DLPU deep learning, fully featured. Replaces discontinued P1455-LE."
+    },
+    {
+      "competitor_model": "Motorola Solutions H5A-PTZ",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "Q6135-LE",
+      "match_confidence": 85,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "32x zoom",
+        "Lightfinder 2.0",
+        "IR",
+        "PoE+",
+        "DLPU"
+      ],
+      "notes": "Moto PTZ swap. Q-line for municipal/public safety applications."
+    },
+    {
+      "competitor_model": "Motorola Solutions M500",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "W800",
+      "match_confidence": 85,
+      "competitor_type": "in-car",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "multi-camera",
+        "GPS",
+        "LTE upload",
+        "AXIS Camera Station integration"
+      ],
+      "notes": "In-car video swap for fleets/public safety. Axis W800 system approach."
+    },
+    {
+      "competitor_model": "Motorola Solutions VB400",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "W110",
+      "match_confidence": 85,
+      "competitor_type": "body-worn",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "GPS",
+        "WiFi/LTE",
+        "pre-record",
+        "AXIS Body Worn Manager"
+      ],
+      "notes": "Body cam swap. Axis W110 integrates with existing Axis VMS infrastructure."
+    },
+    {
+      "competitor_model": "Bosch Flexidome 5000",
+      "competitor_manufacturer": "Bosch",
+      "axis_replacement": "M3075-V",
+      "match_confidence": 85,
+      "competitor_type": "indoor dome",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "WDR",
+        "PoE",
+        "HDMI out"
+      ],
+      "notes": "Cost-effective replacement for basic indoor surveillance."
+    },
+    {
+      "competitor_model": "Bosch NDI-4502-A",
+      "competitor_manufacturer": "Bosch",
+      "axis_replacement": "P3265-V",
+      "match_confidence": 85,
+      "competitor_type": "indoor dome",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "PoE",
+        "DLPU"
+      ],
+      "notes": "DLPU replaces Bosch IVA capability with modern edge AI."
+    },
+    {
+      "competitor_model": "Canon VB-H45",
+      "competitor_manufacturer": "Canon",
+      "axis_replacement": "V5938",
+      "match_confidence": 85,
+      "competitor_type": "indoor PTZ",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "29x zoom",
+        "Lightfinder 2.0",
+        "WDR",
+        "PoE+"
+      ],
+      "notes": "Canon family consolidation. V-line indoor PTZ is direct successor path."
+    },
+    {
+      "competitor_model": "Canon VB-H730F",
+      "competitor_manufacturer": "Canon",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 85,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IK10",
+        "PoE",
+        "IR"
+      ],
+      "notes": "Canon family consolidation. P32 series is the workhorse outdoor dome."
+    },
+    {
+      "competitor_model": "Canon VB-H761LVE",
+      "competitor_manufacturer": "Canon",
+      "axis_replacement": "P3267-LVE",
+      "match_confidence": 85,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IR",
+        "PoE",
+        "DLPU"
+      ],
+      "notes": "Canon family consolidation. P3267 for resolution upgrade path."
+    },
+    {
+      "competitor_model": "Canon VB-M50B",
+      "competitor_manufacturer": "Canon",
+      "axis_replacement": "P1385-E",
+      "match_confidence": 85,
+      "competitor_type": "box camera",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "PoE",
+        "i-CS lens support"
+      ],
+      "notes": "Canon family consolidation. P13 box for flexible lens configurations."
+    },
+    {
+      "competitor_model": "Canon VB-R13",
+      "competitor_manufacturer": "Canon",
+      "axis_replacement": "Q6135-LE",
+      "match_confidence": 85,
+      "competitor_type": "outdoor PTZ",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "32x zoom",
+        "Lightfinder 2.0",
+        "IR",
+        "PoE+",
+        "DLPU"
+      ],
+      "notes": "Canon family consolidation. Q-line PTZ for outdoor deployments."
+    },
+    {
+      "competitor_model": "Canon VB-S30D",
+      "competitor_manufacturer": "Canon",
+      "axis_replacement": "M3085-V",
+      "match_confidence": 85,
+      "competitor_type": "indoor mini dome",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "WDR",
+        "PoE",
+        "IR",
+        "IK08",
+        "compact"
+      ],
+      "notes": "Canon family consolidation. M-line mini dome for discreet indoor."
+    },
+    {
+      "competitor_model": "Canon VB-S30VE",
+      "competitor_manufacturer": "Canon",
+      "axis_replacement": "M5526-E",
+      "match_confidence": 92,
+      "competitor_type": "outdoor mini PTZ",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "10x zoom",
+        "WDR",
+        "PoE+",
+        "IP66",
+        "IK10"
+      ],
+      "notes": "Canon family consolidation. M55 series for compact outdoor PTZ. [Updated Jan 2026: M5525-E is discontinued, replaced by M5526-E]"
+    },
+    {
+      "competitor_model": "Canon VB-S800D",
+      "competitor_manufacturer": "Canon",
+      "axis_replacement": "M3085-V",
+      "match_confidence": 92,
+      "competitor_type": "indoor mini dome",
+      "competitor_resolution": "720p",
+      "axis_features": [
+        "WDR",
+        "PoE",
+        "HDMI",
+        "compact"
+      ],
+      "notes": "Canon family consolidation. Budget-friendly mini dome upgrade. [Updated Jan 2026: M3065-V is discontinued, replaced by M3085-V]"
+    },
+    {
+      "competitor_model": "Dahua IPC-HDBW2431E-S",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 85,
+      "competitor_type": "dome",
+      "competitor_resolution": "4MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IK10",
+        "PoE",
+        "IR"
+      ],
+      "notes": "NDAA-compliant swap. Common rip-and-replace scenario."
+    },
+    {
+      "competitor_model": "Dahua IPC-HDW2831T-AS",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P3268-LV",
+      "match_confidence": 85,
+      "competitor_type": "turret",
+      "competitor_resolution": "8MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IR",
+        "PoE",
+        "DLPU"
+      ],
+      "notes": "NDAA-compliant 4K replacement with superior audio options."
+    },
+    {
+      "competitor_model": "Dahua SD6AE240V-HNI",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "Q6225-LE",
+      "match_confidence": 85,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "40x zoom",
+        "Lightfinder 2.0",
+        "IR 400m",
+        "PoE+"
+      ],
+      "notes": "NDAA-compliant PTZ. Q6225-LE has superior IR range."
+    },
+    {
+      "competitor_model": "IPC-EBW81242",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "M3077-PLVE",
+      "match_confidence": 88,
+      "competitor_type": "Fisheye",
+      "competitor_resolution": "12MP"
+    },
+    {
+      "competitor_model": "IPC-EBW81242P",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "M4318-PLVE",
+      "match_confidence": 88,
+      "competitor_type": "Fisheye",
+      "competitor_resolution": "12MP"
+    },
+    {
+      "competitor_model": "IPC-HDBW5241E-ZE",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P3275-LVE",
+      "match_confidence": 95,
+      "competitor_type": "Dome",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "IPC-HDBW5449R1-ZE",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P3275-LVE",
+      "match_confidence": 92,
+      "competitor_type": "Dome",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "IPC-HDBW5459R1-ZE-PV-PRO",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "Q3546-LVE",
+      "match_confidence": 90,
+      "competitor_type": "Dome",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "IPC-HDBW5541E-ZE",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P3277-LVE",
+      "match_confidence": 92,
+      "competitor_type": "Dome",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "IPC-HDBW5849R1-ZE",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P3278-LVE",
+      "match_confidence": 95,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP/4K"
+    },
+    {
+      "competitor_model": "IPC-HDBW5859R1-ZE-PV-PRO",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "Q3558-LVE",
+      "match_confidence": 95,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP/4K"
+    },
+    {
+      "competitor_model": "IPC-HDBW7442H-Z",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "Q3538-LVE",
+      "match_confidence": 88,
+      "competitor_type": "Dome",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "IPC-HDBW7442H-ZFR",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "Q3546-LVE",
+      "match_confidence": 88,
+      "competitor_type": "Dome",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "IPC-HDBW7842H-Z",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "Q3558-LVE",
+      "match_confidence": 92,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP/4K"
+    },
+    {
+      "competitor_model": "IPC-HDW2449T-S-IL",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "M4215-LV",
+      "match_confidence": 85,
+      "competitor_type": "Eyeball",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "IPC-HDW3441HP-AS-PV",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "M4216-LV",
+      "match_confidence": 88,
+      "competitor_type": "Eyeball",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "IPC-HDW3449HP-AS-PV",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "M4216-LV",
+      "match_confidence": 88,
+      "competitor_type": "Eyeball",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "IPC-HDW3841HP-AS-PV",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "M4218-LV",
+      "match_confidence": 90,
+      "competitor_type": "Eyeball",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "IPC-HDW3849HP-AS-PV",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "M4218-LV",
+      "match_confidence": 90,
+      "competitor_type": "Eyeball",
+      "competitor_resolution": "8MP/4K"
+    },
+    {
+      "competitor_model": "IPC-HDW5449H-ASE-PV",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "M4216-LV",
+      "match_confidence": 90,
+      "competitor_type": "Eyeball",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "IPC-HDW5849H-ASE-PV",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "M4218-LV",
+      "match_confidence": 92,
+      "competitor_type": "Eyeball",
+      "competitor_resolution": "8MP/4K"
+    },
+    {
+      "competitor_model": "IPC-HFW2449S-S-IL",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "M2036-LE",
+      "match_confidence": 85,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "IPC-HFW3241DF-AS-PV",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P1475-LE",
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "IPC-HFW3449T1-AS-PV",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P1467-LE",
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "IPC-HFW3541DF-AS-PV",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P1487-LE",
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "IPC-HFW3841DF-AS-PV",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 90,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "IPC-HFW3849T1-AS-PV",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 92,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP/4K"
+    },
+    {
+      "competitor_model": "IPC-HFW5241E-ZE",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P1475-LE",
+      "match_confidence": 95,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "IPC-HFW5449T1-ZE",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P1487-LE",
+      "match_confidence": 92,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "IPC-HFW5459T1-ASE-PV-PRO",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P1485-LE",
+      "match_confidence": 92,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "IPC-HFW5541E-ZE",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P1487-LE",
+      "match_confidence": 92,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "IPC-HFW5849T1-ZE",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 95,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP/4K"
+    },
+    {
+      "competitor_model": "IPC-HFW5859T1-ASE-PV-PRO",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 95,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP/4K"
+    },
+    {
+      "competitor_model": "IPC-PDBW5831-A360",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "Q6100-E",
+      "match_confidence": 88,
+      "competitor_type": "Multi-sensor 360°",
+      "competitor_resolution": "4x2MP"
+    },
+    {
+      "competitor_model": "IPC-PDBW8802-A180",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P3807-PVE",
+      "match_confidence": 90,
+      "competitor_type": "Multi-sensor 180°",
+      "competitor_resolution": "2x4MP"
+    },
+    {
+      "competitor_model": "IPC-PDBW8840-A180",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P3807-PVE",
+      "match_confidence": 90,
+      "competitor_type": "Multi-sensor 180°",
+      "competitor_resolution": "4x2MP"
+    },
+    {
+      "competitor_model": "IPC-PSDW5831S-B360",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "Q6100-E",
+      "match_confidence": 88,
+      "competitor_type": "Multi-directional + PTZ",
+      "competitor_resolution": "4x2MP + 2MP PTZ"
+    },
+    {
+      "competitor_model": "SD6A445GAHNT-HNR-A",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "Q6355",
+      "match_confidence": 90,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "SD6A84F2-AHNR",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "Q6358",
+      "match_confidence": 92,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "SD6CE445XA-HNR",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "Q6355",
+      "match_confidence": 90,
+      "competitor_type": "PTZ Dome",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "SD6CE845XA-HNR",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "Q6358",
+      "match_confidence": 95,
+      "competitor_type": "PTZ Dome",
+      "competitor_resolution": "8MP/4K"
+    },
+    {
+      "competitor_model": "Hanwha PNV-A9081R",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "Q3558-LVE",
+      "match_confidence": 92,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "4K",
+      "axis_features": [
+        "ARTPEC-9",
+        "Lightfinder 3.0",
+        "Forensic WDR",
+        "DLPU",
+        "IR"
+      ],
+      "notes": "Premium 4K outdoor dome. Q-line flagship with ARTPEC-9, Lightfinder 3.0, Forensic WDR, DLPU deep learning. Best-in-class low light."
+    },
+    {
+      "competitor_model": "Hanwha QNV-8080R",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "P3267-LVE",
+      "match_confidence": 85,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "5MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IR",
+        "PoE",
+        "DLPU"
+      ],
+      "notes": "Direct 5MP competitor swap. Common in enterprise bids."
+    },
+    {
+      "competitor_model": "Hanwha SNV-L6083R",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 85,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IK10",
+        "PoE",
+        "IR"
+      ],
+      "notes": "Older Samsung Techwin model. Direct replacement path."
+    },
+    {
+      "competitor_model": "PNB-A9082",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "Q1798-LE",
+      "match_confidence": 88,
+      "competitor_type": "Box",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "PND-A9082RV",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "P3278-LV",
+      "match_confidence": 92,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "PNO-A9082R",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 95,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "PNO-A9092R",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "Q1798-LE",
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "PNV-A7082RZ",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "P3275-LVE",
+      "match_confidence": 90,
+      "competitor_type": "Dome",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "PNV-A9082RZ",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "Q3558-LVE",
+      "match_confidence": 92,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "QNO-8080R",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "P1467-LE",
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "QNV-8080R",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "P3267-LVE",
+      "match_confidence": 88,
+      "competitor_type": "Dome",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "Samsung SNB-6004",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "P1385-E",
+      "match_confidence": 85,
+      "competitor_type": "box camera",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "PoE",
+        "SD slot"
+      ],
+      "notes": "Legacy Samsung Techwin box cam. P1385 series is box replacement path."
+    },
+    {
+      "competitor_model": "TNP-A6550RW",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "Q6315-LE",
+      "match_confidence": 90,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "TNP-A7430RW",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "Q6355",
+      "match_confidence": 90,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "TNP-A9430RW",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "Q6358",
+      "match_confidence": 92,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "XNB-A8004B",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "F9114-B",
+      "match_confidence": 85,
+      "competitor_type": "Box",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "XND-A8085RV",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "P3277-LVE",
+      "match_confidence": 90,
+      "competitor_type": "Dome",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "XND-A9085RV",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "P3278-LVE",
+      "match_confidence": 92,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "XNO-A6084R",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "P1475-LE",
+      "match_confidence": 95,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "XNO-A8084R",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "P1487-LE",
+      "match_confidence": 92,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "XNO-A9084R",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 95,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "XNV-A6084R",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "P3275-LVE",
+      "match_confidence": 95,
+      "competitor_type": "Dome",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "XNV-A8085R",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "P3277-LVE",
+      "match_confidence": 92,
+      "competitor_type": "Dome",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "XNV-A9085R",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "Q3558-LVE",
+      "match_confidence": 95,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "DS-2CD1143G2-I",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "M3085-V",
+      "match_confidence": 85,
+      "competitor_type": "Dome",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "DS-2CD20123G2-LIU",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "Q1798-LE",
+      "match_confidence": 85,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "12MP"
+    },
+    {
+      "competitor_model": "DS-2CD20166G3-IU",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "Q1798-LE",
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "16MP"
+    },
+    {
+      "competitor_model": "DS-2CD2023G2-IU",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P1475-LE",
+      "match_confidence": 95,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "DS-2CD2025G1-I",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P1465-LE",
+      "match_confidence": 90,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "DS-2CD2043G2-IU",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P1465-LE",
+      "match_confidence": 92,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "DS-2CD2047G2-LU/SL",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P1485-LE",
+      "match_confidence": 90,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "DS-2CD2066G2-IU/SL",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P1487-LE",
+      "match_confidence": 90,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "6MP"
+    },
+    {
+      "competitor_model": "DS-2CD2083G2-IU",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 95,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP/4K"
+    },
+    {
+      "competitor_model": "DS-2CD2087G2-LU/SL",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 95,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP/4K"
+    },
+    {
+      "competitor_model": "DS-2CD2123G2-IU",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P3275-LVE",
+      "match_confidence": 95,
+      "competitor_type": "Dome",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "DS-2CD2143G2-IS",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P3275-V",
+      "match_confidence": 92,
+      "competitor_type": "Dome",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "DS-2CD2143G2-IU",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 90,
+      "competitor_type": "Dome",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "DS-2CD2163G2-IU",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P3277-LV",
+      "match_confidence": 90,
+      "competitor_type": "Dome",
+      "competitor_resolution": "6MP"
+    },
+    {
+      "competitor_model": "DS-2CD2183G2-IU",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P3278-LVE",
+      "match_confidence": 95,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP/4K"
+    },
+    {
+      "competitor_model": "DS-2CD2323G2-IU",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "M4215-LV",
+      "match_confidence": 92,
+      "competitor_type": "Turret",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "DS-2CD2346G2P-ISU/SL",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "M4216-LV",
+      "match_confidence": 88,
+      "competitor_type": "Turret",
+      "competitor_resolution": "4MP"
     },
     {
       "competitor_model": "DS-2CD2347G2-LU",
       "competitor_manufacturer": "Hikvision",
-      "axis_replacement": "P3265-LVE",
-      "match_confidence": 90,
-      "competitor_type": "4MP ColorVu Turret"
-    },
-    {
-      "competitor_model": "IPC-HDBW2431E-S-S2",
-      "competitor_manufacturer": "Dahua",
-      "axis_replacement": "M3085-V",
+      "axis_replacement": "M4216-LV",
       "match_confidence": 88,
-      "competitor_type": "4MP Lite Dome"
+      "competitor_type": "Turret",
+      "competitor_resolution": "4MP"
     },
     {
-      "competitor_model": "IPC-HDW2841T-ZS",
-      "competitor_manufacturer": "Dahua",
-      "axis_replacement": "P3268-LVE",
-      "match_confidence": 90,
-      "competitor_type": "8MP WizSense Dome"
-    },
-    {
-      "competitor_model": "IPC3614SB-ADF28K",
-      "competitor_manufacturer": "Uniview",
-      "axis_replacement": "M3086-V",
-      "match_confidence": 85,
-      "competitor_type": "4MP Dome"
-    },
-    {
-      "competitor_model": "CD62",
-      "competitor_manufacturer": "Verkada",
-      "axis_replacement": "Q3538-LVE",
+      "competitor_model": "DS-2CD2387G2-LU",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "Q3558-LVE",
       "match_confidence": 92,
-      "competitor_type": "4K Indoor Dome"
+      "competitor_type": "Turret",
+      "competitor_resolution": "8MP/4K"
     },
     {
-      "competitor_model": "CD52",
-      "competitor_manufacturer": "Verkada",
-      "axis_replacement": "P3265-LVE",
+      "competitor_model": "DS-2CD2387G2P-LSU/SL",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "M4218-LV",
       "match_confidence": 90,
-      "competitor_type": "5MP Indoor Dome"
+      "competitor_type": "Turret",
+      "competitor_resolution": "8MP"
     },
     {
-      "competitor_model": "R2",
-      "competitor_manufacturer": "Rhombus",
+      "competitor_model": "DS-2CD2746G2-IZS",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P3275-LVE",
+      "match_confidence": 92,
+      "competitor_type": "Dome",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "DS-2CD2786G2-IZS",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P3278-LVE",
+      "match_confidence": 95,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP/4K"
+    },
+    {
+      "competitor_model": "DS-2CD2H46G2-IZS",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "M4216-LV",
+      "match_confidence": 88,
+      "competitor_type": "Turret",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "DS-2CD2H86G2-IZS",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "M4218-LV",
+      "match_confidence": 90,
+      "competitor_type": "Turret",
+      "competitor_resolution": "8MP/4K"
+    },
+    {
+      "competitor_model": "DS-2CD2T23G2-2I",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P1485-LE",
+      "match_confidence": 95,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "DS-2CD2T43G2-2I",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P1467-LE",
+      "match_confidence": 90,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "DS-2CD2T43G2-4I",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "Q1786-LE",
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "DS-2CD2T45G1-I8",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P1467-LE",
+      "match_confidence": 90,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "DS-2CD2T83G2-2I",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 95,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP/4K"
+    },
+    {
+      "competitor_model": "DS-2CD2T83G2-4I",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "Q1798-LE",
+      "match_confidence": 90,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP/4K"
+    },
+    {
+      "competitor_model": "DS-2CD2T85G1-I8",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 92,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "DS-2CD3056G2-IS",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "M2036-LE",
+      "match_confidence": 85,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "DS-2CD6365G1-IVS",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "M3077-PLVE",
+      "match_confidence": 88,
+      "competitor_type": "Fisheye",
+      "competitor_resolution": "6MP"
+    },
+    {
+      "competitor_model": "DS-2CD63C5G0-IVS",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "M3077-PLVE",
+      "match_confidence": 88,
+      "competitor_type": "Fisheye",
+      "competitor_resolution": "12MP"
+    },
+    {
+      "competitor_model": "DS-2CD6D54G1-IZS",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P3719-PLE",
+      "match_confidence": 90,
+      "competitor_type": "Multi-Sensor",
+      "competitor_resolution": "20MP (4x5MP)"
+    },
+    {
+      "competitor_model": "DS-2DE4425IW-DE",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "Q6135-LE",
+      "match_confidence": 90,
+      "competitor_type": "PTZ Dome",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "DS-2DE7A425IW-AEB",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "Q6355",
+      "match_confidence": 92,
+      "competitor_type": "PTZ Dome",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "DS-2DE7A825IW-AEB",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "Q6358",
+      "match_confidence": 95,
+      "competitor_type": "PTZ Dome",
+      "competitor_resolution": "8MP/4K"
+    },
+    {
+      "competitor_model": "DS-2DF8A442IXS-AELY",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "Q6355",
+      "match_confidence": 90,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "DS-2DF8A842IXS-AELW",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "Q6358",
+      "match_confidence": 92,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "Hikvision DS-2CD2143G0-I",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 85,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "4MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IK10",
+        "PoE",
+        "IR"
+      ],
+      "notes": "NDAA-compliant replacement. Lightfinder approach over raw MP."
+    },
+    {
+      "competitor_model": "Hikvision DS-2CD2346G2-I",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 85,
+      "competitor_type": "turret",
+      "competitor_resolution": "4MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IK10",
+        "PoE",
+        "IR"
+      ],
+      "notes": "NDAA replacement. DLPU + ACAP analytics replaces AcuSense."
+    },
+    {
+      "competitor_model": "Hikvision DS-2CD2385G1-I",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P3268-LV",
+      "match_confidence": 85,
+      "competitor_type": "turret",
+      "competitor_resolution": "8MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IR",
+        "PoE",
+        "DLPU"
+      ],
+      "notes": "NDAA-compliant 4K replacement. P3268 series for high-res needs."
+    },
+    {
+      "competitor_model": "Hikvision DS-2CD2T85G1-I5",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 92,
+      "competitor_type": "bullet",
+      "competitor_resolution": "8MP",
+      "axis_features": [
+        "ARTPEC-9",
+        "AV1 codec",
+        "DLPU",
+        "Lightfinder 2.0",
+        "Forensic WDR"
+      ],
+      "notes": "NEW 8MP AI-powered outdoor bullet. ARTPEC-9 with AV1 codec, DLPU deep learning, Lightfinder 2.0. OptimizedIR up to 50m. Best-in-class bullet for all-around surveillance."
+    },
+    {
+      "competitor_model": "Hikvision DS-2DE4425IW-DE",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "Q6135-LE",
+      "match_confidence": 85,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "4MP",
+      "axis_features": [
+        "32x zoom",
+        "Lightfinder 2.0",
+        "IR",
+        "PoE+",
+        "DLPU"
+      ],
+      "notes": "NDAA-compliant PTZ. Q-line for PTZ replacement path."
+    },
+    {
+      "competitor_model": "iDS-2CD7A46G0-IZHS/P",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P1465-LE-3",
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "iDS-2CD7A86G0-IZHS/P",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "Q1798-LE",
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "Honeywell H4W4PER3",
+      "competitor_manufacturer": "Honeywell",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 85,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "4MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IK10",
+        "PoE",
+        "IR"
+      ],
+      "notes": "Honeywell Performance series replacement. Common in commercial."
+    },
+    {
+      "competitor_model": "Panasonic WV-S2531LN",
+      "competitor_manufacturer": "i-PRO",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 85,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IK10",
+        "PoE",
+        "IR"
+      ],
+      "notes": "Panasonic security exited NA market. Direct swap."
+    },
+    {
+      "competitor_model": "WV-S1130V",
+      "competitor_manufacturer": "i-PRO",
+      "axis_replacement": "P1485-LE",
+      "match_confidence": 90,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "WV-S1531LN",
+      "competitor_manufacturer": "i-PRO",
+      "axis_replacement": "P1487-LE",
+      "match_confidence": 90,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "WV-S1536",
+      "competitor_manufacturer": "i-PRO",
+      "axis_replacement": "Q1615 Mk III",
+      "match_confidence": 88,
+      "competitor_type": "Box",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "WV-S1570L",
+      "competitor_manufacturer": "i-PRO",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 92,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "WV-S1572L",
+      "competitor_manufacturer": "i-PRO",
+      "axis_replacement": "Q1659",
+      "match_confidence": 88,
+      "competitor_type": "Box",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "WV-S2130",
+      "competitor_manufacturer": "i-PRO",
       "axis_replacement": "M3085-V",
       "match_confidence": 88,
-      "competitor_type": "5MP Dome"
-    },
-    {
-      "competitor_model": "XNV-8082R",
-      "competitor_manufacturer": "Hanwha Vision",
-      "axis_replacement": "Q3538-LVE",
-      "match_confidence": 93,
-      "competitor_type": "6MP AI Dome"
-    },
-    {
-      "competitor_model": "XND-8080R",
-      "competitor_manufacturer": "Hanwha Vision",
-      "axis_replacement": "P3268-LVE",
-      "match_confidence": 91,
-      "competitor_type": "5MP Dome"
+      "competitor_type": "Dome",
+      "competitor_resolution": "2MP"
     },
     {
       "competitor_model": "WV-S2136",
       "competitor_manufacturer": "i-PRO",
-      "axis_replacement": "P3265-LVE",
+      "axis_replacement": "P3275-LVE",
       "match_confidence": 90,
-      "competitor_type": "4MP Dome"
+      "competitor_type": "Dome",
+      "competitor_resolution": "2MP"
     },
     {
-      "competitor_model": "H5A-BO-IR",
-      "competitor_manufacturer": "Avigilon",
+      "competitor_model": "WV-S2536",
+      "competitor_manufacturer": "i-PRO",
+      "axis_replacement": "P3277-LVE",
+      "match_confidence": 90,
+      "competitor_type": "Dome",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "WV-S2572L",
+      "competitor_manufacturer": "i-PRO",
+      "axis_replacement": "Q3558-LVE",
+      "match_confidence": 92,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "WV-S4556L",
+      "competitor_manufacturer": "i-PRO",
+      "axis_replacement": "Q6135-LE",
+      "match_confidence": 88,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "WV-S4576L",
+      "competitor_manufacturer": "i-PRO",
+      "axis_replacement": "Q6358",
+      "match_confidence": 92,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "WV-S9110",
+      "competitor_manufacturer": "i-PRO",
+      "axis_replacement": "M3077-PLVE",
+      "match_confidence": 88,
+      "competitor_type": "Fisheye",
+      "competitor_resolution": "9MP"
+    },
+    {
+      "competitor_model": "WV-U2130L",
+      "competitor_manufacturer": "i-PRO",
+      "axis_replacement": "M3905-R",
+      "match_confidence": 88,
+      "competitor_type": "Compact",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "WV-X6533LN",
+      "competitor_manufacturer": "i-PRO",
+      "axis_replacement": "Q6355",
+      "match_confidence": 88,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "WV-X8570N",
+      "competitor_manufacturer": "i-PRO",
+      "axis_replacement": "P3719-PLE",
+      "match_confidence": 90,
+      "competitor_type": "Multi-sensor",
+      "competitor_resolution": "4x4MP"
+    },
+    {
+      "competitor_model": "IQinVision IQA35NE",
+      "competitor_manufacturer": "IQinVision",
+      "axis_replacement": "P3267-LVE",
+      "match_confidence": 85,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "5MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IR",
+        "PoE",
+        "DLPU"
+      ],
+      "notes": "IQinVision defunct. 5MP replacement path."
+    },
+    {
+      "competitor_model": "IQinVision IQD62NE",
+      "competitor_manufacturer": "IQinVision",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 85,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IK10",
+        "PoE",
+        "IR"
+      ],
+      "notes": "IQinVision defunct (acquired by Vicon). No ongoing support."
+    },
+    {
+      "competitor_model": "March Networks ME4",
+      "competitor_manufacturer": "March Networks",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 85,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "4MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IK10",
+        "PoE",
+        "IR"
+      ],
+      "notes": "March Networks common in banking/retail. Check VMS compatibility."
+    },
+    {
+      "competitor_model": "IBE329-1ER",
+      "competitor_manufacturer": "Pelco",
       "axis_replacement": "P1465-LE",
-      "match_confidence": 89,
-      "competitor_type": "5MP Bullet"
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "3MP"
     },
     {
-      "competitor_model": "IXE83",
+      "competitor_model": "IBE529-1ER",
+      "competitor_manufacturer": "Pelco",
+      "axis_replacement": "P1467-LE",
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "IBE829-1ER",
+      "competitor_manufacturer": "Pelco",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 90,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "IME129-1ES",
+      "competitor_manufacturer": "Pelco",
+      "axis_replacement": "P3265-V",
+      "match_confidence": 88,
+      "competitor_type": "Dome",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "IME3122-1ERS",
+      "competitor_manufacturer": "Pelco",
+      "axis_replacement": "P3265-V",
+      "match_confidence": 88,
+      "competitor_type": "Dome",
+      "competitor_resolution": "3MP"
+    },
+    {
+      "competitor_model": "IME5122-1ERS",
+      "competitor_manufacturer": "Pelco",
+      "axis_replacement": "P3267-LVE",
+      "match_confidence": 90,
+      "competitor_type": "Dome",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "IME8122-1EISR",
+      "competitor_manufacturer": "Pelco",
+      "axis_replacement": "P3278-LVE",
+      "match_confidence": 92,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "IMF12127-1EI",
+      "competitor_manufacturer": "Pelco",
+      "axis_replacement": "M3077-PLVE",
+      "match_confidence": 88,
+      "competitor_type": "Fisheye",
+      "competitor_resolution": "12MP"
+    },
+    {
+      "competitor_model": "IMP1110-1ERS",
+      "competitor_manufacturer": "Pelco",
+      "axis_replacement": "M3085-V",
+      "match_confidence": 85,
+      "competitor_type": "Dome",
+      "competitor_resolution": "1MP"
+    },
+    {
+      "competitor_model": "Optera 180",
+      "competitor_manufacturer": "Pelco",
+      "axis_replacement": "P3807-PVE",
+      "match_confidence": 90,
+      "competitor_type": "Panoramic",
+      "competitor_resolution": "4x5MP"
+    },
+    {
+      "competitor_model": "Optera 270",
+      "competitor_manufacturer": "Pelco",
+      "axis_replacement": "P3719-PLE",
+      "match_confidence": 88,
+      "competitor_type": "Panoramic",
+      "competitor_resolution": "3x4MP"
+    },
+    {
+      "competitor_model": "Pelco IME3122-1ERS",
+      "competitor_manufacturer": "Pelco",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 85,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IK10",
+        "PoE",
+        "IR"
+      ],
+      "notes": "Direct replacement. P3265-LVE adds DLPU for edge analytics."
+    },
+    {
+      "competitor_model": "Pelco Sarix IME119-1ES",
+      "competitor_manufacturer": "Pelco",
+      "axis_replacement": "M3085-V",
+      "match_confidence": 92,
+      "competitor_type": "indoor dome",
+      "competitor_resolution": "720p",
+      "axis_features": [
+        "WDR",
+        "PoE",
+        "HDMI"
+      ],
+      "notes": "Entry-level indoor replacement. M-line for cost-effective path. [Updated Jan 2026: M3065-V is discontinued, replaced by M3085-V]"
+    },
+    {
+      "competitor_model": "Pelco Sarix IMP Series",
+      "competitor_manufacturer": "Pelco",
+      "axis_replacement": "P3255-LVE",
+      "match_confidence": 85,
+      "competitor_type": "indoor/outdoor dome",
+      "competitor_resolution": "1080p-5MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "PoE",
+        "DLPU"
+      ],
+      "notes": "Good general replacement for Sarix line."
+    },
+    {
+      "competitor_model": "Pelco Spectra Enhanced 7",
+      "competitor_manufacturer": "Pelco",
+      "axis_replacement": "Q6135-LE",
+      "match_confidence": 85,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "32x zoom",
+        "Lightfinder 2.0",
+        "IR",
+        "PoE+",
+        "DLPU"
+      ],
+      "notes": "Pelco PTZ replacement. Q-line for premium PTZ needs."
+    },
+    {
+      "competitor_model": "Spectra Pro",
       "competitor_manufacturer": "Pelco",
       "axis_replacement": "Q6135-LE",
       "match_confidence": 88,
-      "competitor_type": "PTZ Dome"
+      "competitor_type": "PTZ",
+      "competitor_resolution": "2MP"
     },
     {
-      "competitor_model": "FD9365-EHTV",
+      "competitor_model": "Spectra Pro 4K",
+      "competitor_manufacturer": "Pelco",
+      "axis_replacement": "Q6358",
+      "match_confidence": 90,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "R100",
+      "competitor_manufacturer": "Rhombus",
+      "axis_replacement": "M3085-V",
+      "match_confidence": 85,
+      "competitor_type": "Dome",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "R170",
+      "competitor_manufacturer": "Rhombus",
+      "axis_replacement": "P3265-V",
+      "match_confidence": 88,
+      "competitor_type": "Dome",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "R200",
+      "competitor_manufacturer": "Rhombus",
+      "axis_replacement": "P3277-LVE",
+      "match_confidence": 88,
+      "competitor_type": "Dome",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "R230",
+      "competitor_manufacturer": "Rhombus",
+      "axis_replacement": "P3278-LVE",
+      "match_confidence": 90,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "R350",
+      "competitor_manufacturer": "Rhombus",
+      "axis_replacement": "P1467-LE",
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "R360",
+      "competitor_manufacturer": "Rhombus",
+      "axis_replacement": "M3077-PLVE",
+      "match_confidence": 88,
+      "competitor_type": "Fisheye",
+      "competitor_resolution": "12MP"
+    },
+    {
+      "competitor_model": "R400",
+      "competitor_manufacturer": "Rhombus",
+      "axis_replacement": "P1487-LE",
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "R430",
+      "competitor_manufacturer": "Rhombus",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 90,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "R500",
+      "competitor_manufacturer": "Rhombus",
+      "axis_replacement": "P3807-PVE",
+      "match_confidence": 88,
+      "competitor_type": "Multi-sensor",
+      "competitor_resolution": "4x4MP"
+    },
+    {
+      "competitor_model": "R600",
+      "competitor_manufacturer": "Rhombus",
+      "axis_replacement": "P3719-PLE",
+      "match_confidence": 90,
+      "competitor_type": "Multi-sensor",
+      "competitor_resolution": "4x5MP"
+    },
+    {
+      "competitor_model": "Rhombus R2",
+      "competitor_manufacturer": "Rhombus",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 85,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "5MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IK10",
+        "PoE",
+        "IR"
+      ],
+      "notes": "Popular K-12/SMB model. Open platform alternative with flexible VMS options."
+    },
+    {
+      "competitor_model": "Rhombus R200",
+      "competitor_manufacturer": "Rhombus",
+      "axis_replacement": "P3265-V",
+      "match_confidence": 85,
+      "competitor_type": "indoor dome",
+      "competitor_resolution": "5MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "PoE",
+        "DLPU",
+        "SD slot"
+      ],
+      "notes": "Entry-level cloud cam swap. Open platform, VMS choice, no mandatory subscription."
+    },
+    {
+      "competitor_model": "Rhombus R2c",
+      "competitor_manufacturer": "Rhombus",
+      "axis_replacement": "M3085-V",
+      "match_confidence": 85,
+      "competitor_type": "compact dome",
+      "competitor_resolution": "5MP",
+      "axis_features": [
+        "WDR",
+        "PoE",
+        "IR",
+        "IK08",
+        "compact"
+      ],
+      "notes": "Compact/discreet install swap. M-line for cost-effective indoor."
+    },
+    {
+      "competitor_model": "Rhombus R360",
+      "competitor_manufacturer": "Rhombus",
+      "axis_replacement": "M4318-PLVE",
+      "match_confidence": 85,
+      "competitor_type": "fisheye",
+      "competitor_resolution": "12MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "360° dewarping",
+        "PoE",
+        "IR",
+        "DLPU"
+      ],
+      "notes": "Fisheye replacement. M43 series offers edge dewarping and ACAP analytics."
+    },
+    {
+      "competitor_model": "Rhombus R400",
+      "competitor_manufacturer": "Rhombus",
+      "axis_replacement": "Q3558-LVE",
+      "match_confidence": 92,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "4K",
+      "axis_features": [
+        "ARTPEC-9",
+        "Lightfinder 3.0",
+        "Forensic WDR",
+        "DLPU",
+        "IR"
+      ],
+      "notes": "Premium 4K outdoor dome. Q-line flagship with ARTPEC-9, Lightfinder 3.0, Forensic WDR, DLPU deep learning. Best-in-class low light."
+    },
+    {
+      "competitor_model": "Rhombus R500",
+      "competitor_manufacturer": "Rhombus",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 92,
+      "competitor_type": "bullet",
+      "competitor_resolution": "8MP",
+      "axis_features": [
+        "ARTPEC-9",
+        "AV1 codec",
+        "DLPU",
+        "Lightfinder 2.0",
+        "Forensic WDR"
+      ],
+      "notes": "NEW 8MP AI-powered outdoor bullet. ARTPEC-9 with AV1 codec, DLPU deep learning, Lightfinder 2.0. OptimizedIR up to 50m. Best-in-class bullet for all-around surveillance."
+    },
+    {
+      "competitor_model": "Rhombus R600",
+      "competitor_manufacturer": "Rhombus",
+      "axis_replacement": "Q6135-LE",
+      "match_confidence": 85,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "4K",
+      "axis_features": [
+        "32x zoom",
+        "Lightfinder 2.0",
+        "IR",
+        "PoE+",
+        "DLPU"
+      ],
+      "notes": "PTZ swap. Q-line + ACAP autotracking matches Rhombus AI tracking capability."
+    },
+    {
+      "competitor_model": "Sony SNC-VB632D",
+      "competitor_manufacturer": "Sony",
+      "axis_replacement": "P1485-LE",
+      "match_confidence": 92,
+      "competitor_type": "bullet",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "ARTPEC-9",
+        "AV1 codec",
+        "DLPU",
+        "Lightfinder 2.0",
+        "Forensic WDR"
+      ],
+      "notes": "NEW 2MP AI-powered outdoor bullet. ARTPEC-9 with AV1 codec, DLPU deep learning, fully featured. Replaces discontinued P1455-LE."
+    },
+    {
+      "competitor_model": "IPC2325SB-DZK-I0",
+      "competitor_manufacturer": "Uniview",
+      "axis_replacement": "P1487-LE",
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "IPC2328SB-DZK-I0",
+      "competitor_manufacturer": "Uniview",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 90,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "IPC3635SB-ADZK-I0",
+      "competitor_manufacturer": "Uniview",
+      "axis_replacement": "P3277-LVE",
+      "match_confidence": 88,
+      "competitor_type": "Dome",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "IPC3638SB-ADZK-I0",
+      "competitor_manufacturer": "Uniview",
+      "axis_replacement": "P3278-LVE",
+      "match_confidence": 88,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "IPC6858SR-X40-VF",
+      "competitor_manufacturer": "Uniview",
+      "axis_replacement": "Q6358",
+      "match_confidence": 88,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "CB52",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "P1487-LE",
+      "match_confidence": 92,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "CB62",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 95,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "CB71",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "Q1798-LE",
+      "match_confidence": 90,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "CD21",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "M3085-V",
+      "match_confidence": 88,
+      "competitor_type": "Mini Dome",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "CD31",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "P3265-V",
+      "match_confidence": 88,
+      "competitor_type": "Dome",
+      "competitor_resolution": "3MP"
+    },
+    {
+      "competitor_model": "CD41",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "P3275-LV",
+      "match_confidence": 90,
+      "competitor_type": "Dome",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "CD51",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "P3277-LVE",
+      "match_confidence": 90,
+      "competitor_type": "Dome",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "CD52",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "P3277-LVE",
+      "match_confidence": 92,
+      "competitor_type": "Dome",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "CD61",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "P3278-LV",
+      "match_confidence": 92,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "CD62",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "P3278-LVE",
+      "match_confidence": 95,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "CF81",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "M3077-PLVE",
+      "match_confidence": 90,
+      "competitor_type": "Fisheye",
+      "competitor_resolution": "12MP"
+    },
+    {
+      "competitor_model": "CF81-E",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "M4318-PLVE",
+      "match_confidence": 88,
+      "competitor_type": "Fisheye",
+      "competitor_resolution": "12MP"
+    },
+    {
+      "competitor_model": "CM41",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "M1135",
+      "match_confidence": 88,
+      "competitor_type": "Mini",
+      "competitor_resolution": "4MP"
+    },
+    {
+      "competitor_model": "CM61",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "F9114-B",
+      "match_confidence": 85,
+      "competitor_type": "Mini",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "CS52",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "M4216-LV",
+      "match_confidence": 88,
+      "competitor_type": "Turret",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "Verkada CB52",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "P1485-LE",
+      "match_confidence": 92,
+      "competitor_type": "bullet",
+      "competitor_resolution": "5MP",
+      "axis_features": [
+        "ARTPEC-9",
+        "AV1 codec",
+        "DLPU",
+        "Lightfinder 2.0",
+        "Forensic WDR"
+      ],
+      "notes": "NEW 2MP AI-powered outdoor bullet. ARTPEC-9 with AV1 codec, DLPU deep learning, fully featured. Replaces discontinued P1455-LE."
+    },
+    {
+      "competitor_model": "Verkada CB62",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 92,
+      "competitor_type": "bullet",
+      "competitor_resolution": "4K",
+      "axis_features": [
+        "ARTPEC-9",
+        "AV1 codec",
+        "DLPU",
+        "Lightfinder 2.0",
+        "Forensic WDR"
+      ],
+      "notes": "NEW 8MP AI-powered outdoor bullet. ARTPEC-9 with AV1 codec, DLPU deep learning, Lightfinder 2.0. OptimizedIR up to 50m. Best-in-class bullet for all-around surveillance."
+    },
+    {
+      "competitor_model": "Verkada CD42",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "P3265-V",
+      "match_confidence": 85,
+      "competitor_type": "indoor dome",
+      "competitor_resolution": "5MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "PoE",
+        "DLPU",
+        "SD slot"
+      ],
+      "notes": "Competitive swap. Axis offers VMS flexibility, on-prem options, no mandatory subscription."
+    },
+    {
+      "competitor_model": "Verkada CD52",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 85,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "5MP",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "IK10",
+        "PoE",
+        "IR"
+      ],
+      "notes": "Competitive swap. Open architecture, ACAP ecosystem, hybrid cloud options via partners."
+    },
+    {
+      "competitor_model": "Verkada CD62",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "Q3558-LVE",
+      "match_confidence": 92,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "4K",
+      "axis_features": [
+        "ARTPEC-9",
+        "Lightfinder 3.0",
+        "Forensic WDR",
+        "DLPU",
+        "IR"
+      ],
+      "notes": "Premium 4K outdoor dome. Q-line flagship with ARTPEC-9, Lightfinder 3.0, Forensic WDR, DLPU deep learning. Best-in-class low light."
+    },
+    {
+      "competitor_model": "Verkada CM41",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "M3085-V",
+      "match_confidence": 85,
+      "competitor_type": "mini dome",
+      "competitor_resolution": "5MP",
+      "axis_features": [
+        "WDR",
+        "PoE",
+        "IR",
+        "IK08",
+        "compact"
+      ],
+      "notes": "Mini dome swap. M-line for cost-effective indoor deployments."
+    },
+    {
+      "competitor_model": "Verkada CM61",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "M4308-PLE",
+      "match_confidence": 85,
+      "competitor_type": "mini dome",
+      "competitor_resolution": "4K",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "WDR",
+        "PoE",
+        "180° panoramic",
+        "DLPU"
+      ],
+      "notes": "Fisheye/panoramic swap. M4308-PLE offers dewarping and edge analytics."
+    },
+    {
+      "competitor_model": "Verkada CP52",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "Q6135-LE",
+      "match_confidence": 85,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "32x zoom",
+        "Lightfinder 2.0",
+        "IR",
+        "PoE+",
+        "DLPU"
+      ],
+      "notes": "PTZ swap. Q-line offers superior zoom range and open VMS integration."
+    },
+    {
+      "competitor_model": "Verkada D80",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "Q3558-LVE",
+      "match_confidence": 92,
+      "competitor_type": "outdoor dome",
+      "competitor_resolution": "4K",
+      "axis_features": [
+        "ARTPEC-9",
+        "Lightfinder 3.0",
+        "Forensic WDR",
+        "DLPU",
+        "IR"
+      ],
+      "notes": "Premium 4K outdoor dome. Q-line flagship with ARTPEC-9, Lightfinder 3.0, Forensic WDR, DLPU deep learning. Best-in-class low light."
+    },
+    {
+      "competitor_model": "FD9167-HT",
       "competitor_manufacturer": "Vivotek",
       "axis_replacement": "P3265-LVE",
-      "match_confidence": 87,
-      "competitor_type": "2MP Dome"
+      "match_confidence": 88,
+      "competitor_type": "Dome",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "FD9187-HT",
+      "competitor_manufacturer": "Vivotek",
+      "axis_replacement": "P3267-LVE",
+      "match_confidence": 88,
+      "competitor_type": "Dome",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "FD9189-HT",
+      "competitor_manufacturer": "Vivotek",
+      "axis_replacement": "P3278-LVE",
+      "match_confidence": 90,
+      "competitor_type": "Dome",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "FE9382-EHV",
+      "competitor_manufacturer": "Vivotek",
+      "axis_replacement": "M3077-PLVE",
+      "match_confidence": 88,
+      "competitor_type": "Fisheye",
+      "competitor_resolution": "12MP"
+    },
+    {
+      "competitor_model": "IB9367-HT",
+      "competitor_manufacturer": "Vivotek",
+      "axis_replacement": "P1465-LE",
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "IB9387-HT",
+      "competitor_manufacturer": "Vivotek",
+      "axis_replacement": "P1467-LE",
+      "match_confidence": 88,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "IB9389-HT",
+      "competitor_manufacturer": "Vivotek",
+      "axis_replacement": "P1488-LE",
+      "match_confidence": 90,
+      "competitor_type": "Bullet",
+      "competitor_resolution": "8MP"
+    },
+    {
+      "competitor_model": "MD9560-H",
+      "competitor_manufacturer": "Vivotek",
+      "axis_replacement": "P3925-R",
+      "match_confidence": 88,
+      "competitor_type": "Dome",
+      "competitor_resolution": "2MP"
+    },
+    {
+      "competitor_model": "MS9390-HV",
+      "competitor_manufacturer": "Vivotek",
+      "axis_replacement": "P3807-PVE",
+      "match_confidence": 88,
+      "competitor_type": "Multi-sensor",
+      "competitor_resolution": "2x4MP"
+    },
+    {
+      "competitor_model": "SD9384-EHL",
+      "competitor_manufacturer": "Vivotek",
+      "axis_replacement": "Q6355",
+      "match_confidence": 88,
+      "competitor_type": "PTZ",
+      "competitor_resolution": "5MP"
+    },
+    {
+      "competitor_model": "Vivotek FD9167-H",
+      "competitor_manufacturer": "Vivotek",
+      "axis_replacement": "P3265-V",
+      "match_confidence": 85,
+      "competitor_type": "indoor dome",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "Lightfinder 2.0",
+        "Forensic WDR",
+        "PoE",
+        "DLPU"
+      ],
+      "notes": "Competitive swap from Vivotek. Common in SMB installs."
+    },
+    {
+      "competitor_model": "Vivotek IB9367-EHT",
+      "competitor_manufacturer": "Vivotek",
+      "axis_replacement": "P1485-LE",
+      "match_confidence": 92,
+      "competitor_type": "bullet",
+      "competitor_resolution": "1080p",
+      "axis_features": [
+        "ARTPEC-9",
+        "AV1 codec",
+        "DLPU",
+        "Lightfinder 2.0",
+        "Forensic WDR"
+      ],
+      "notes": "NEW 2MP AI-powered outdoor bullet. ARTPEC-9 with AV1 codec, DLPU deep learning, fully featured. Replaces discontinued P1455-LE."
     }
   ],
   "axis_legacy_database": {
     "mappings": [
       {
-        "legacy_model": "P3364-LVE",
-        "replacement_model": "P3265-LVE",
-        "notes": "Direct successor with improved low-light",
-        "discontinued_year": 2020
+        "legacy_model": "F9111 Main Unit",
+        "replacement_model": "F9111-R Mk II Main Unit",
+        "notes": "1-channel ruggedized main unit. Replaced by F9111-R Mk II with ARTPEC-8 and improved analytics. Discontinued: 2026-07-08",
+        "discontinued_year": 2026
       },
       {
-        "legacy_model": "P3364-LV",
-        "replacement_model": "P3265-LV",
-        "notes": "Indoor version upgrade path"
-      },
-      {
-        "legacy_model": "P3384-VE",
-        "replacement_model": "P3268-LVE",
-        "notes": "Upgrade to 4K resolution"
-      },
-      {
-        "legacy_model": "Q6044-E",
-        "replacement_model": "Q6075-E",
-        "notes": "PTZ upgrade with HDTV 1080p"
-      },
-      {
-        "legacy_model": "Q6045-E",
-        "replacement_model": "Q6075-SE",
-        "notes": "Stainless steel PTZ upgrade"
-      },
-      {
-        "legacy_model": "M3044-V",
-        "replacement_model": "M3085-V",
-        "notes": "Compact dome upgrade"
-      },
-      {
-        "legacy_model": "M3045-V",
-        "replacement_model": "M3086-V",
-        "notes": "Wide angle compact upgrade"
+        "legacy_model": "M5014",
+        "replacement_model": "M5074",
+        "notes": "Legacy mini PTZ with 720p resolution, 3x digital zoom. Palm-sized ceiling mount. Replaced by M5074 (720p, 5x optical zoom). End of support - no security updates. Discontinued: 2023-02-28",
+        "discontinued_year": 2023
       },
       {
         "legacy_model": "P3225-LVE",
-        "replacement_model": "P3245-LVE",
-        "notes": "Lightfinder upgrade"
+        "replacement_model": "P3275-LVE",
+        "notes": "1080p outdoor vandal-resistant fixed dome with IR. First generation. Replaced by P3275-LVE (2MP, ARTPEC-8) or P3285-LVE (2MP with audio analytics). End of support - no security updates. Discontinued: 2016-10-31",
+        "discontinued_year": 2016
       },
       {
-        "legacy_model": "P3225-LV",
-        "replacement_model": "P3245-LV",
-        "notes": "Indoor Lightfinder upgrade"
+        "legacy_model": "Q1647-LE",
+        "replacement_model": "Q1656-LE",
+        "notes": "Outdoor 5MP box camera with i-CS lens. Replaced by Q1656-LE with ARTPEC-8 and improved 4MP sensor. Discontinued: 2023-06-01",
+        "discontinued_year": 2023
       },
       {
-        "legacy_model": "Q3517-LVE",
-        "replacement_model": "Q3536-LVE",
-        "notes": "Professional dome upgrade"
+        "legacy_model": "Q1932-E",
+        "replacement_model": "Q1972-E",
+        "notes": "Outdoor thermal bullet camera. 640x480 resolution. Built-in heater. Replaced by Q1972-E (higher resolution, improved analytics). End of support - no security updates. Discontinued: 2016-12-31",
+        "discontinued_year": 2016
+      },
+      {
+        "legacy_model": "M3024-LVE",
+        "replacement_model": "M3085-V",
+        "notes": "M30 series continuity. Budget-friendly replacement."
+      },
+      {
+        "legacy_model": "M3045-V",
+        "replacement_model": "M3075-V",
+        "notes": "Direct successor. Drop-in replacement."
+      },
+      {
+        "legacy_model": "P3364-LV",
+        "replacement_model": "P3265-V",
+        "notes": "Legacy Axis to current gen. Same mounting pattern."
+      },
+      {
+        "legacy_model": "P3384-V",
+        "replacement_model": "P3265-V",
+        "notes": "Legacy Axis to current gen. Same P32 series mounting."
+      },
+      {
+        "legacy_model": "P5534-E",
+        "replacement_model": "P5655-E",
+        "notes": "P55 series PTZ succession. Compact form factor maintained."
+      },
+      {
+        "legacy_model": "Q6044-E",
+        "replacement_model": "Q6135-LE",
+        "notes": "Legacy Axis PTZ. Q6135-LE is current replacement with IR."
+      },
+      {
+        "legacy_model": "Q6045-E Mk II",
+        "replacement_model": "Q6135-LE",
+        "notes": "Discontinued Axis PTZ. Check Q6225-LE for extreme temp requirements."
       }
     ]
   },
   "metadata": {
-    "version": "3.0.0",
-    "last_updated": "2025-01-30",
-    "total_mappings": 15,
-    "note": "SAMPLE DATA - Replace with your real crossref_data.json"
+    "version": "3.1.0",
+    "last_updated": "2026-02-04",
+    "total_mappings": 245,
+    "total_legacy_mappings": 12,
+    "source": "Q1 2026 Axis Product Guide + crossref_data_v5.json"
   }
 }
