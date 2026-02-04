@@ -1,0 +1,125 @@
+/**
+ * AxisX v3 Base Styles
+ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+  color: #1a1a1a;
+  background-color: #ffffff;
+}
+
+/* Focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid #FFCC33;
+  outline-offset: 2px;
+}
+
+/* Remove default button styles */
+button {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Input styles */
+input {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+input:focus {
+  border-color: #FFCC33 !important;
+}
+
+/* Link styles */
+a {
+  color: inherit;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  background-color: #FFCC33;
+  color: #000000;
+}
+
+/* Scrollbar styling (webkit) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Voice button animation */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.voice-listening {
+  animation: pulse 1.5s infinite;
+}
+
+/* NDAA badge */
+.badge-ndaa {
+  background-color: #FF0033;
+  color: white;
+}
+
+/* Cloud badge */
+.badge-cloud {
+  background-color: #7C3AED;
+  color: white;
+}
+
+/* Success badge */
+.badge-success {
+  background-color: #10B981;
+  color: white;
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white;
+  }
+  
+  header, footer, nav, button {
+    display: none !important;
+  }
+}

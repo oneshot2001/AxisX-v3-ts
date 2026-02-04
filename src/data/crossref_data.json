@@ -1,0 +1,173 @@
+{
+  "mappings": [
+    {
+      "competitor_model": "DS-2CD2143G2-I",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 95,
+      "competitor_type": "4MP Fixed Dome",
+      "competitor_resolution": "4MP",
+      "axis_features": ["Lightfinder 2.0", "Forensic WDR", "Zipstream"]
+    },
+    {
+      "competitor_model": "DS-2CD2183G2-I",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P3268-LVE",
+      "match_confidence": 92,
+      "competitor_type": "8MP Fixed Dome",
+      "competitor_resolution": "4K"
+    },
+    {
+      "competitor_model": "DS-2CD2347G2-LU",
+      "competitor_manufacturer": "Hikvision",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 90,
+      "competitor_type": "4MP ColorVu Turret"
+    },
+    {
+      "competitor_model": "IPC-HDBW2431E-S-S2",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "M3085-V",
+      "match_confidence": 88,
+      "competitor_type": "4MP Lite Dome"
+    },
+    {
+      "competitor_model": "IPC-HDW2841T-ZS",
+      "competitor_manufacturer": "Dahua",
+      "axis_replacement": "P3268-LVE",
+      "match_confidence": 90,
+      "competitor_type": "8MP WizSense Dome"
+    },
+    {
+      "competitor_model": "IPC3614SB-ADF28K",
+      "competitor_manufacturer": "Uniview",
+      "axis_replacement": "M3086-V",
+      "match_confidence": 85,
+      "competitor_type": "4MP Dome"
+    },
+    {
+      "competitor_model": "CD62",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "Q3538-LVE",
+      "match_confidence": 92,
+      "competitor_type": "4K Indoor Dome"
+    },
+    {
+      "competitor_model": "CD52",
+      "competitor_manufacturer": "Verkada",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 90,
+      "competitor_type": "5MP Indoor Dome"
+    },
+    {
+      "competitor_model": "R2",
+      "competitor_manufacturer": "Rhombus",
+      "axis_replacement": "M3085-V",
+      "match_confidence": 88,
+      "competitor_type": "5MP Dome"
+    },
+    {
+      "competitor_model": "XNV-8082R",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "Q3538-LVE",
+      "match_confidence": 93,
+      "competitor_type": "6MP AI Dome"
+    },
+    {
+      "competitor_model": "XND-8080R",
+      "competitor_manufacturer": "Hanwha Vision",
+      "axis_replacement": "P3268-LVE",
+      "match_confidence": 91,
+      "competitor_type": "5MP Dome"
+    },
+    {
+      "competitor_model": "WV-S2136",
+      "competitor_manufacturer": "i-PRO",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 90,
+      "competitor_type": "4MP Dome"
+    },
+    {
+      "competitor_model": "H5A-BO-IR",
+      "competitor_manufacturer": "Avigilon",
+      "axis_replacement": "P1465-LE",
+      "match_confidence": 89,
+      "competitor_type": "5MP Bullet"
+    },
+    {
+      "competitor_model": "IXE83",
+      "competitor_manufacturer": "Pelco",
+      "axis_replacement": "Q6135-LE",
+      "match_confidence": 88,
+      "competitor_type": "PTZ Dome"
+    },
+    {
+      "competitor_model": "FD9365-EHTV",
+      "competitor_manufacturer": "Vivotek",
+      "axis_replacement": "P3265-LVE",
+      "match_confidence": 87,
+      "competitor_type": "2MP Dome"
+    }
+  ],
+  "axis_legacy_database": {
+    "mappings": [
+      {
+        "legacy_model": "P3364-LVE",
+        "replacement_model": "P3265-LVE",
+        "notes": "Direct successor with improved low-light",
+        "discontinued_year": 2020
+      },
+      {
+        "legacy_model": "P3364-LV",
+        "replacement_model": "P3265-LV",
+        "notes": "Indoor version upgrade path"
+      },
+      {
+        "legacy_model": "P3384-VE",
+        "replacement_model": "P3268-LVE",
+        "notes": "Upgrade to 4K resolution"
+      },
+      {
+        "legacy_model": "Q6044-E",
+        "replacement_model": "Q6075-E",
+        "notes": "PTZ upgrade with HDTV 1080p"
+      },
+      {
+        "legacy_model": "Q6045-E",
+        "replacement_model": "Q6075-SE",
+        "notes": "Stainless steel PTZ upgrade"
+      },
+      {
+        "legacy_model": "M3044-V",
+        "replacement_model": "M3085-V",
+        "notes": "Compact dome upgrade"
+      },
+      {
+        "legacy_model": "M3045-V",
+        "replacement_model": "M3086-V",
+        "notes": "Wide angle compact upgrade"
+      },
+      {
+        "legacy_model": "P3225-LVE",
+        "replacement_model": "P3245-LVE",
+        "notes": "Lightfinder upgrade"
+      },
+      {
+        "legacy_model": "P3225-LV",
+        "replacement_model": "P3245-LV",
+        "notes": "Indoor Lightfinder upgrade"
+      },
+      {
+        "legacy_model": "Q3517-LVE",
+        "replacement_model": "Q3536-LVE",
+        "notes": "Professional dome upgrade"
+      }
+    ]
+  },
+  "metadata": {
+    "version": "3.0.0",
+    "last_updated": "2025-01-30",
+    "total_mappings": 15,
+    "note": "SAMPLE DATA - Replace with your real crossref_data.json"
+  }
+}

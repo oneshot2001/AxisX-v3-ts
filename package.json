@@ -1,0 +1,52 @@
+{
+  "name": "axisx-v3",
+  "version": "3.0.0",
+  "description": "AxisX Camera Cross-Reference Tool - TypeScript Edition",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "deploy": "npm run build && npx vercel --prod"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "jspdf": "^2.5.1",
+    "lucide-react": "^0.294.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@types/node": "^20.10.4",
+    "@vitejs/plugin-react": "^4.2.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.8",
+    "vitest": "^1.1.0",
+    "@vitest/ui": "^1.1.0",
+    "@vitest/coverage-v8": "^1.1.0",
+    "eslint": "^8.55.0",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oneshot2001/AxisX-v3-ts"
+  },
+  "keywords": [
+    "axis",
+    "camera",
+    "security",
+    "cross-reference",
+    "ndaa"
+  ],
+  "author": "Matthew Visher",
+  "license": "MIT"
+}
