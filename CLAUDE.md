@@ -2,118 +2,175 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Agent OS Documentation
-
-### Product Context
-- **Mission & Vision:** @.agent-os/product/mission.md
-- **Technical Architecture:** @.agent-os/product/tech-stack.md
-- **Development Roadmap:** @.agent-os/product/roadmap.md
-- **Decision History:** @.agent-os/product/decisions.md
-
-### Development Standards
-- **Code Style:** @~/.agent-os/standards/code-style.md
-- **Best Practices:** @~/.agent-os/standards/best-practices.md
-
-### Project Management
-- **Active Specs:** @.agent-os/specs/
-- **Spec Planning:** Use `@~/.agent-os/instructions/create-spec.md`
-- **Tasks Execution:** Use `@~/.agent-os/instructions/execute-tasks.md`
-
 ## Project Overview
 
-AxisX v3 is a camera cross-reference tool helping sales professionals find Axis Communications camera replacements for competitor models. Built with TypeScript and React, emphasizing 100% type safety.
+AxisX v3 is a camera cross-reference tool for Axis Communications sales professionals. It helps find Axis camera replacements for competitor models, with features for NDAA compliance tracking, voice input, and BOM generation. Built with TypeScript strict mode for 100% type safety.
 
 ## Development Commands
 
 ```bash
-# Install dependencies
-npm install
-
-# Development server (port 5173, auto-opens browser)
-npm run dev
-
-# Run tests
-npm test                    # Run all tests
-npm test -- --watch         # Watch mode
-npm test -- path/to/file    # Single test file
-npm run test:ui             # Visual test UI
-npm run test:coverage       # Coverage report
-
-# Type checking and linting
-npm run typecheck           # TypeScript validation only
-npm run lint                # ESLint
-
-# Production
-npm run build               # Build for production
-npm run preview             # Preview production build
-npm run deploy              # Build + deploy to Vercel
+npm install                  # Install dependencies
+npm run dev                  # Dev server (port 5173)
+npm test                     # Run all tests
+npm test -- path/to/file     # Single test file
+npm test -- --watch          # Watch mode
+npm run test:ui              # Visual test UI
+npm run test:coverage        # Coverage report
+npm run typecheck            # TypeScript validation only
+npm run lint                 # ESLint
+npm run build                # Production build
+npm run deploy               # Build + deploy to Vercel
 ```
+
+## Deployment
+
+The `npm run deploy` command runs type checking, builds for production, and deploys to Vercel. Ensure you have Vercel CLI configured (`npx vercel login`) before first deploy.
 
 ## Architecture
 
-### Core Principle: Separation of Concerns
-- **`src/core/`** - Pure business logic with no React dependencies. All algorithms and data processing live here.
-- **`src/hooks/`** - React hooks that wrap core logic for component use
-- **`src/components/`** - React UI components
-- **`src/types/index.ts`** - Single source of truth for all TypeScript types (764 lines, 12 organized sections)
+### Three-Layer Separation
 
-### Search System Flow
-1. Query enters `src/core/search/queryParser.ts` → detects type (competitor, legacy, axis-model, manufacturer)
-2. `src/core/search/engine.ts` routes to appropriate handler
-3. `src/core/search/fuzzy.ts` performs Levenshtein-based matching
-4. Results grouped by quality: exact → partial → similar
-
-### URL Resolution Cascade (src/core/url/)
-Four-step cascade for 100% URL accuracy:
-1. **Verified URLs** (`verified.ts`) - Hardcoded known-good URLs
-2. **Model Aliases** (`aliases.ts`) - Typo/variant corrections
-3. **Base Model** - Strip suffixes and retry
-4. **Search Fallback** - axis.com/products?q=
-
-### Key Data Files
-- `src/data/crossref_data.json` - Competitor→Axis mappings
-- `src/data/axis_msrp_data.json` - Price lookup table
-
-## Type System
-
-All types in `src/types/index.ts`. Key types:
-
-```typescript
-SearchResponse       // Complete search result with grouping & confidence
-CompetitorMapping    // Competitor model → Axis replacement
-LegacyAxisMapping    // Discontinued Axis → current replacement
-ResolvedURL          // URL with confidence level & resolution method
-CartItem             // Shopping cart item with quantity
+```
+src/core/       → Pure TypeScript business logic (NO React imports)
+src/hooks/      → React hooks wrapping core logic
+src/components/ → React UI components consuming hooks
 ```
 
-Use path aliases for imports:
+This separation is intentional: core algorithms are testable without React and can be reused outside the React context.
+
+### Type System
+
+All types live in `src/types/index.ts` (764 lines, 12 sections). This is the single source of truth. Key interfaces:
+
+- `ISearchEngine` - Search contract with query routing
+- `IURLResolver` - URL resolution cascade contract
+- `IMSRPLookup` - Price lookup contract
+- `SearchResponse` - Complete search result with grouping & confidence
+- `CompetitorMapping` / `LegacyAxisMapping` - Data structures
+
+Import types with: `import type { SearchResult } from '@/types';`
+
+### Path Aliases
+
 ```typescript
-import type { SearchResult, CartItem } from '@/types';
-import { createSearchEngine } from '@/core/search';
-import { useCart } from '@/hooks';
+@/         → src/
+@/types    → src/types/index.ts
+@/core/*   → src/core/*
+@/hooks/*  → src/hooks/*
+@/components/* → src/components/*
+@/data/*   → src/data/*
 ```
 
-## Category System
+### Search System
 
-Competitor categories for filtering/display (defined in types):
-- **NDAA** - Section 889 banned: Hikvision, Dahua, Uniview
-- **Cloud** - Subscription-based: Verkada, Rhombus
-- **Korean** - Hanwha Vision, Samsung legacy
-- **Japanese** - i-PRO, Panasonic
-- **Motorola** - Avigilon, Pelco
+Query flow through `src/core/search/`:
 
-## Testing
+1. `queryParser.ts` detects type: competitor | legacy | axis-model | axis-browse | manufacturer
+2. `engine.ts` routes to appropriate handler and builds multi-level indexes
+3. `fuzzy.ts` performs Levenshtein matching with configurable thresholds:
+   - **EXACT** = 90+ (near-perfect match)
+   - **PARTIAL** = 70-89 (good match with minor differences)
+   - **SIMILAR** = 50-69 (fuzzy match, may need verification)
+4. Results grouped by quality tier: exact → partial → similar
 
-Tests in `tests/` directory using Vitest. Test files follow `*.test.ts` pattern.
+### URL Resolution Cascade
 
-Current test coverage:
-- `tests/search.test.ts` - Fuzzy matching, search engine, query parsing
-- `tests/url.test.ts` - URL resolution
+`src/core/url/resolver.ts` implements 5-step fallback for URL resolution:
 
-## Contributing Rules
+1. **Aliases** - Typo/variant corrections redirect to canonical model
+2. **Verified** - Hardcoded known-good URLs (exact match)
+3. **Base model** - Strip variant suffixes (-60HZ, -EUR, -24V, lens sizes) and check verified
+4. **Discontinued check** - Search fallback for discontinued models
+5. **Generated** - Construct URL from pattern `axis.com/products/axis-{model}`
 
-1. All code must be TypeScript (no `.js` files in `src/`)
-2. Run `npm run typecheck` before committing
-3. Add tests for new features in `tests/`
-4. Update `src/types/index.ts` when changing data structures
-5. Core business logic goes in `src/core/` (no React imports)
+Confidence levels: `'verified' | 'alias' | 'generated' | 'search-fallback'`
+
+### NDAA Categories
+
+Competitor manufacturers are categorized for Section 889 compliance filtering:
+- **NDAA banned**: Hikvision, Dahua, Uniview
+- **Cloud**: Verkada, Rhombus (subscription-based)
+- **Korean**: Hanwha Vision
+- **Japanese**: i-PRO, Panasonic
+- **Motorola**: Avigilon, Pelco
+
+## Key Patterns
+
+### Adding Core Logic
+
+New business logic goes in `src/core/` as pure functions with no React:
+
+```typescript
+// src/core/newfeature/processor.ts
+export function processData(input: InputType): OutputType {
+  // Pure function, fully testable
+}
+```
+
+Then wrap in a hook at `src/hooks/useNewFeature.ts` for React consumption.
+
+### Hook Usage
+
+**useSearch** - Debounced search with 150ms delay:
+```typescript
+const { results, isSearching, query, setQuery } = useSearch();
+// setQuery triggers debounced search automatically
+```
+
+**useCart** - BOM (Bill of Materials) management:
+```typescript
+const { items, addItem, removeItem, updateQuantity, clearCart, totalMSRP } = useCart();
+// items persist to localStorage
+```
+
+**useVoice** - Voice input via Web Speech API:
+```typescript
+const { isListening, startListening, stopListening, transcript } = useVoice();
+```
+
+### Data Files
+
+Static JSON in `src/data/` is bundled at build time:
+- `crossref_data.json` - Competitor→Axis mappings
+- `axis_msrp_data.json` - Price lookup table
+
+#### Updating Product Data
+
+When updating with new Axis product guides:
+
+1. **Expected JSON structure** for `crossref_data.json`:
+```json
+{
+  "mappings": [
+    {
+      "competitor": "COMPETITOR-MODEL",
+      "manufacturer": "Manufacturer Name",
+      "axis_replacements": ["AXIS-MODEL-1", "AXIS-MODEL-2"],
+      "notes": "Optional migration notes"
+    }
+  ]
+}
+```
+
+2. **Expected JSON structure** for `axis_msrp_data.json`:
+```json
+{
+  "AXIS-MODEL-1": { "msrp": 1299.00, "description": "Product description" },
+  "AXIS-MODEL-2": { "msrp": 2499.00, "description": "Product description" }
+}
+```
+
+3. **Verify after update**:
+   - Run `npm run typecheck` to catch any schema mismatches
+   - Run `npm test` to ensure search indexing works correctly
+   - Test search for new models in dev mode
+
+### Testing
+
+Tests in `tests/` using Vitest with `@testing-library/jest-dom` matchers. Setup in `tests/setup.ts`. Current test files:
+- `search.test.ts` - Fuzzy matching, query parsing, search engine
+- `url.test.ts` - URL resolution cascade
+
+## Roadmap
+
+See `.agent-os/product/roadmap.md` for current development phases and priorities.
