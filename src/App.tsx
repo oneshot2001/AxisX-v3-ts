@@ -9,13 +9,16 @@ import type { ISearchEngine, SearchResponse, CartItem } from '@/types';
 
 // Core modules
 import { createSearchEngine } from '@/core/search';
-import { getAxisURL, URLResolver } from '@/core/url';
+import { URLResolver } from '@/core/url';
 import { initMSRP, getFormattedPrice } from '@/core/msrp';
 
 // Hooks
 import { useSearch } from '@/hooks/useSearch';
 import { useVoice } from '@/hooks/useVoice';
 import { useCart } from '@/hooks/useCart';
+
+// Components
+import { SearchInput } from '@/components';
 
 // Theme
 import { theme } from './theme';
@@ -74,6 +77,7 @@ function AxisXApp({ engine }: AxisXAppProps) {
     setQuery,
     results,
     isSearching,
+    search,
     clear,
   } = useSearch(engine, { debounceMs: 150 });
 
@@ -161,6 +165,7 @@ function AxisXApp({ engine }: AxisXAppProps) {
             setQuery={setQuery}
             results={results}
             isSearching={isSearching}
+            search={search}
             clear={clear}
             voiceSupported={voiceSupported}
             isListening={isListening}
@@ -246,6 +251,7 @@ interface SearchViewProps {
   setQuery: (q: string) => void;
   results: SearchResponse | null;
   isSearching: boolean;
+  search: () => void;
   clear: () => void;
   voiceSupported: boolean;
   isListening: boolean;
@@ -258,6 +264,8 @@ function SearchView({
   setQuery,
   results,
   isSearching,
+  search,
+  clear,
   voiceSupported,
   isListening,
   toggleVoice,
@@ -266,49 +274,23 @@ function SearchView({
   return (
     <div>
       {/* Search Input */}
-      <div style={{
-        display: 'flex',
-        gap: '0.5rem',
-        marginBottom: '1.5rem',
-      }}>
-        <input
-          type="text"
+      <div style={{ marginBottom: '1.5rem' }}>
+        <SearchInput
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search competitor model, Axis model, or manufacturer..."
-          style={{
-            flex: 1,
-            padding: '0.75rem 1rem',
-            fontSize: '1rem',
-            borderRadius: theme.borderRadius.md,
-            border: `2px solid ${theme.colors.border}`,
-            outline: 'none',
+          onChange={setQuery}
+          onSearch={search}
+          onClear={clear}
+          isLoading={isSearching}
+          voice={{
+            enabled: voiceSupported,
+            isListening,
+            onToggle: toggleVoice,
           }}
+          autoFocus
         />
-        
-        {voiceSupported && (
-          <button
-            onClick={toggleVoice}
-            style={{
-              padding: '0.75rem 1rem',
-              borderRadius: theme.borderRadius.md,
-              border: 'none',
-              cursor: 'pointer',
-              backgroundColor: isListening ? theme.colors.error : theme.colors.bgAlt,
-              color: isListening ? '#fff' : theme.colors.textPrimary,
-              fontSize: '1.25rem',
-            }}
-            title={isListening ? 'Stop listening' : 'Voice search'}
-          >
-            🎤
-          </button>
-        )}
       </div>
 
       {/* Results */}
-      {isSearching && (
-        <p style={{ color: theme.colors.textMuted }}>Searching...</p>
-      )}
 
       {results && results.results.length > 0 && (
         <div>

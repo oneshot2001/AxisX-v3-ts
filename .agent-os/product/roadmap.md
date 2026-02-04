@@ -50,7 +50,7 @@ The following features have been implemented in the v3 TypeScript codebase:
 
 ### Must-Have Features
 
-- [ ] Migrate search input component with voice toggle `M`
+- [x] Migrate search input component with voice toggle `M`
 - [ ] Migrate search results display with grouping `M`
 - [ ] Migrate BOM cart component with quantity controls `M`
 - [ ] Migrate PDF export functionality `S`
@@ -59,9 +59,9 @@ The following features have been implemented in the v3 TypeScript codebase:
 
 ### Should-Have Features
 
-- [ ] Add loading states and error handling `S`
-- [ ] Implement keyboard shortcuts (Enter to search) `XS`
-- [ ] Add clear/reset functionality `XS`
+- [x] Add loading states and error handling `S`
+- [x] Implement keyboard shortcuts (Enter to search) `XS`
+- [x] Add clear/reset functionality `XS`
 
 ### Dependencies
 
