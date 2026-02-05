@@ -52,7 +52,7 @@ The following features have been implemented in the v3 TypeScript codebase:
 
 - [x] Migrate search input component with voice toggle `M`
 - [x] Migrate search results display with grouping `M`
-- [ ] Migrate BOM cart component with quantity controls `M`
+- [x] Migrate BOM cart component with quantity controls `M`
 - [ ] Migrate PDF export functionality `S`
 - [ ] Migrate CSV export functionality `S`
 - [ ] Implement responsive layout matching v2 `M`
