@@ -5,7 +5,7 @@
  * Handles add, remove, update, and calculations.
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import type { CartItem, CartSummary, SearchResult, CompetitorMapping } from '@/types';
 import { generateId } from '@/types';
 import { getMSRP } from '@/core/msrp';
@@ -25,8 +25,8 @@ export interface UseCartReturn {
   /** Add item to cart */
   addItem: (model: string, options?: AddItemOptions) => void;
   
-  /** Add from search result */
-  addFromResult: (result: SearchResult) => void;
+  /** Add from search result with optional quantity */
+  addFromResult: (result: SearchResult, quantity?: number) => void;
   
   /** Remove item by ID */
   removeItem: (id: string) => void;
@@ -56,11 +56,48 @@ export interface AddItemOptions {
 }
 
 // =============================================================================
+// CONSTANTS
+// =============================================================================
+
+const CART_STORAGE_KEY = 'axisx-cart';
+
+// =============================================================================
+// HELPERS
+// =============================================================================
+
+/**
+ * Load cart items from localStorage
+ */
+function loadFromStorage(): CartItem[] {
+  try {
+    const stored = localStorage.getItem(CART_STORAGE_KEY);
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch {
+    // Corrupted data, ignore and return empty array
+  }
+  return [];
+}
+
+/**
+ * Save cart items to localStorage
+ */
+function saveToStorage(items: CartItem[]): void {
+  localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+}
+
+// =============================================================================
 // HOOK IMPLEMENTATION
 // =============================================================================
 
 export function useCart(): UseCartReturn {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useState<CartItem[]>(() => loadFromStorage());
+
+  // Persist to localStorage when items change
+  useEffect(() => {
+    saveToStorage(items);
+  }, [items]);
 
   // Calculate summary
   const summary = useMemo((): CartSummary => {
@@ -145,14 +182,15 @@ export function useCart(): UseCartReturn {
     setItems(prev => [...prev, newItem]);
   }, [items]);
 
-  // Add from search result
-  const addFromResult = useCallback((result: SearchResult) => {
+  // Add from search result with optional quantity
+  const addFromResult = useCallback((result: SearchResult, quantity: number = 1) => {
     const mapping = result.mapping;
-    
+
     if (result.isLegacy) {
       // Legacy mapping
       const legacy = mapping as any;
       addItem(legacy.replacement_model, {
+        quantity,
         source: 'legacy',
         competitorModel: legacy.legacy_model,
         notes: legacy.notes,
@@ -161,6 +199,7 @@ export function useCart(): UseCartReturn {
       // Competitor mapping
       const competitor = mapping as CompetitorMapping;
       addItem(competitor.axis_replacement, {
+        quantity,
         source: 'search',
         competitorModel: competitor.competitor_model,
         competitorManufacturer: competitor.competitor_manufacturer,

@@ -84,6 +84,7 @@ export class SearchEngine implements ISearchEngine {
   private legacyIndex: Map<string, LegacyAxisMapping[]> = new Map();
   private manufacturerIndex: Map<string, CompetitorMapping[]> = new Map();
   private axisModelIndex: Map<string, CompetitorMapping[]> = new Map();
+  private typeIndex: Map<string, CompetitorMapping[]> = new Map();
 
   constructor(
     competitorMappings: CompetitorMapping[],
@@ -114,6 +115,13 @@ export class SearchEngine implements ISearchEngine {
       const axisKey = normalizeStrict(mapping.axis_replacement);
       const axisExisting = this.axisModelIndex.get(axisKey) ?? [];
       this.axisModelIndex.set(axisKey, [...axisExisting, mapping]);
+
+      // Type index (camera type grouping)
+      if (mapping.competitor_type) {
+        const typeKey = this.normalizeType(mapping.competitor_type);
+        const typeExisting = this.typeIndex.get(typeKey) ?? [];
+        this.typeIndex.set(typeKey, [...typeExisting, mapping]);
+      }
     }
 
     // Legacy model index
@@ -122,6 +130,42 @@ export class SearchEngine implements ISearchEngine {
       const existing = this.legacyIndex.get(key) ?? [];
       this.legacyIndex.set(key, [...existing, mapping]);
     }
+  }
+
+  /**
+   * Normalize camera type for consistent grouping
+   */
+  private normalizeType(type: string): string {
+    const lower = type.toLowerCase();
+
+    // Dome variants
+    if (lower.includes('dome')) {
+      if (lower.includes('ptz')) return 'ptz-dome';
+      if (lower.includes('mini') || lower.includes('compact')) return 'compact-dome';
+      if (lower.includes('outdoor')) return 'outdoor-dome';
+      if (lower.includes('indoor')) return 'indoor-dome';
+      return 'dome';
+    }
+
+    // Bullet variants
+    if (lower.includes('bullet')) return 'bullet';
+
+    // PTZ variants
+    if (lower.includes('ptz') || lower.includes('speed')) return 'ptz';
+
+    // Box cameras
+    if (lower.includes('box') || lower.includes('fixed')) return 'box';
+
+    // Panoramic / Multi-sensor
+    if (lower.includes('panoramic') || lower.includes('multi') || lower.includes('180') || lower.includes('360')) {
+      return 'panoramic';
+    }
+
+    // Thermal
+    if (lower.includes('thermal')) return 'thermal';
+
+    // Default to the original
+    return lower;
   }
 
   /**
@@ -341,19 +385,58 @@ export class SearchEngine implements ISearchEngine {
   // ===========================================================================
 
   private handleAxisBrowse(): SearchResult[] {
-    // Return a sample from each manufacturer for browse mode
-    const results: SearchResult[] = [];
-    const seen = new Set<string>();
+    // Show complete Axis portfolio grouped by camera type
+    // Extract unique Axis models and group by inferred form factor
+    const axisModels = new Map<string, { model: string; mappings: CompetitorMapping[] }>();
 
+    // Collect unique Axis models with their competitor mappings
     for (const mapping of this.competitorMappings) {
-      const mfr = mapping.competitor_manufacturer;
-      if (!seen.has(mfr)) {
-        seen.add(mfr);
-        results.push(this.createResult(mapping, 100, 'exact'));
+      const axisModel = mapping.axis_replacement;
+      const existing = axisModels.get(axisModel);
+      if (existing) {
+        existing.mappings.push(mapping);
+      } else {
+        axisModels.set(axisModel, { model: axisModel, mappings: [mapping] });
       }
     }
 
-    return results.slice(0, 20);
+    // Convert to results, sorted by model series and number
+    const results: SearchResult[] = [];
+    const sortedModels = Array.from(axisModels.values()).sort((a, b) => {
+      return a.model.localeCompare(b.model);
+    });
+
+    for (const { mappings } of sortedModels) {
+      if (mappings.length === 0) continue;
+
+      // Use the first mapping with the best features/notes as representative
+      const representativeMapping = mappings.reduce((best, current) => {
+        const bestFeatures = best?.axis_features?.length ?? 0;
+        const currentFeatures = current.axis_features?.length ?? 0;
+        return currentFeatures > bestFeatures ? current : best;
+      }, mappings[0]);
+
+      if (representativeMapping) {
+        results.push(this.createResult(representativeMapping, 100, 'exact'));
+      }
+    }
+
+    // Group by camera type (P = box/bullet/dome, Q = higher-end, M = compact, etc.)
+    // Sort so similar types are grouped together
+    return results.sort((a, b) => {
+      const modelA = (a.mapping as CompetitorMapping).axis_replacement;
+      const modelB = (b.mapping as CompetitorMapping).axis_replacement;
+      const seriesA = modelA.charAt(0);
+      const seriesB = modelB.charAt(0);
+
+      // Sort by series first, then by model number
+      if (seriesA !== seriesB) {
+        // Priority order: P, Q, M, F, T, V, W, D, C, A
+        const order = ['P', 'Q', 'M', 'F', 'T', 'V', 'W', 'D', 'C', 'A'];
+        return order.indexOf(seriesA) - order.indexOf(seriesB);
+      }
+      return modelA.localeCompare(modelB);
+    });
   }
 
   private handleAxisModel(model: string): SearchResult[] {
@@ -376,9 +459,15 @@ export class SearchEngine implements ISearchEngine {
   private handleManufacturer(manufacturer: string): SearchResult[] {
     const mappings = this.getManufacturerModels(manufacturer);
 
-    return mappings
-      .slice(0, this.config.maxResults)
-      .map(mapping => this.createResult(mapping, 100, 'exact'));
+    // Return ALL models for the manufacturer, grouped by camera type
+    // Sort by camera type for better organization
+    const sortedMappings = [...mappings].sort((a, b) => {
+      const typeA = a.competitor_type?.toLowerCase() ?? '';
+      const typeB = b.competitor_type?.toLowerCase() ?? '';
+      return typeA.localeCompare(typeB);
+    });
+
+    return sortedMappings.map(mapping => this.createResult(mapping, 100, 'exact'));
   }
 
   private createResult(

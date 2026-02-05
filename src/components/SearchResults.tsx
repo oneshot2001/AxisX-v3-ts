@@ -6,12 +6,14 @@
  * - Partial Matches (70-89)
  * - Similar Matches (50-69)
  *
+ * Includes optional category filtering via CategoryFilter component.
  * Sections are collapsible with expandable headers.
  */
 
-import { useState } from 'react';
-import type { SearchResponse, SearchResult } from '@/types';
+import { useState, useMemo } from 'react';
+import type { SearchResponse, SearchResult, CategoryId } from '@/types';
 import { ResultCard } from './ResultCard';
+import { CategoryFilter } from './CategoryFilter';
 import { theme } from '../theme';
 
 // =============================================================================
@@ -22,11 +24,14 @@ export interface SearchResultsProps {
   /** Complete search response */
   response: SearchResponse;
 
-  /** Callback when a result is added to cart */
-  onAddToCart: (result: SearchResult) => void;
+  /** Callback when a result is added to cart with optional quantity */
+  onAddToCart: (result: SearchResult, quantity?: number) => void;
 
   /** Callback when a suggestion is clicked */
   onSuggestionClick: (suggestion: string) => void;
+
+  /** Show category filter (default: true) */
+  showCategoryFilter?: boolean;
 }
 
 interface ResultSectionProps {
@@ -42,11 +47,43 @@ interface ResultSectionProps {
   /** Toggle expansion */
   onToggle: () => void;
 
-  /** Callback when a result is added to cart */
-  onAddToCart: (result: SearchResult) => void;
+  /** Callback when a result is added to cart with optional quantity */
+  onAddToCart: (result: SearchResult, quantity?: number) => void;
 
   /** Accent color for the header */
   accentColor: string;
+}
+
+// =============================================================================
+// HELPERS
+// =============================================================================
+
+/**
+ * Calculate category counts from results
+ */
+function getCategoryCounts(results: readonly SearchResult[]): Record<CategoryId, number> {
+  const counts: Record<CategoryId, number> = {
+    all: results.length,
+    ndaa: 0,
+    cloud: 0,
+    korean: 0,
+    japanese: 0,
+    motorola: 0,
+    taiwan: 0,
+    competitive: 0,
+    family: 0,
+    defunct: 0,
+    'legacy-axis': 0,
+  };
+
+  for (const result of results) {
+    const category = result.category as CategoryId;
+    if (category in counts) {
+      counts[category]++;
+    }
+  }
+
+  return counts;
 }
 
 // =============================================================================
@@ -125,7 +162,7 @@ function ResultSection({
             <ResultCard
               key={index}
               result={result}
-              onAddToCart={() => onAddToCart(result)}
+              onAddToCart={(quantity) => onAddToCart(result, quantity)}
             />
           ))}
         </div>
@@ -142,11 +179,29 @@ export function SearchResults({
   response,
   onAddToCart,
   onSuggestionClick,
+  showCategoryFilter = true,
 }: SearchResultsProps) {
-  // Group results by quality tier
-  const exactMatches = response.results.filter(r => r.score >= 90);
-  const partialMatches = response.results.filter(r => r.score >= 70 && r.score < 90);
-  const similarMatches = response.results.filter(r => r.score >= 50 && r.score < 70);
+  // Category filter state
+  const [activeCategory, setActiveCategory] = useState<CategoryId>('all');
+
+  // Calculate category counts from all results (before filtering)
+  const categoryCounts = useMemo(
+    () => getCategoryCounts(response.results),
+    [response.results]
+  );
+
+  // Filter results by category
+  const filteredResults = useMemo(() => {
+    if (activeCategory === 'all') {
+      return response.results;
+    }
+    return response.results.filter((r) => r.category === activeCategory);
+  }, [response.results, activeCategory]);
+
+  // Group filtered results by quality tier
+  const exactMatches = filteredResults.filter((r) => r.score >= 90);
+  const partialMatches = filteredResults.filter((r) => r.score >= 70 && r.score < 90);
+  const similarMatches = filteredResults.filter((r) => r.score >= 50 && r.score < 70);
 
   const hasExactOrPartial = exactMatches.length > 0 || partialMatches.length > 0;
 
@@ -155,7 +210,7 @@ export function SearchResults({
   const [partialExpanded, setPartialExpanded] = useState(true);
   const [similarExpanded, setSimilarExpanded] = useState(!hasExactOrPartial);
 
-  // No results
+  // No results at all
   if (response.results.length === 0) {
     return (
       <div
@@ -165,9 +220,7 @@ export function SearchResults({
           color: theme.colors.textMuted,
         }}
       >
-        <p style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>
-          No matches found
-        </p>
+        <p style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>No matches found</p>
         <p>Try a different model number or manufacturer</p>
 
         {response.suggestions.length > 0 && (
@@ -197,6 +250,15 @@ export function SearchResults({
 
   return (
     <div>
+      {/* Category Filter */}
+      {showCategoryFilter && (
+        <CategoryFilter
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+          resultCounts={categoryCounts}
+        />
+      )}
+
       {/* Results metadata */}
       <p
         style={{
@@ -205,9 +267,36 @@ export function SearchResults({
           fontSize: theme.typography.fontSizes.sm,
         }}
       >
-        {response.results.length} results • {response.confidence} confidence •{' '}
-        {response.durationMs.toFixed(1)}ms
+        {filteredResults.length} results
+        {activeCategory !== 'all' && ` (filtered from ${response.results.length})`}
+        {' '}• {response.confidence} confidence • {response.durationMs.toFixed(1)}ms
       </p>
+
+      {/* No results after filtering */}
+      {filteredResults.length === 0 && (
+        <div
+          style={{
+            textAlign: 'center',
+            padding: '2rem',
+            color: theme.colors.textMuted,
+          }}
+        >
+          <p>No results in this category</p>
+          <button
+            onClick={() => setActiveCategory('all')}
+            style={{
+              marginTop: '0.5rem',
+              background: 'none',
+              border: 'none',
+              color: theme.colors.primary,
+              cursor: 'pointer',
+              textDecoration: 'underline',
+            }}
+          >
+            Show all results
+          </button>
+        </div>
+      )}
 
       {/* Grouped sections */}
       <ResultSection

@@ -246,6 +246,7 @@ export type QueryType =
   | 'legacy'          // Discontinued Axis model
   | 'axis-model'      // Direct Axis model lookup (P3265, Q6135, etc.)
   | 'axis-browse'     // User typed "axis" - show all series
+  | 'axis-type-browse'// Browse Axis portfolio by camera type
   | 'manufacturer';   // User typed manufacturer name
 
 /** Individual search result */
