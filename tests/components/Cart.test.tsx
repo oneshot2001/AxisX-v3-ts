@@ -150,10 +150,10 @@ describe('Cart', () => {
         />
       );
 
-      expect(screen.getByText(/cart is empty/i)).toBeInTheDocument();
+      expect(screen.getByText(/bom is empty/i)).toBeInTheDocument();
     });
 
-    it('disables Clear Cart button when empty', () => {
+    it('disables Clear BOM button when empty', () => {
       const emptySummary: CartSummary = {
         uniqueModels: 0,
         totalQuantity: 0,
@@ -172,7 +172,7 @@ describe('Cart', () => {
         />
       );
 
-      const clearButton = screen.getByRole('button', { name: /clear cart/i });
+      const clearButton = screen.getByRole('button', { name: /clear bom/i });
       expect(clearButton).toBeDisabled();
     });
   });
@@ -222,7 +222,7 @@ describe('Cart', () => {
   });
 
   describe('Callbacks', () => {
-    it('calls onClear when Clear Cart button clicked', () => {
+    it('calls onClear when Clear BOM button clicked', () => {
       render(
         <Cart
           items={[mockItem1]}
@@ -233,7 +233,7 @@ describe('Cart', () => {
         />
       );
 
-      fireEvent.click(screen.getByRole('button', { name: /clear cart/i }));
+      fireEvent.click(screen.getByRole('button', { name: /clear bom/i }));
       expect(onClear).toHaveBeenCalledTimes(1);
     });
 

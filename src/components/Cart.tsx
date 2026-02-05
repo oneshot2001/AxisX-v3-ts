@@ -124,7 +124,7 @@ export function Cart({
           >
             <ShoppingCart size={48} style={{ marginBottom: '1rem', opacity: 0.5 }} />
             <p style={{ fontSize: theme.typography.fontSizes.md, marginBottom: '0.5rem' }}>
-              Your cart is empty
+              Your BOM is empty
             </p>
             <p style={{ fontSize: theme.typography.fontSizes.sm }}>
               Search for cameras and add them to your BOM
@@ -194,11 +194,11 @@ export function Cart({
           </span>
         </div>
 
-        {/* Clear Cart Button */}
+        {/* Clear BOM Button */}
         <button
           onClick={onClear}
           disabled={isEmpty}
-          aria-label="Clear Cart"
+          aria-label="Clear BOM"
           style={{
             width: '100%',
             display: 'flex',
@@ -217,7 +217,7 @@ export function Cart({
           }}
         >
           <Trash2 size={16} />
-          Clear Cart
+          Clear BOM
         </button>
       </div>
     </div>

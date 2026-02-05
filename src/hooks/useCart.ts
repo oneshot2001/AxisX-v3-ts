@@ -25,8 +25,8 @@ export interface UseCartReturn {
   /** Add item to cart */
   addItem: (model: string, options?: AddItemOptions) => void;
   
-  /** Add from search result */
-  addFromResult: (result: SearchResult) => void;
+  /** Add from search result with optional quantity */
+  addFromResult: (result: SearchResult, quantity?: number) => void;
   
   /** Remove item by ID */
   removeItem: (id: string) => void;
@@ -182,14 +182,15 @@ export function useCart(): UseCartReturn {
     setItems(prev => [...prev, newItem]);
   }, [items]);
 
-  // Add from search result
-  const addFromResult = useCallback((result: SearchResult) => {
+  // Add from search result with optional quantity
+  const addFromResult = useCallback((result: SearchResult, quantity: number = 1) => {
     const mapping = result.mapping;
-    
+
     if (result.isLegacy) {
       // Legacy mapping
       const legacy = mapping as any;
       addItem(legacy.replacement_model, {
+        quantity,
         source: 'legacy',
         competitorModel: legacy.legacy_model,
         notes: legacy.notes,
@@ -198,6 +199,7 @@ export function useCart(): UseCartReturn {
       // Competitor mapping
       const competitor = mapping as CompetitorMapping;
       addItem(competitor.axis_replacement, {
+        quantity,
         source: 'search',
         competitorModel: competitor.competitor_model,
         competitorManufacturer: competitor.competitor_manufacturer,

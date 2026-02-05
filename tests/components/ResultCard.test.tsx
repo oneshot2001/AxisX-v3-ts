@@ -56,11 +56,12 @@ describe('ResultCard', () => {
       expect(link).toHaveAttribute('href', 'https://www.axis.com/products/axis-p3265-lve');
     });
 
-    it('calls onAddToCart when Add to Cart clicked', () => {
+    it('calls onAddToCart when Add to BOM clicked', () => {
       render(<ResultCard result={mockResult} onAddToCart={onAddToCart} />);
 
-      fireEvent.click(screen.getByRole('button', { name: /add to cart/i }));
+      fireEvent.click(screen.getByRole('button', { name: /add to bom/i }));
       expect(onAddToCart).toHaveBeenCalledTimes(1);
+      expect(onAddToCart).toHaveBeenCalledWith(1);
     });
   });
 
@@ -69,15 +70,17 @@ describe('ResultCard', () => {
       render(<ResultCard result={mockResult} onAddToCart={onAddToCart} />);
 
       // Resolution and form factor are combined: "4MP • outdoor dome"
-      expect(screen.getByText(/4MP/)).toBeInTheDocument();
-      expect(screen.getByText(/outdoor dome/i)).toBeInTheDocument();
+      // Use getAllByText since 4MP may appear in multiple places
+      expect(screen.getAllByText(/4MP/).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/outdoor dome/i).length).toBeGreaterThan(0);
     });
 
-    it('renders Axis features list', () => {
+    it('renders Axis features as pill badges', () => {
       render(<ResultCard result={mockResult} onAddToCart={onAddToCart} />);
 
-      expect(screen.getByText(/Lightfinder 2.0/)).toBeInTheDocument();
-      expect(screen.getByText(/Forensic WDR/)).toBeInTheDocument();
+      // Features now appear with "+" prefix in pill badges
+      expect(screen.getByText(/\+ Lightfinder 2\.0/)).toBeInTheDocument();
+      expect(screen.getByText(/\+ Forensic WDR/)).toBeInTheDocument();
     });
 
     it('handles missing competitor_resolution gracefully', () => {
@@ -118,6 +121,7 @@ describe('ResultCard', () => {
       render(<ResultCard result={mockResult} onAddToCart={onAddToCart} />);
 
       expect(screen.getByText(/NDAA-compliant replacement/)).toBeInTheDocument();
+      expect(screen.getByText(/Migration Note/)).toBeInTheDocument();
     });
 
     it('hides notes section when notes are missing', () => {
@@ -132,8 +136,8 @@ describe('ResultCard', () => {
 
       render(<ResultCard result={resultWithoutNotes} onAddToCart={onAddToCart} />);
 
-      // Notes label should not be present
-      expect(screen.queryByText('Notes:')).not.toBeInTheDocument();
+      // Migration Note label should not be present
+      expect(screen.queryByText(/Migration Note/)).not.toBeInTheDocument();
     });
   });
 

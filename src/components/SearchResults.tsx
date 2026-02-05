@@ -24,8 +24,8 @@ export interface SearchResultsProps {
   /** Complete search response */
   response: SearchResponse;
 
-  /** Callback when a result is added to cart */
-  onAddToCart: (result: SearchResult) => void;
+  /** Callback when a result is added to cart with optional quantity */
+  onAddToCart: (result: SearchResult, quantity?: number) => void;
 
   /** Callback when a suggestion is clicked */
   onSuggestionClick: (suggestion: string) => void;
@@ -47,8 +47,8 @@ interface ResultSectionProps {
   /** Toggle expansion */
   onToggle: () => void;
 
-  /** Callback when a result is added to cart */
-  onAddToCart: (result: SearchResult) => void;
+  /** Callback when a result is added to cart with optional quantity */
+  onAddToCart: (result: SearchResult, quantity?: number) => void;
 
   /** Accent color for the header */
   accentColor: string;
@@ -162,7 +162,7 @@ function ResultSection({
             <ResultCard
               key={index}
               result={result}
-              onAddToCart={() => onAddToCart(result)}
+              onAddToCart={(quantity) => onAddToCart(result, quantity)}
             />
           ))}
         </div>

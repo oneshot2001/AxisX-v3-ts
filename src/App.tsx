@@ -143,11 +143,11 @@ function AxisXApp({ engine }: AxisXAppProps) {
           >
             🔍 Search
           </NavButton>
-          <NavButton 
-            active={view === 'cart'} 
+          <NavButton
+            active={view === 'cart'}
             onClick={() => setView('cart')}
           >
-            🛒 Cart ({cartItems.length})
+            📋 BOM ({cartItems.length})
           </NavButton>
           <NavButton 
             active={view === 'info'} 
@@ -258,7 +258,7 @@ interface SearchViewProps {
   voiceSupported: boolean;
   isListening: boolean;
   toggleVoice: () => void;
-  onAddToCart: (result: SearchResult) => void;
+  onAddToCart: (result: SearchResult, quantity?: number) => void;
 }
 
 function SearchView({
@@ -316,8 +316,8 @@ function CartView({ items, summary, onRemove, onQuantityChange, onClear }: CartV
   if (items.length === 0) {
     return (
       <div style={{ textAlign: 'center', padding: '3rem', color: theme.colors.textMuted }}>
-        <p style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>🛒</p>
-        <p>Your cart is empty</p>
+        <p style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>📋</p>
+        <p>Your BOM is empty</p>
         <p style={{ fontSize: theme.typography.fontSizes.sm }}>
           Search for cameras and add them to build a quote
         </p>
@@ -338,7 +338,7 @@ function CartView({ items, summary, onRemove, onQuantityChange, onClear }: CartV
         alignItems: 'center',
         marginBottom: '1rem',
       }}>
-        <h2 style={{ margin: 0 }}>Cart ({summaryLine})</h2>
+        <h2 style={{ margin: 0 }}>BOM ({summaryLine})</h2>
         <button
           onClick={onClear}
           style={{
@@ -350,7 +350,7 @@ function CartView({ items, summary, onRemove, onQuantityChange, onClear }: CartV
             cursor: 'pointer',
           }}
         >
-          Clear All
+          Clear BOM
         </button>
       </div>
 

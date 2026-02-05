@@ -22,8 +22,8 @@ export interface ResultCardProps {
   /** The search result to display */
   result: SearchResult;
 
-  /** Callback when "Add to Cart" is clicked */
-  onAddToCart: () => void;
+  /** Callback when "Add to BOM" is clicked with quantity */
+  onAddToCart: (quantity?: number) => void;
 }
 
 // =============================================================================
@@ -59,6 +59,31 @@ function getCategoryTextColor(category: string): string {
     default:
       return theme.colors.textPrimary;
   }
+}
+
+/**
+ * Get "Why Switch" selling points based on category
+ */
+function getWhySwitchPoints(category: string): string[] {
+  const points: string[] = [];
+
+  // Category-specific points
+  switch (category) {
+    case 'ndaa':
+      points.push('NDAA Section 889 compliant - required for federal contracts');
+      points.push('No mandatory cloud subscription - own your data');
+      break;
+    case 'cloud':
+      points.push('One-time purchase, no recurring subscription fees');
+      points.push('No forced cloud dependency - local storage options');
+      break;
+  }
+
+  // Universal Axis advantages
+  points.push('Open platform - works with any ONVIF-compatible VMS');
+  points.push('Edge analytics included at no additional cost');
+
+  return points;
 }
 
 // =============================================================================
@@ -191,7 +216,7 @@ export function ResultCard({ result, onAddToCart }: ResultCardProps) {
       </div>
 
       {/* Spec Comparison Grid - only show if we have spec data */}
-      {!isLegacy && (competitorResolution || competitorType || axisFeatures) && (
+      {!isLegacy && (competitorResolution || competitorType) && (
         <div
           style={{
             display: 'grid',
@@ -239,35 +264,134 @@ export function ResultCard({ result, onAddToCart }: ResultCardProps) {
                 marginBottom: '0.25rem',
               }}
             >
-              Axis
+              Axis Replacement
             </div>
             <div style={{ fontWeight: 500 }}>
-              {axisFeatures && axisFeatures.length > 0
-                ? axisFeatures.slice(0, 3).join(', ')
-                : '—'}
+              {competitorResolution || '—'} equivalent
             </div>
           </div>
         </div>
       )}
 
-      {/* Notes Section */}
+      {/* Key Features - shown as pill badges */}
+      {axisFeatures && axisFeatures.length > 0 && (
+        <div style={{ marginBottom: '0.75rem' }}>
+          <div
+            style={{
+              fontSize: theme.typography.fontSizes.xs,
+              color: theme.colors.textMuted,
+              marginBottom: '0.5rem',
+              fontWeight: 600,
+            }}
+          >
+            Key Features
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}>
+            {axisFeatures.map((feature, index) => (
+              <span
+                key={index}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  padding: '0.25rem 0.5rem',
+                  borderRadius: theme.borderRadius.full,
+                  backgroundColor: 'rgba(255, 204, 51, 0.15)',
+                  border: '1px solid rgba(255, 204, 51, 0.3)',
+                  color: theme.colors.primary,
+                  fontSize: theme.typography.fontSizes.xs,
+                  fontWeight: 500,
+                }}
+              >
+                + {feature}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Why Switch Section */}
+      {!isLegacy && (
+        <div
+          style={{
+            marginBottom: '0.75rem',
+            padding: '0.75rem',
+            backgroundColor: 'rgba(34, 197, 94, 0.08)',
+            borderRadius: theme.borderRadius.sm,
+            border: '1px solid rgba(34, 197, 94, 0.2)',
+          }}
+        >
+          <div
+            style={{
+              fontSize: theme.typography.fontSizes.xs,
+              color: theme.colors.success,
+              marginBottom: '0.5rem',
+              fontWeight: 600,
+            }}
+          >
+            Why Switch to Axis?
+          </div>
+          <ul
+            style={{
+              margin: 0,
+              paddingLeft: '1.25rem',
+              fontSize: theme.typography.fontSizes.sm,
+              color: theme.colors.textSecondary,
+              lineHeight: 1.5,
+            }}
+          >
+            {getWhySwitchPoints(result.category).map((point, index) => (
+              <li key={index} style={{ marginBottom: '0.25rem' }}>
+                {point}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Notes Callout - Yellow highlighted for migration notes */}
       {notes && (
         <div
           style={{
             padding: '0.75rem',
             marginBottom: '0.75rem',
-            backgroundColor: 'rgba(39, 39, 42, 0.5)',
+            backgroundColor: 'rgba(234, 179, 8, 0.12)',
             borderRadius: theme.borderRadius.sm,
-            borderLeft: `2px solid ${theme.colors.primary}`,
+            borderLeft: `3px solid ${theme.colors.warning}`,
+            border: '1px solid rgba(234, 179, 8, 0.25)',
           }}
         >
-          <span style={{ fontWeight: 600 }}>Notes:</span>{' '}
-          <span style={{ color: theme.colors.textSecondary }}>{notes}</span>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '0.5rem',
+            }}
+          >
+            <span
+              style={{
+                fontSize: theme.typography.fontSizes.sm,
+                fontWeight: 600,
+                color: theme.colors.warning,
+                flexShrink: 0,
+              }}
+            >
+              💡 Migration Note:
+            </span>
+            <span
+              style={{
+                fontSize: theme.typography.fontSizes.sm,
+                color: theme.colors.textPrimary,
+                lineHeight: 1.4,
+              }}
+            >
+              {notes}
+            </span>
+          </div>
         </div>
       )}
 
       {/* Action buttons */}
-      <div style={{ display: 'flex', gap: '0.5rem' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
         <a
           href={result.axisUrl}
           target="_blank"
@@ -285,7 +409,7 @@ export function ResultCard({ result, onAddToCart }: ResultCardProps) {
           View on Axis.com
         </a>
         <button
-          onClick={onAddToCart}
+          onClick={() => onAddToCart(1)}
           style={{
             padding: '0.5rem 1rem',
             borderRadius: theme.borderRadius.sm,
@@ -297,8 +421,45 @@ export function ResultCard({ result, onAddToCart }: ResultCardProps) {
             fontWeight: 500,
           }}
         >
-          + Add to Cart
+          + Add to BOM
         </button>
+      </div>
+
+      {/* Quick Add Buttons */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <span style={{
+          fontSize: theme.typography.fontSizes.xs,
+          color: theme.colors.textMuted,
+        }}>
+          Quick add:
+        </span>
+        {[1, 2, 4, 8, 16].map((qty) => (
+          <button
+            key={qty}
+            onClick={() => onAddToCart(qty)}
+            style={{
+              padding: '0.25rem 0.5rem',
+              borderRadius: theme.borderRadius.sm,
+              border: `1px solid ${theme.colors.border}`,
+              backgroundColor: 'transparent',
+              color: theme.colors.textSecondary,
+              cursor: 'pointer',
+              fontSize: theme.typography.fontSizes.xs,
+              fontWeight: 500,
+              transition: 'all 0.15s ease',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.borderColor = theme.colors.primary;
+              e.currentTarget.style.color = theme.colors.primary;
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.borderColor = theme.colors.border;
+              e.currentTarget.style.color = theme.colors.textSecondary;
+            }}
+          >
+            +{qty}
+          </button>
+        ))}
       </div>
     </div>
   );
