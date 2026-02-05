@@ -1,10 +1,15 @@
 /**
  * ResultCard Component
  *
- * Displays a single search result with competitor→Axis replacement flow,
- * match score, MSRP, and action buttons.
+ * Displays a single search result with:
+ * - Competitor → Axis replacement flow
+ * - Two-column spec comparison
+ * - Notes section
+ * - Confidence badge (HIGH/MEDIUM)
+ * - Action buttons
  */
 
+import { CheckCircle, AlertCircle } from 'lucide-react';
 import type { SearchResult, CompetitorMapping, LegacyAxisMapping } from '@/types';
 import { getFormattedPrice } from '@/core/msrp';
 import { theme } from '../theme';
@@ -77,8 +82,18 @@ export function ResultCard({ result, onAddToCart }: ResultCardProps) {
     ? 'Axis (Legacy)'
     : (mapping as CompetitorMapping).competitor_manufacturer;
 
+  // Extract spec comparison data (competitor mapping only)
+  const competitorMapping = isLegacy ? null : (mapping as CompetitorMapping);
+  const competitorResolution = competitorMapping?.competitor_resolution;
+  const competitorType = competitorMapping?.competitor_type;
+  const axisFeatures = competitorMapping?.axis_features;
+  const notes = mapping.notes;
+
   // Get MSRP for the Axis model
   const msrpDisplay = getFormattedPrice(axisModel);
+
+  // Confidence badge logic
+  const isHighConfidence = result.score >= 85;
 
   return (
     <div
@@ -90,7 +105,7 @@ export function ResultCard({ result, onAddToCart }: ResultCardProps) {
         backgroundColor: theme.colors.bgCard,
       }}
     >
-      {/* Header: Manufacturer badge + competitor model + score */}
+      {/* Header: Manufacturer badge + competitor model + confidence badge */}
       <div
         style={{
           display: 'flex',
@@ -116,13 +131,27 @@ export function ResultCard({ result, onAddToCart }: ResultCardProps) {
           </span>
           <span style={{ fontWeight: 600 }}>{competitorModel}</span>
         </div>
+
+        {/* Confidence Badge */}
         <span
           style={{
-            fontSize: theme.typography.fontSizes.sm,
-            color: result.score >= 90 ? theme.colors.success : theme.colors.warning,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.25rem',
+            padding: '0.25rem 0.5rem',
+            borderRadius: theme.borderRadius.sm,
+            backgroundColor: isHighConfidence ? theme.colors.success : theme.colors.warning,
+            color: '#fff',
+            fontSize: theme.typography.fontSizes.xs,
+            fontWeight: 600,
           }}
         >
-          {result.score}% match
+          {isHighConfidence ? (
+            <CheckCircle size={12} />
+          ) : (
+            <AlertCircle size={12} />
+          )}
+          {isHighConfidence ? 'HIGH' : 'MEDIUM'}
         </span>
       </div>
 
@@ -135,7 +164,7 @@ export function ResultCard({ result, onAddToCart }: ResultCardProps) {
           marginBottom: '0.75rem',
         }}
       >
-        <span style={{ color: theme.colors.primary, fontWeight: 700 }}>→</span>
+        <span style={{ color: theme.colors.primary, fontWeight: 700, fontSize: '1.25rem' }}>→</span>
         <span
           style={{
             backgroundColor: theme.colors.primary,
@@ -147,7 +176,7 @@ export function ResultCard({ result, onAddToCart }: ResultCardProps) {
         >
           AXIS
         </span>
-        <span style={{ fontWeight: 700, color: theme.colors.primary }}>
+        <span style={{ fontWeight: 700, color: theme.colors.primary, fontSize: '1.125rem' }}>
           {axisModel}
         </span>
         <span
@@ -160,6 +189,82 @@ export function ResultCard({ result, onAddToCart }: ResultCardProps) {
           {msrpDisplay}
         </span>
       </div>
+
+      {/* Spec Comparison Grid - only show if we have spec data */}
+      {!isLegacy && (competitorResolution || competitorType || axisFeatures) && (
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '0.75rem',
+            marginBottom: '0.75rem',
+          }}
+        >
+          {/* Competitor Specs */}
+          <div
+            style={{
+              padding: '0.75rem',
+              borderRadius: theme.borderRadius.sm,
+              backgroundColor: theme.colors.bgAlt,
+              border: `1px solid ${theme.colors.border}`,
+            }}
+          >
+            <div
+              style={{
+                fontSize: theme.typography.fontSizes.xs,
+                color: theme.colors.textMuted,
+                marginBottom: '0.25rem',
+              }}
+            >
+              Legacy
+            </div>
+            <div style={{ fontWeight: 500 }}>
+              {competitorResolution || '—'} • {competitorType || '—'}
+            </div>
+          </div>
+
+          {/* Axis Specs */}
+          <div
+            style={{
+              padding: '0.75rem',
+              borderRadius: theme.borderRadius.sm,
+              backgroundColor: 'rgba(255, 204, 51, 0.1)',
+              border: `1px solid rgba(255, 204, 51, 0.5)`,
+            }}
+          >
+            <div
+              style={{
+                fontSize: theme.typography.fontSizes.xs,
+                color: theme.colors.primary,
+                marginBottom: '0.25rem',
+              }}
+            >
+              Axis
+            </div>
+            <div style={{ fontWeight: 500 }}>
+              {axisFeatures && axisFeatures.length > 0
+                ? axisFeatures.slice(0, 3).join(', ')
+                : '—'}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Notes Section */}
+      {notes && (
+        <div
+          style={{
+            padding: '0.75rem',
+            marginBottom: '0.75rem',
+            backgroundColor: 'rgba(39, 39, 42, 0.5)',
+            borderRadius: theme.borderRadius.sm,
+            borderLeft: `2px solid ${theme.colors.primary}`,
+          }}
+        >
+          <span style={{ fontWeight: 600 }}>Notes:</span>{' '}
+          <span style={{ color: theme.colors.textSecondary }}>{notes}</span>
+        </div>
+      )}
 
       {/* Action buttons */}
       <div style={{ display: 'flex', gap: '0.5rem' }}>
