@@ -17,6 +17,9 @@
  * 10. UI State
  * 11. Theme
  * 12. Utilities
+ * 13. PDF Export
+ * 14. Batch Operations
+ * 15. Spreadsheet Import
  */
 
 // =============================================================================
@@ -439,6 +442,9 @@ export interface CartItem {
 
   /** Notes */
   notes?: string;
+
+  /** Key Axis features / "Why Switch" selling points (from competitor mapping) */
+  readonly axisFeatures?: readonly string[];
 }
 
 /** Cart summary */
@@ -764,7 +770,26 @@ export function generateId(): string {
 }
 
 // =============================================================================
-// 13. BATCH OPERATIONS
+// 13. PDF EXPORT
+// =============================================================================
+
+/** Options for generating a Battle Card PDF */
+export interface BattleCardOptions {
+  readonly items: readonly CartItem[];
+  readonly summary: CartSummary;
+  readonly projectName: string;
+  readonly customerName: string;
+  readonly generatedDate: Date;
+}
+
+/** Metadata for PDF export header/footer */
+export interface ExportMetadata {
+  readonly projectName: string;
+  readonly customerName: string;
+}
+
+// =============================================================================
+// 14. BATCH OPERATIONS
 // =============================================================================
 
 /** Single item in a batch search */
@@ -793,7 +818,7 @@ export interface BatchProgress {
 }
 
 // =============================================================================
-// 14. SPREADSHEET IMPORT
+// 15. SPREADSHEET IMPORT
 // =============================================================================
 
 /** Supported spreadsheet file types */

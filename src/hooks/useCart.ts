@@ -53,6 +53,7 @@ export interface AddItemOptions {
   competitorModel?: string;
   competitorManufacturer?: string;
   notes?: string;
+  axisFeatures?: readonly string[];
 }
 
 // =============================================================================
@@ -136,6 +137,7 @@ export function useCart(): UseCartReturn {
       competitorModel,
       competitorManufacturer,
       notes,
+      axisFeatures,
     } = options;
 
     const normalizedModel = model.toUpperCase().replace(/^AXIS\s*/i, '').trim();
@@ -177,6 +179,7 @@ export function useCart(): UseCartReturn {
       competitorManufacturer,
       axisUrl,
       notes,
+      axisFeatures,
     };
 
     setItems(prev => [...prev, newItem]);
@@ -203,6 +206,7 @@ export function useCart(): UseCartReturn {
         source: 'search',
         competitorModel: competitor.competitor_model,
         competitorManufacturer: competitor.competitor_manufacturer,
+        axisFeatures: competitor.axis_features,
       });
     }
   }, [addItem]);
