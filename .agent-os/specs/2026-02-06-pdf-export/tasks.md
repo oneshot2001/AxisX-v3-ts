@@ -3,7 +3,7 @@
 These are the tasks to be completed for the spec detailed in @.agent-os/specs/2026-02-06-pdf-export/spec.md
 
 > Created: 2026-02-06
-> Status: Ready for Implementation
+> Status: Complete
 
 ## Tasks
 
@@ -26,4 +26,4 @@ These are the tasks to be completed for the spec detailed in @.agent-os/specs/20
   - [x] 3.2 Add "Export PDF" button to Cart component footer
   - [x] 3.3 Wire up export dialog and hook in `App.tsx` cart view
   - [x] 3.4 Verify all tests pass
-  - [ ] 3.5 Manual test: build BOM, export PDF, verify layout and content
+  - [x] 3.5 Manual test: build BOM, export PDF, verify layout and content

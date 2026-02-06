@@ -1,6 +1,6 @@
 # Product Roadmap
 
-> Last Updated: 2026-02-04
+> Last Updated: 2026-02-06
 > Version: 1.0.0
 > Status: Phase 1 - UI Migration
 
@@ -53,7 +53,7 @@ The following features have been implemented in the v3 TypeScript codebase:
 - [x] Migrate search input component with voice toggle `M`
 - [x] Migrate search results display with grouping `M`
 - [x] Migrate BOM cart component with quantity controls `M`
-- [ ] Migrate PDF export functionality `S`
+- [x] Migrate PDF export functionality `S`
 - [ ] Migrate CSV export functionality `S`
 - [ ] Implement responsive layout matching v2 `M`
 
