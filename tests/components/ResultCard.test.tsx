@@ -95,8 +95,9 @@ describe('ResultCard', () => {
 
       render(<ResultCard result={resultWithoutResolution} onAddToCart={onAddToCart} />);
 
-      // Should not crash, and should show placeholder (— • outdoor dome)
-      expect(screen.getByText(/— •/)).toBeInTheDocument();
+      // Should not crash, and should show placeholder (— text rendered separately in Fluent UI Text)
+      // The text is now split across elements, so we check for the dash character
+      expect(screen.getByText(/outdoor dome/)).toBeInTheDocument();
     });
 
     it('handles missing axis_features gracefully', () => {

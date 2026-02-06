@@ -12,19 +12,27 @@
     "test:coverage": "vitest --coverage",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "typecheck": "tsc --noEmit",
+    "merge:v5": "tsx scripts/merge-v5.ts",
+    "scrape": "tsx scripts/scrape.ts",
+    "scrape:validate": "tsx scripts/validate.ts",
     "deploy": "npm run build && npx vercel --prod"
   },
   "dependencies": {
+    "@fluentui/react-components": "^9.72.11",
+    "@fluentui/react-icons": "^2.0.318",
     "jspdf": "^2.5.1",
     "lucide-react": "^0.294.0",
+    "papaparse": "^5.5.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
     "@types/node": "^20.10.4",
+    "@types/papaparse": "^5.5.2",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
@@ -32,10 +40,14 @@
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/coverage-v8": "^1.1.0",
     "@vitest/ui": "^1.1.0",
+    "cheerio": "^1.2.0",
     "eslint": "^8.55.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "jsdom": "^28.0.0",
+    "p-queue": "^9.1.0",
+    "puppeteer": "^24.37.1",
+    "tsx": "^4.21.0",
     "typescript": "^5.3.3",
     "vite": "^5.0.8",
     "vitest": "^1.1.0"

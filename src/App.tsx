@@ -1,11 +1,32 @@
 /**
  * AxisX v3 - Main Application
- * 
- * This is the scaffold. Port your UI components here.
+ *
+ * Camera cross-reference tool for Axis Communications sales professionals.
+ * Migrated to Fluent UI with Axis branding.
  */
 
-import React, { useEffect, useState } from 'react';
-import type { ISearchEngine, SearchResponse, SearchResult, CartItem } from '@/types';
+import { useEffect, useState } from 'react';
+import {
+  Button,
+  Text,
+  Spinner,
+  Dialog,
+  DialogSurface,
+  DialogBody,
+  DialogTitle,
+  DialogContent,
+  makeStyles,
+  tokens,
+} from '@fluentui/react-components';
+import {
+  Search24Regular,
+  ClipboardBulletListLtrRegular,
+  Info24Regular,
+  DocumentBulletList24Regular,
+  ArrowUpload24Regular,
+  Dismiss24Regular,
+} from '@fluentui/react-icons';
+import type { ISearchEngine, SearchResponse, SearchResult, CartItem, BatchSearchItem } from '@/types';
 
 // Core modules
 import { createSearchEngine } from '@/core/search';
@@ -16,16 +37,141 @@ import { initMSRP } from '@/core/msrp';
 import { useSearch } from '@/hooks/useSearch';
 import { useVoice } from '@/hooks/useVoice';
 import { useCart } from '@/hooks/useCart';
+import { useBatchSearch } from '@/hooks/useBatchSearch';
+import { useSpreadsheetImport } from '@/hooks/useSpreadsheetImport';
 
 // Components
-import { SearchInput, SearchResults, CartItemRow } from '@/components';
+import {
+  SearchInput,
+  SearchResults,
+  CartItemRow,
+  BatchInput,
+  BatchResults,
+  FileUploader,
+  ColumnMapper,
+  ValidationPreview,
+  ImportSummary,
+} from '@/components';
 
 // Theme
-import { theme } from './theme';
+import { axisTokens } from '@/styles/fluentTheme';
 
 // Data (will be imported at build time)
 import crossrefData from '@/data/crossref_data.json';
 import msrpData from '@/data/axis_msrp_data.json';
+
+// =============================================================================
+// STYLES
+// =============================================================================
+
+const useStyles = makeStyles({
+  app: {
+    minHeight: '100vh',
+    backgroundColor: tokens.colorNeutralBackground1,
+    fontFamily: tokens.fontFamilyBase,
+    color: tokens.colorNeutralForeground1,
+  },
+  header: {
+    padding: '1rem 1.5rem',
+    borderBottom: `1px solid ${tokens.colorNeutralStroke1}`,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  logo: {
+    fontSize: tokens.fontSizeBase600,
+    fontWeight: tokens.fontWeightBold,
+    color: axisTokens.primary,
+    margin: 0,
+  },
+  version: {
+    fontSize: tokens.fontSizeBase200,
+    color: tokens.colorNeutralForeground3,
+    marginLeft: '0.5rem',
+    fontWeight: tokens.fontWeightRegular,
+  },
+  nav: {
+    display: 'flex',
+    gap: '0.5rem',
+  },
+  main: {
+    padding: '1.5rem',
+    maxWidth: '900px',
+    margin: '0 auto',
+  },
+  footer: {
+    padding: '1rem',
+    textAlign: 'center',
+    color: tokens.colorNeutralForeground3,
+    fontSize: tokens.fontSizeBase200,
+    borderTop: `1px solid ${tokens.colorNeutralStroke1}`,
+  },
+  footerBrand: {
+    color: axisTokens.primary,
+    fontWeight: tokens.fontWeightSemibold,
+  },
+  loadingScreen: {
+    minHeight: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    gap: '1rem',
+    backgroundColor: '#1A1A1A',
+  },
+  loadingText: {
+    color: axisTokens.primary,
+    fontSize: tokens.fontSizeBase500,
+  },
+  searchContainer: {
+    marginBottom: '1.5rem',
+  },
+  emptyCart: {
+    textAlign: 'center',
+    padding: '3rem',
+    color: tokens.colorNeutralForeground3,
+  },
+  emptyCartIcon: {
+    fontSize: tokens.fontSizeBase600,
+    marginBottom: '0.5rem',
+  },
+  cartHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '1rem',
+  },
+  cartList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.5rem',
+  },
+  cartSummary: {
+    marginTop: '1.5rem',
+    padding: '1rem',
+    backgroundColor: tokens.colorNeutralBackground3,
+    borderRadius: tokens.borderRadiusMedium,
+    textAlign: 'right',
+  },
+  cartTotal: {
+    fontSize: tokens.fontSizeBase500,
+    fontWeight: tokens.fontWeightBold,
+  },
+  cartTbd: {
+    fontSize: tokens.fontSizeBase200,
+    color: tokens.colorNeutralForeground3,
+  },
+  infoSection: {
+    maxWidth: '600px',
+  },
+  infoHeading: {
+    marginTop: '1.5rem',
+    marginBottom: '0.5rem',
+  },
+  infoList: {
+    lineHeight: 1.8,
+  },
+});
 
 // =============================================================================
 // APP COMPONENT
@@ -63,6 +209,21 @@ export default function App() {
 }
 
 // =============================================================================
+// LOADING SCREEN
+// =============================================================================
+
+function LoadingScreen() {
+  const styles = useStyles();
+
+  return (
+    <div className={styles.loadingScreen}>
+      <Spinner size="large" style={{ color: axisTokens.primary }} />
+      <Text className={styles.loadingText}>Loading AxisX...</Text>
+    </div>
+  );
+}
+
+// =============================================================================
 // MAIN APP (after initialization)
 // =============================================================================
 
@@ -71,6 +232,8 @@ interface AxisXAppProps {
 }
 
 function AxisXApp({ engine }: AxisXAppProps) {
+  const styles = useStyles();
+
   // Search hook
   const {
     query,
@@ -100,66 +263,105 @@ function AxisXApp({ engine }: AxisXAppProps) {
     clear: clearCart,
   } = useCart();
 
+  // Batch search hook
+  const batchSearch = useBatchSearch(engine, {
+    onComplete: (items) => {
+      console.log(`Batch search complete: ${items.length} items processed`);
+    },
+  });
+
   // View state
-  const [view, setView] = useState<'search' | 'cart' | 'info'>('search');
+  const [view, setView] = useState<'search' | 'batch' | 'cart' | 'info'>('search');
+
+  // Handler to add batch items to cart
+  const handleAddBatchToCart = () => {
+    const selectedItems = batchSearch.items.filter(
+      (item) =>
+        item.selected &&
+        item.status === 'complete' &&
+        item.response &&
+        item.response.results.length > 0
+    );
+
+    selectedItems.forEach((item) => {
+      const response = item.response;
+      if (response && response.results.length > 0) {
+        const bestResult = response.results[0];
+        if (bestResult) {
+          addFromResult(bestResult, item.quantity);
+        }
+      }
+    });
+
+    // Clear selection after adding
+    batchSearch.deselectAll();
+  };
+
+  // Spreadsheet import hook
+  const spreadsheetImport = useSpreadsheetImport(engine);
+
+  // Import modal state
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+
+  // Handler to add validated spreadsheet items to batch
+  const handleAddSpreadsheetToBatch = () => {
+    const validItems = spreadsheetImport.getValidItems();
+
+    // Build raw input from valid items
+    const modelLines = validItems.map((item) => item.input).join('\n');
+
+    // Set the raw input (this will parse and create batch items)
+    batchSearch.setRawInput(modelLines);
+
+    // Close modal and reset spreadsheet import
+    setIsImportModalOpen(false);
+    spreadsheetImport.reset();
+  };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      backgroundColor: theme.colors.bgMain,
-      fontFamily: theme.typography.fontFamily,
-      color: theme.colors.textPrimary,
-    }}>
+    <div className={styles.app}>
       {/* Header */}
-      <header style={{
-        padding: '1rem 1.5rem',
-        borderBottom: `1px solid ${theme.colors.border}`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      }}>
-        <h1 style={{
-          fontSize: theme.typography.fontSizes.xxl,
-          fontWeight: 700,
-          color: theme.colors.primary,
-          margin: 0,
-        }}>
+      <header className={styles.header}>
+        <h1 className={styles.logo}>
           AxisX
-          <span style={{
-            fontSize: theme.typography.fontSizes.sm,
-            color: theme.colors.textMuted,
-            marginLeft: '0.5rem',
-            fontWeight: 400,
-          }}>
-            v3.0
-          </span>
+          <span className={styles.version}>v3.0</span>
         </h1>
 
         {/* Nav */}
-        <nav style={{ display: 'flex', gap: '0.5rem' }}>
-          <NavButton 
-            active={view === 'search'} 
+        <nav className={styles.nav}>
+          <Button
+            appearance={view === 'search' ? 'primary' : 'subtle'}
             onClick={() => setView('search')}
+            icon={<Search24Regular />}
           >
-            🔍 Search
-          </NavButton>
-          <NavButton
-            active={view === 'cart'}
+            Search
+          </Button>
+          <Button
+            appearance={view === 'batch' ? 'primary' : 'subtle'}
+            onClick={() => setView('batch')}
+            icon={<DocumentBulletList24Regular />}
+          >
+            Batch
+          </Button>
+          <Button
+            appearance={view === 'cart' ? 'primary' : 'subtle'}
             onClick={() => setView('cart')}
+            icon={<ClipboardBulletListLtrRegular />}
           >
-            📋 BOM ({cartItems.length})
-          </NavButton>
-          <NavButton 
-            active={view === 'info'} 
+            BOM ({cartItems.length})
+          </Button>
+          <Button
+            appearance={view === 'info' ? 'primary' : 'subtle'}
             onClick={() => setView('info')}
+            icon={<Info24Regular />}
           >
-            ℹ️ Info
-          </NavButton>
+            Info
+          </Button>
         </nav>
       </header>
 
       {/* Main Content */}
-      <main style={{ padding: '1.5rem', maxWidth: '900px', margin: '0 auto' }}>
+      <main className={styles.main}>
         {view === 'search' && (
           <SearchView
             query={query}
@@ -172,6 +374,26 @@ function AxisXApp({ engine }: AxisXAppProps) {
             isListening={isListening}
             toggleVoice={toggleVoice}
             onAddToCart={addFromResult}
+          />
+        )}
+
+        {view === 'batch' && (
+          <BatchView
+            rawInput={batchSearch.rawInput}
+            setRawInput={batchSearch.setRawInput}
+            modelCount={batchSearch.modelCount}
+            items={batchSearch.items}
+            isProcessing={batchSearch.isProcessing}
+            progress={batchSearch.progress}
+            selectedCount={batchSearch.selectedCount}
+            onSearch={batchSearch.processBatch}
+            onClear={batchSearch.clear}
+            onToggleSelection={batchSearch.toggleSelection}
+            onSelectAll={batchSearch.selectAll}
+            onDeselectAll={batchSearch.deselectAll}
+            onQuantityChange={batchSearch.updateQuantity}
+            onAddSelectedToCart={handleAddBatchToCart}
+            onImport={() => setIsImportModalOpen(true)}
           />
         )}
 
@@ -189,64 +411,88 @@ function AxisXApp({ engine }: AxisXAppProps) {
       </main>
 
       {/* Footer */}
-      <footer style={{
-        padding: '1rem',
-        textAlign: 'center',
-        color: theme.colors.textMuted,
-        fontSize: theme.typography.fontSizes.sm,
-        borderTop: `1px solid ${theme.colors.border}`,
-      }}>
-        <span style={{ color: theme.colors.primary, fontWeight: 600 }}>AxisX</span>
-        {' '}— Built with TypeScript for Axis partners
+      <footer className={styles.footer}>
+        <span className={styles.footerBrand}>AxisX</span>
+        {' '}{'\u2014'} Built with TypeScript for Axis partners
       </footer>
+
+      {/* Import Modal */}
+      <Dialog
+        open={isImportModalOpen}
+        onOpenChange={(_e, data) => {
+          if (!data.open) {
+            setIsImportModalOpen(false);
+            spreadsheetImport.reset();
+          }
+        }}
+      >
+        <DialogSurface style={{ maxWidth: '800px', width: '90vw' }}>
+          <DialogBody>
+            <DialogTitle
+              action={
+                <Button
+                  appearance="subtle"
+                  icon={<Dismiss24Regular />}
+                  onClick={() => {
+                    setIsImportModalOpen(false);
+                    spreadsheetImport.reset();
+                  }}
+                />
+              }
+            >
+              Import from Spreadsheet
+            </DialogTitle>
+            <DialogContent>
+              {spreadsheetImport.step === 'upload' && (
+                <FileUploader
+                  onFileSelect={spreadsheetImport.uploadFile}
+                  isLoading={spreadsheetImport.isProcessing}
+                  error={spreadsheetImport.error}
+                />
+              )}
+
+              {spreadsheetImport.step === 'mapping' && spreadsheetImport.spreadsheetData && spreadsheetImport.columnMapping && (
+                <ColumnMapper
+                  data={spreadsheetImport.spreadsheetData}
+                  mapping={spreadsheetImport.columnMapping}
+                  onMappingChange={spreadsheetImport.setColumnMapping}
+                  onProceed={spreadsheetImport.runValidation}
+                  onBack={spreadsheetImport.goBack}
+                  isProcessing={spreadsheetImport.isProcessing}
+                />
+              )}
+
+              {(spreadsheetImport.step === 'validation' || spreadsheetImport.step === 'complete') && (
+                <>
+                  <ValidationPreview
+                    results={spreadsheetImport.validationResults}
+                    isProcessing={spreadsheetImport.isProcessing}
+                    progress={spreadsheetImport.progress}
+                  />
+
+                  {spreadsheetImport.step === 'complete' && (
+                    <div style={{ marginTop: '1.5rem' }}>
+                      <ImportSummary
+                        summary={spreadsheetImport.summary}
+                        onAddToBatch={handleAddSpreadsheetToBatch}
+                        onBack={spreadsheetImport.goBack}
+                        onReset={spreadsheetImport.reset}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+            </DialogContent>
+          </DialogBody>
+        </DialogSurface>
+      </Dialog>
     </div>
   );
 }
 
 // =============================================================================
-// SUB-COMPONENTS (Stubs - port your UI here)
+// SEARCH VIEW
 // =============================================================================
-
-function LoadingScreen() {
-  return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: '#000',
-      color: '#FFCC33',
-      fontSize: '1.5rem',
-    }}>
-      Loading AxisX...
-    </div>
-  );
-}
-
-interface NavButtonProps {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}
-
-function NavButton({ active, onClick, children }: NavButtonProps) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        padding: '0.5rem 1rem',
-        borderRadius: theme.borderRadius.md,
-        border: 'none',
-        cursor: 'pointer',
-        fontWeight: 500,
-        backgroundColor: active ? theme.colors.primary : 'transparent',
-        color: active ? '#000' : theme.colors.textSecondary,
-      }}
-    >
-      {children}
-    </button>
-  );
-}
 
 interface SearchViewProps {
   query: string;
@@ -273,10 +519,12 @@ function SearchView({
   toggleVoice,
   onAddToCart,
 }: SearchViewProps) {
+  const styles = useStyles();
+
   return (
     <div>
       {/* Search Input */}
-      <div style={{ marginBottom: '1.5rem' }}>
+      <div className={styles.searchContainer}>
         <SearchInput
           value={query}
           onChange={setQuery}
@@ -304,6 +552,91 @@ function SearchView({
   );
 }
 
+// =============================================================================
+// BATCH VIEW
+// =============================================================================
+
+interface BatchViewProps {
+  rawInput: string;
+  setRawInput: (input: string) => void;
+  modelCount: number;
+  items: readonly BatchSearchItem[];
+  isProcessing: boolean;
+  progress: { current: number; total: number; percent: number };
+  selectedCount: number;
+  onSearch: () => void;
+  onClear: () => void;
+  onToggleSelection: (id: string) => void;
+  onSelectAll: () => void;
+  onDeselectAll: () => void;
+  onQuantityChange: (id: string, quantity: number) => void;
+  onAddSelectedToCart: () => void;
+  onImport: () => void;
+}
+
+function BatchView({
+  rawInput,
+  setRawInput,
+  modelCount,
+  items,
+  isProcessing,
+  progress,
+  selectedCount,
+  onSearch,
+  onClear,
+  onToggleSelection,
+  onSelectAll,
+  onDeselectAll,
+  onQuantityChange,
+  onAddSelectedToCart,
+  onImport,
+}: BatchViewProps) {
+  return (
+    <div>
+      {/* Import Button */}
+      <div style={{ marginBottom: '1rem' }}>
+        <Button
+          appearance="outline"
+          icon={<ArrowUpload24Regular />}
+          onClick={onImport}
+        >
+          Import from Spreadsheet
+        </Button>
+      </div>
+
+      {/* Batch Input */}
+      <BatchInput
+        value={rawInput}
+        onChange={setRawInput}
+        onSearch={onSearch}
+        onClear={onClear}
+        modelCount={modelCount}
+        isProcessing={isProcessing}
+        progress={progress}
+      />
+
+      {/* Batch Results */}
+      {items.length > 0 && (
+        <div style={{ marginTop: '1.5rem' }}>
+          <BatchResults
+            items={items}
+            onToggleSelection={onToggleSelection}
+            onSelectAll={onSelectAll}
+            onDeselectAll={onDeselectAll}
+            onQuantityChange={onQuantityChange}
+            onAddSelectedToCart={onAddSelectedToCart}
+            selectedCount={selectedCount}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+// =============================================================================
+// CART VIEW
+// =============================================================================
+
 interface CartViewProps {
   items: CartItem[];
   summary: any;
@@ -313,14 +646,18 @@ interface CartViewProps {
 }
 
 function CartView({ items, summary, onRemove, onQuantityChange, onClear }: CartViewProps) {
+  const styles = useStyles();
+
   if (items.length === 0) {
     return (
-      <div style={{ textAlign: 'center', padding: '3rem', color: theme.colors.textMuted }}>
-        <p style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>📋</p>
-        <p>Your BOM is empty</p>
-        <p style={{ fontSize: theme.typography.fontSizes.sm }}>
+      <div className={styles.emptyCart}>
+        <Text className={styles.emptyCartIcon} block>
+          <ClipboardBulletListLtrRegular style={{ width: 48, height: 48 }} />
+        </Text>
+        <Text block>Your BOM is empty</Text>
+        <Text size={200} block>
           Search for cameras and add them to build a quote
-        </p>
+        </Text>
       </div>
     );
   }
@@ -332,29 +669,20 @@ function CartView({ items, summary, onRemove, onQuantityChange, onClear }: CartV
 
   return (
     <div>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '1rem',
-      }}>
-        <h2 style={{ margin: 0 }}>BOM ({summaryLine})</h2>
-        <button
+      <div className={styles.cartHeader}>
+        <Text size={500} weight="semibold">
+          BOM ({summaryLine})
+        </Text>
+        <Button
           onClick={onClear}
-          style={{
-            padding: '0.5rem 1rem',
-            border: 'none',
-            borderRadius: theme.borderRadius.sm,
-            backgroundColor: theme.colors.error,
-            color: '#fff',
-            cursor: 'pointer',
-          }}
+          appearance="primary"
+          style={{ backgroundColor: axisTokens.error }}
         >
           Clear BOM
-        </button>
+        </Button>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      <div className={styles.cartList}>
         {items.map((item) => (
           <CartItemRow
             key={item.id}
@@ -365,50 +693,57 @@ function CartView({ items, summary, onRemove, onQuantityChange, onClear }: CartV
         ))}
       </div>
 
-      <div style={{
-        marginTop: '1.5rem',
-        padding: '1rem',
-        backgroundColor: theme.colors.bgAlt,
-        borderRadius: theme.borderRadius.md,
-        textAlign: 'right',
-      }}>
-        <div style={{ fontSize: theme.typography.fontSizes.lg, fontWeight: 700 }}>
+      <div className={styles.cartSummary}>
+        <Text className={styles.cartTotal} block>
           Total: {summary.formattedTotal}
-        </div>
+        </Text>
         {summary.unknownPriceCount > 0 && (
-          <div style={{ fontSize: theme.typography.fontSizes.sm, color: theme.colors.textMuted }}>
+          <Text className={styles.cartTbd} block>
             + {summary.unknownPriceCount} items with TBD pricing
-          </div>
+          </Text>
         )}
       </div>
     </div>
   );
 }
 
+// =============================================================================
+// INFO VIEW
+// =============================================================================
+
 function InfoView() {
+  const styles = useStyles();
+
   return (
-    <div style={{ maxWidth: '600px' }}>
-      <h2>About AxisX v3</h2>
-      <p>
+    <div className={styles.infoSection}>
+      <Text as="h2" size={600} weight="semibold">
+        About AxisX v3
+      </Text>
+      <Text block>
         AxisX is the industry's most comprehensive camera cross-reference tool,
         helping security professionals find the perfect Axis replacement for any
         competitor camera.
-      </p>
+      </Text>
 
-      <h3 style={{ marginTop: '1.5rem' }}>New in v3</h3>
-      <ul style={{ lineHeight: 1.8 }}>
-        <li>✅ <strong>TypeScript</strong> - 100% typed for reliability</li>
-        <li>✅ <strong>Voice Search</strong> - Hands-free model lookup</li>
-        <li>✅ <strong>Verified URLs</strong> - No more broken Axis.com links</li>
-        <li>✅ <strong>Improved Search</strong> - Smarter fuzzy matching</li>
-        <li>✅ <strong>Faster</strong> - Indexed lookups, instant results</li>
+      <Text as="h3" size={500} weight="semibold" className={styles.infoHeading}>
+        New in v3
+      </Text>
+      <ul className={styles.infoList}>
+        <li><strong>TypeScript</strong> - 100% typed for reliability</li>
+        <li><strong>Fluent UI</strong> - Modern Axis-branded interface</li>
+        <li><strong>Voice Search</strong> - Hands-free model lookup</li>
+        <li><strong>Verified URLs</strong> - No more broken Axis.com links</li>
+        <li><strong>Improved Search</strong> - Smarter fuzzy matching</li>
+        <li><strong>Faster</strong> - Indexed lookups, instant results</li>
       </ul>
 
-      <h3 style={{ marginTop: '1.5rem' }}>Manufacturers Covered</h3>
-      <p>
-        Hikvision, Dahua, Uniview, Verkada, Rhombus, Hanwha Vision, 
+      <Text as="h3" size={500} weight="semibold" className={styles.infoHeading}>
+        Manufacturers Covered
+      </Text>
+      <Text block>
+        Hikvision, Dahua, Uniview, Verkada, Rhombus, Hanwha Vision,
         i-PRO, Avigilon, Pelco, Vivotek, Bosch, Sony, and more.
-      </p>
+      </Text>
     </div>
   );
 }

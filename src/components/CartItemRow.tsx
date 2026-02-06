@@ -2,11 +2,75 @@
  * CartItemRow Component
  *
  * Displays a single cart item with quantity controls, line total, and remove button.
+ * Migrated to Fluent UI components.
  */
 
+import {
+  Card,
+  Button,
+  Text,
+  makeStyles,
+  tokens,
+} from '@fluentui/react-components';
+import { Dismiss24Regular, Add24Regular, Subtract24Regular } from '@fluentui/react-icons';
 import type { CartItem } from '@/types';
 import { getFormattedPrice } from '@/core/msrp';
-import { theme } from '../theme';
+
+// =============================================================================
+// STYLES
+// =============================================================================
+
+const useStyles = makeStyles({
+  card: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem',
+    padding: '1rem',
+  },
+  modelInfo: {
+    flex: 1,
+    minWidth: 0,
+  },
+  modelName: {
+    fontWeight: tokens.fontWeightSemibold,
+  },
+  replacesText: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  unitPrice: {
+    marginTop: '0.25rem',
+  },
+  quantityControls: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.25rem',
+    backgroundColor: tokens.colorNeutralBackground3,
+    borderRadius: tokens.borderRadiusMedium,
+    padding: '0.25rem',
+  },
+  quantityButton: {
+    minWidth: '32px',
+    width: '32px',
+    height: '32px',
+  },
+  quantityText: {
+    minWidth: '2rem',
+    textAlign: 'center',
+    fontWeight: tokens.fontWeightSemibold,
+  },
+  lineTotal: {
+    minWidth: '5rem',
+    textAlign: 'right',
+    fontWeight: tokens.fontWeightSemibold,
+  },
+  removeButton: {
+    minWidth: '32px',
+    width: '32px',
+    height: '32px',
+  },
+});
 
 // =============================================================================
 // TYPES
@@ -28,7 +92,7 @@ export interface CartItemRowProps {
 // =============================================================================
 
 /**
- * Format line total (msrp × quantity) or "TBD"
+ * Format line total (msrp x quantity) or "TBD"
  */
 function formatLineTotal(msrp: number | null, quantity: number): string {
   if (msrp === null) {
@@ -47,147 +111,70 @@ function formatLineTotal(msrp: number | null, quantity: number): string {
 // =============================================================================
 
 export function CartItemRow({ item, onQuantityChange, onRemove }: CartItemRowProps) {
+  const styles = useStyles();
   const unitPrice = getFormattedPrice(item.model);
   const lineTotal = formatLineTotal(item.msrp, item.quantity);
 
   return (
-    <div
-      style={{
-        padding: '1rem',
-        borderRadius: theme.borderRadius.md,
-        border: `1px solid ${theme.colors.border}`,
-        backgroundColor: theme.colors.bgCard,
-        display: 'flex',
-        alignItems: 'center',
-        gap: '1rem',
-      }}
-    >
+    <Card className={styles.card} appearance="outline">
       {/* Model info */}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontWeight: 600, color: theme.colors.textPrimary }}>
+      <div className={styles.modelInfo}>
+        <Text className={styles.modelName} block>
           {item.model}
-        </div>
+        </Text>
         {item.competitorModel && (
-          <div
-            style={{
-              fontSize: theme.typography.fontSizes.sm,
-              color: theme.colors.textMuted,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
-          >
+          <Text size={200} className={styles.replacesText} block>
             Replaces: {item.competitorModel}
             {item.competitorManufacturer && ` (${item.competitorManufacturer})`}
-          </div>
+          </Text>
         )}
-        <div
-          style={{
-            fontSize: theme.typography.fontSizes.xs,
-            color: theme.colors.textMuted,
-            marginTop: '0.25rem',
-          }}
-        >
+        <Text size={100} className={styles.unitPrice} block>
           {unitPrice} each
-        </div>
+        </Text>
       </div>
 
       {/* Quantity controls */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.25rem',
-          backgroundColor: theme.colors.bgAlt,
-          borderRadius: theme.borderRadius.sm,
-          padding: '0.25rem',
-        }}
-      >
-        <button
+      <div className={styles.quantityControls}>
+        <Button
           onClick={() => onQuantityChange(item.quantity - 1)}
           disabled={item.quantity <= 1}
           aria-label="Decrease quantity"
-          style={{
-            width: '2rem',
-            height: '2rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            border: 'none',
-            borderRadius: theme.borderRadius.sm,
-            backgroundColor: item.quantity <= 1 ? 'transparent' : theme.colors.bgCard,
-            color: item.quantity <= 1 ? theme.colors.textMuted : theme.colors.textPrimary,
-            cursor: item.quantity <= 1 ? 'not-allowed' : 'pointer',
-            fontWeight: 600,
-            fontSize: theme.typography.fontSizes.md,
-          }}
-        >
-          −
-        </button>
-        <span
-          style={{
-            minWidth: '2rem',
-            textAlign: 'center',
-            fontWeight: 600,
-            color: theme.colors.textPrimary,
-          }}
-        >
+          appearance="subtle"
+          size="small"
+          icon={<Subtract24Regular />}
+          className={styles.quantityButton}
+        />
+        <Text className={styles.quantityText}>
           {item.quantity}
-        </span>
-        <button
+        </Text>
+        <Button
           onClick={() => onQuantityChange(item.quantity + 1)}
           aria-label="Increase quantity"
-          style={{
-            width: '2rem',
-            height: '2rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            border: 'none',
-            borderRadius: theme.borderRadius.sm,
-            backgroundColor: theme.colors.bgCard,
-            color: theme.colors.textPrimary,
-            cursor: 'pointer',
-            fontWeight: 600,
-            fontSize: theme.typography.fontSizes.md,
-          }}
-        >
-          +
-        </button>
+          appearance="subtle"
+          size="small"
+          icon={<Add24Regular />}
+          className={styles.quantityButton}
+        />
       </div>
 
       {/* Line total */}
-      <div
-        style={{
-          minWidth: '5rem',
-          textAlign: 'right',
-          fontWeight: 600,
-          color: item.msrp !== null ? theme.colors.textPrimary : theme.colors.textMuted,
-          fontSize: theme.typography.fontSizes.md,
-        }}
+      <Text
+        className={styles.lineTotal}
+        style={{ color: item.msrp !== null ? undefined : tokens.colorNeutralForeground3 }}
       >
         {lineTotal}
-      </div>
+      </Text>
 
       {/* Remove button */}
-      <button
+      <Button
         onClick={onRemove}
         aria-label="Remove item"
-        style={{
-          width: '2rem',
-          height: '2rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          border: 'none',
-          background: 'none',
-          cursor: 'pointer',
-          color: theme.colors.error,
-          fontSize: theme.typography.fontSizes.lg,
-        }}
-      >
-        ✕
-      </button>
-    </div>
+        appearance="subtle"
+        size="small"
+        icon={<Dismiss24Regular />}
+        className={styles.removeButton}
+        style={{ color: tokens.colorPaletteRedForeground1 }}
+      />
+    </Card>
   );
 }

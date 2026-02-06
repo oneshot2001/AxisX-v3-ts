@@ -9,77 +9,70 @@ AxisX v3 is a camera cross-reference tool for Axis Communications sales professi
 ## Development Commands
 
 ```bash
-npm install                  # Install dependencies
-npm run dev                  # Dev server (port 5173)
-npm test                     # Run all tests
-npm test -- path/to/file     # Single test file
-npm test -- --watch          # Watch mode
-npm run test:ui              # Visual test UI
-npm run test:coverage        # Coverage report
-npm run typecheck            # TypeScript validation only
-npm run lint                 # ESLint
-npm run build                # Production build
-npm run deploy               # Build + deploy to Vercel
+npm run dev              # Vite dev server (port 5173, auto-opens browser)
+npm run build            # TypeScript compile + Vite production build
+npm run preview          # Preview production build locally
+npm run typecheck        # TypeScript validation only
+npm run lint             # ESLint (strict, 0 warnings allowed)
+npm test                 # Run all tests (Vitest)
+npm test -- file.test.ts # Run single test file
+npm test -- --watch      # Watch mode
+npm run test:ui          # Visual test dashboard
+npm run test:coverage    # Coverage report
+npm run deploy           # Build + deploy to Vercel
 ```
-
-## Deployment
-
-The `npm run deploy` command runs type checking, builds for production, and deploys to Vercel. Ensure you have Vercel CLI configured (`npx vercel login`) before first deploy.
 
 ## Architecture
 
 ### Three-Layer Separation
 
 ```
-src/core/       → Pure TypeScript business logic (NO React imports)
+src/core/       → Pure TypeScript business logic (NO React imports allowed)
 src/hooks/      → React hooks wrapping core logic
 src/components/ → React UI components consuming hooks
 ```
 
-This separation is intentional: core algorithms are testable without React and can be reused outside the React context.
+Core algorithms are testable without React and can be reused outside the React context.
 
 ### Type System
 
-All types live in `src/types/index.ts` (764 lines, 12 sections). This is the single source of truth. Key interfaces:
+All types centralized in `src/types/index.ts` (764 lines, 12 sections). Key interfaces:
 
 - `ISearchEngine` - Search contract with query routing
 - `IURLResolver` - URL resolution cascade contract
 - `IMSRPLookup` - Price lookup contract
-- `SearchResponse` - Complete search result with grouping & confidence
+- `SearchResponse` / `SearchResult` - Search result structures
 - `CompetitorMapping` / `LegacyAxisMapping` - Data structures
 
-Import types with: `import type { SearchResult } from '@/types';`
+Import types: `import type { SearchResult } from '@/types';`
 
 ### Path Aliases
 
 ```typescript
-@/         → src/
-@/types    → src/types/index.ts
-@/core/*   → src/core/*
-@/hooks/*  → src/hooks/*
+@/             → src/
+@/types        → src/types/index.ts
+@/core/*       → src/core/*
+@/hooks/*      → src/hooks/*
 @/components/* → src/components/*
-@/data/*   → src/data/*
+@/data/*       → src/data/*
 ```
 
-### Search System
+### Search System (`src/core/search/`)
 
-Query flow through `src/core/search/`:
-
+Query flow:
 1. `queryParser.ts` detects type: competitor | legacy | axis-model | axis-browse | manufacturer
-2. `engine.ts` routes to appropriate handler and builds multi-level indexes
-3. `fuzzy.ts` performs Levenshtein matching with configurable thresholds:
-   - **EXACT** = 90+ (near-perfect match)
-   - **PARTIAL** = 70-89 (good match with minor differences)
-   - **SIMILAR** = 50-69 (fuzzy match, may need verification)
-4. Results grouped by quality tier: exact → partial → similar
+2. `engine.ts` routes to appropriate handler with multi-level indexes
+3. `fuzzy.ts` performs Levenshtein matching with thresholds:
+   - **EXACT** (90+): near-perfect match
+   - **PARTIAL** (70-89): good match with minor differences
+   - **SIMILAR** (50-69): fuzzy match, may need verification
 
-### URL Resolution Cascade
+### URL Resolution Cascade (`src/core/url/resolver.ts`)
 
-`src/core/url/resolver.ts` implements 5-step fallback for URL resolution:
-
+5-step fallback for 100% URL accuracy:
 1. **Aliases** - Typo/variant corrections redirect to canonical model
 2. **Verified** - Hardcoded known-good URLs (exact match)
-3. **Base model** - Strip variant suffixes (-60HZ, -EUR, -24V, lens sizes) and check verified
+3. **Base model** - Strip variant suffixes (-60HZ, -EUR, -24V, lens sizes)
 4. **Discontinued check** - Search fallback for discontinued models
 5. **Generated** - Construct URL from pattern `axis.com/products/axis-{model}`
 
@@ -87,7 +80,7 @@ Confidence levels: `'verified' | 'alias' | 'generated' | 'search-fallback'`
 
 ### NDAA Categories
 
-Competitor manufacturers are categorized for Section 889 compliance filtering:
+Competitor manufacturers categorized for Section 889 compliance:
 - **NDAA banned**: Hikvision, Dahua, Uniview
 - **Cloud**: Verkada, Rhombus (subscription-based)
 - **Korean**: Hanwha Vision
@@ -96,80 +89,72 @@ Competitor manufacturers are categorized for Section 889 compliance filtering:
 
 ## Key Patterns
 
-### Adding Core Logic
+### Adding New Features
 
-New business logic goes in `src/core/` as pure functions with no React:
+1. Add types to `src/types/index.ts`
+2. Implement pure function in `src/core/`
+3. Wrap with hook in `src/hooks/`
+4. Create component in `src/components/`
+5. Write tests in `tests/`
+
+### JSON Data Imports
+
+Data files in `src/data/` require `as any` cast due to TypeScript JSON module limitations:
 
 ```typescript
-// src/core/newfeature/processor.ts
-export function processData(input: InputType): OutputType {
-  // Pure function, fully testable
-}
+import crossrefRaw from '@/data/crossref_data.json';
+const data = crossrefRaw as CrossRefData;
 ```
 
-Then wrap in a hook at `src/hooks/useNewFeature.ts` for React consumption.
+### Hook APIs
 
-### Hook Usage
-
-**useSearch** - Debounced search with 150ms delay:
+**useSearch** - Debounced search (150ms):
 ```typescript
 const { results, isSearching, query, setQuery } = useSearch();
-// setQuery triggers debounced search automatically
 ```
 
-**useCart** - BOM (Bill of Materials) management:
+**useCart** - BOM management with localStorage persistence:
 ```typescript
 const { items, addItem, removeItem, updateQuantity, clearCart, totalMSRP } = useCart();
-// items persist to localStorage
 ```
 
-**useVoice** - Voice input via Web Speech API:
+**useVoice** - Web Speech API:
 ```typescript
 const { isListening, startListening, stopListening, transcript } = useVoice();
 ```
 
-### Data Files
+### Data File Structures
 
-Static JSON in `src/data/` is bundled at build time:
-- `crossref_data.json` - Competitor→Axis mappings
-- `axis_msrp_data.json` - Price lookup table
-
-#### Updating Product Data
-
-When updating with new Axis product guides:
-
-1. **Expected JSON structure** for `crossref_data.json`:
+**crossref_data.json:**
 ```json
 {
-  "mappings": [
-    {
-      "competitor": "COMPETITOR-MODEL",
-      "manufacturer": "Manufacturer Name",
-      "axis_replacements": ["AXIS-MODEL-1", "AXIS-MODEL-2"],
-      "notes": "Optional migration notes"
-    }
-  ]
+  "mappings": [{
+    "competitor": "COMPETITOR-MODEL",
+    "manufacturer": "Manufacturer Name",
+    "axis_replacements": ["AXIS-MODEL-1"],
+    "notes": "Optional migration notes"
+  }]
 }
 ```
 
-2. **Expected JSON structure** for `axis_msrp_data.json`:
+**axis_msrp_data.json:**
 ```json
 {
-  "AXIS-MODEL-1": { "msrp": 1299.00, "description": "Product description" },
-  "AXIS-MODEL-2": { "msrp": 2499.00, "description": "Product description" }
+  "AXIS-MODEL-1": { "msrp": 1299.00, "description": "Product description" }
 }
 ```
 
-3. **Verify after update**:
-   - Run `npm run typecheck` to catch any schema mismatches
-   - Run `npm test` to ensure search indexing works correctly
-   - Test search for new models in dev mode
+After updating data files: run `npm run typecheck` then `npm test`.
 
-### Testing
+## Testing
 
-Tests in `tests/` using Vitest with `@testing-library/jest-dom` matchers. Setup in `tests/setup.ts`. Current test files:
+Tests in `tests/` use Vitest with `@testing-library/jest-dom` matchers:
 - `search.test.ts` - Fuzzy matching, query parsing, search engine
 - `url.test.ts` - URL resolution cascade
+
+## Deployment
+
+`npm run deploy` runs type checking, builds for production, and deploys to Vercel. Requires `npx vercel login` before first deploy.
 
 ## Roadmap
 

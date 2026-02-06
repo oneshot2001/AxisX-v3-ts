@@ -3,11 +3,62 @@
  *
  * Search input with voice toggle, keyboard shortcuts, and loading states.
  * Designed for field use with voice-first workflow.
+ *
+ * Migrated to Fluent UI components.
  */
 
 import { useCallback, useRef, useEffect } from 'react';
-import { Mic } from 'lucide-react';
-import { theme } from '../theme';
+import {
+  Input,
+  Button,
+  Spinner,
+  makeStyles,
+  tokens,
+} from '@fluentui/react-components';
+import { Mic24Regular, Mic24Filled, Search24Regular } from '@fluentui/react-icons';
+
+// =============================================================================
+// STYLES
+// =============================================================================
+
+const useStyles = makeStyles({
+  container: {
+    display: 'flex',
+    gap: '0.5rem',
+    position: 'relative',
+  },
+  inputWrapper: {
+    flex: 1,
+    position: 'relative',
+  },
+  input: {
+    width: '100%',
+    fontSize: tokens.fontSizeBase400,
+  },
+  spinnerContainer: {
+    position: 'absolute',
+    right: '0.75rem',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  voiceButton: {
+    minWidth: '44px',
+    height: '44px',
+  },
+  voiceButtonListening: {
+    minWidth: '44px',
+    height: '44px',
+    animationName: {
+      '0%': { boxShadow: '0 0 0 0 rgba(239, 68, 68, 0.7)' },
+      '70%': { boxShadow: '0 0 0 10px rgba(239, 68, 68, 0)' },
+      '100%': { boxShadow: '0 0 0 0 rgba(239, 68, 68, 0)' },
+    },
+    animationDuration: '1.5s',
+    animationIterationCount: 'infinite',
+  },
+});
 
 // =============================================================================
 // TYPES
@@ -57,6 +108,7 @@ export function SearchInput({
   voice,
   autoFocus = false,
 }: SearchInputProps) {
+  const styles = useStyles();
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Auto-focus on mount
@@ -89,89 +141,41 @@ export function SearchInput({
   const showVoiceButton = voice?.enabled === true;
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        gap: '0.5rem',
-        position: 'relative',
-      }}
-    >
+    <div className={styles.container}>
       {/* Search Input */}
-      <input
-        ref={inputRef}
-        type="text"
-        value={value}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        placeholder={placeholder}
-        aria-label="Search for camera models"
-        style={{
-          flex: 1,
-          padding: '0.75rem 1rem',
-          paddingRight: isLoading ? '2.5rem' : '1rem',
-          fontSize: '1rem',
-          borderRadius: theme.borderRadius.md,
-          border: `2px solid ${theme.colors.border}`,
-          outline: 'none',
-          transition: 'border-color 0.15s ease',
-        }}
-      />
-
-      {/* Loading Indicator */}
-      {isLoading && (
-        <div
-          role="status"
-          aria-label="Searching"
-          style={{
-            position: 'absolute',
-            right: showVoiceButton ? '3.5rem' : '0.75rem',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            width: '1.25rem',
-            height: '1.25rem',
-            border: `2px solid ${theme.colors.border}`,
-            borderTopColor: theme.colors.primary,
-            borderRadius: '50%',
-            animation: 'spin 0.8s linear infinite',
-          }}
+      <div className={styles.inputWrapper}>
+        <Input
+          ref={inputRef}
+          type="text"
+          value={value}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholder}
+          aria-label="Search for camera models"
+          className={styles.input}
+          size="large"
+          appearance="outline"
+          contentBefore={<Search24Regular />}
+          contentAfter={isLoading ? (
+            <Spinner size="tiny" aria-label="Searching" />
+          ) : undefined}
         />
-      )}
+      </div>
 
       {/* Voice Button */}
       {showVoiceButton && (
-        <button
-          type="button"
+        <Button
           onClick={voice.onToggle}
           aria-label="Voice search"
           aria-pressed={voice.isListening}
+          appearance={voice.isListening ? 'primary' : 'secondary'}
+          className={voice.isListening ? styles.voiceButtonListening : styles.voiceButton}
+          icon={voice.isListening ? <Mic24Filled /> : <Mic24Regular />}
           style={{
-            padding: '0.75rem 1rem',
-            borderRadius: theme.borderRadius.md,
-            border: 'none',
-            cursor: 'pointer',
-            backgroundColor: voice.isListening
-              ? theme.colors.error
-              : theme.colors.bgAlt,
-            color: voice.isListening ? '#fff' : theme.colors.textPrimary,
-            fontSize: '1.25rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transition: 'background-color 0.15s ease',
+            backgroundColor: voice.isListening ? '#EF4444' : undefined,
           }}
-        >
-          <Mic size={20} />
-        </button>
+        />
       )}
-
-      {/* Keyframe animation for spinner */}
-      <style>
-        {`
-          @keyframes spin {
-            to { transform: translateY(-50%) rotate(360deg); }
-          }
-        `}
-      </style>
     </div>
   );
 }

@@ -256,7 +256,8 @@ describe('SearchInput', () => {
         />
       );
 
-      expect(screen.getByRole('status')).toBeInTheDocument();
+      // Fluent UI Spinner uses role="progressbar"
+      expect(screen.getByRole('progressbar')).toBeInTheDocument();
     });
 
     it('hides loading indicator when isLoading is false', () => {

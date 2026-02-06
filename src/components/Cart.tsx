@@ -6,12 +6,112 @@
  * - List of CartItemRow components
  * - Summary footer with totals
  * - Clear cart action
+ *
+ * Migrated to Fluent UI components.
  */
 
-import { ShoppingCart, Trash2 } from 'lucide-react';
+import {
+  Card,
+  Button,
+  Text,
+  makeStyles,
+  tokens,
+} from '@fluentui/react-components';
+import { Cart24Regular, Delete24Regular } from '@fluentui/react-icons';
 import type { CartItem, CartSummary } from '@/types';
 import { CartItemRow } from './CartItemRow';
-import { theme } from '../theme';
+import { axisTokens } from '@/styles/fluentTheme';
+
+// =============================================================================
+// STYLES
+// =============================================================================
+
+const useStyles = makeStyles({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    overflow: 'hidden',
+  },
+  header: {
+    padding: '1rem',
+    borderBottom: `1px solid ${tokens.colorNeutralStroke1}`,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerLeft: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.75rem',
+  },
+  headerTitle: {
+    fontWeight: tokens.fontWeightSemibold,
+    fontSize: tokens.fontSizeBase500,
+  },
+  itemCountBadge: {
+    backgroundColor: axisTokens.primary,
+    color: '#000',
+    padding: '0.25rem 0.75rem',
+    borderRadius: tokens.borderRadiusCircular,
+    fontSize: tokens.fontSizeBase200,
+    fontWeight: tokens.fontWeightSemibold,
+  },
+  itemList: {
+    flex: 1,
+    overflowY: 'auto',
+    padding: '1rem',
+  },
+  itemListContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.75rem',
+  },
+  emptyState: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    minHeight: '200px',
+    textAlign: 'center',
+    color: tokens.colorNeutralForeground3,
+  },
+  emptyIcon: {
+    marginBottom: '1rem',
+    opacity: 0.5,
+  },
+  emptyTitle: {
+    marginBottom: '0.5rem',
+  },
+  footer: {
+    padding: '1rem',
+    borderTop: `1px solid ${tokens.colorNeutralStroke1}`,
+    backgroundColor: tokens.colorNeutralBackground3,
+  },
+  summaryRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    marginBottom: '1rem',
+  },
+  summaryLabel: {
+    color: tokens.colorNeutralForeground3,
+    fontSize: tokens.fontSizeBase200,
+  },
+  unknownPriceWarning: {
+    color: axisTokens.warning,
+    fontSize: tokens.fontSizeBase100,
+    marginTop: '0.25rem',
+  },
+  totalAmount: {
+    fontSize: tokens.fontSizeBase600,
+    fontWeight: tokens.fontWeightBold,
+  },
+  clearButton: {
+    width: '100%',
+  },
+});
 
 // =============================================================================
 // TYPES
@@ -49,89 +149,38 @@ export function Cart({
   onClear,
   title = 'BOM Cart',
 }: CartProps) {
+  const styles = useStyles();
   const isEmpty = items.length === 0;
   const itemCountLabel = summary.uniqueModels === 1 ? '1 item' : `${summary.uniqueModels} items`;
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        backgroundColor: theme.colors.bgMain,
-        borderRadius: theme.borderRadius.lg,
-        border: `1px solid ${theme.colors.border}`,
-        overflow: 'hidden',
-      }}
-    >
+    <Card className={styles.container} appearance="outline">
       {/* Header */}
-      <div
-        style={{
-          padding: '1rem',
-          borderBottom: `1px solid ${theme.colors.border}`,
-          backgroundColor: theme.colors.bgCard,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <ShoppingCart size={20} color={theme.colors.primary} />
-          <span
-            style={{
-              fontWeight: 600,
-              fontSize: theme.typography.fontSizes.lg,
-              color: theme.colors.textPrimary,
-            }}
-          >
-            {title}
-          </span>
+      <div className={styles.header}>
+        <div className={styles.headerLeft}>
+          <Cart24Regular style={{ color: axisTokens.primary }} />
+          <Text className={styles.headerTitle}>{title}</Text>
         </div>
-        <span
-          style={{
-            backgroundColor: theme.colors.primary,
-            color: '#fff',
-            padding: '0.25rem 0.75rem',
-            borderRadius: theme.borderRadius.full,
-            fontSize: theme.typography.fontSizes.sm,
-            fontWeight: 600,
-          }}
-        >
-          {itemCountLabel}
-        </span>
+        <span className={styles.itemCountBadge}>{itemCountLabel}</span>
       </div>
 
       {/* Item List */}
-      <div
-        style={{
-          flex: 1,
-          overflowY: 'auto',
-          padding: '1rem',
-        }}
-      >
+      <div className={styles.itemList}>
         {isEmpty ? (
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%',
-              minHeight: '200px',
-              color: theme.colors.textMuted,
-              textAlign: 'center',
-            }}
-          >
-            <ShoppingCart size={48} style={{ marginBottom: '1rem', opacity: 0.5 }} />
-            <p style={{ fontSize: theme.typography.fontSizes.md, marginBottom: '0.5rem' }}>
+          <div className={styles.emptyState}>
+            <Cart24Regular
+              style={{ width: 48, height: 48 }}
+              className={styles.emptyIcon}
+            />
+            <Text size={400} className={styles.emptyTitle}>
               Your BOM is empty
-            </p>
-            <p style={{ fontSize: theme.typography.fontSizes.sm }}>
+            </Text>
+            <Text size={200}>
               Search for cameras and add them to your BOM
-            </p>
+            </Text>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div className={styles.itemListContent}>
             {items.map((item) => (
               <CartItemRow
                 key={item.id}
@@ -145,81 +194,37 @@ export function Cart({
       </div>
 
       {/* Footer */}
-      <div
-        style={{
-          padding: '1rem',
-          borderTop: `1px solid ${theme.colors.border}`,
-          backgroundColor: theme.colors.bgAlt,
-        }}
-      >
+      <div className={styles.footer}>
         {/* Summary */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'baseline',
-            marginBottom: '1rem',
-          }}
-        >
+        <div className={styles.summaryRow}>
           <div>
-            <span
-              style={{
-                fontSize: theme.typography.fontSizes.sm,
-                color: theme.colors.textMuted,
-              }}
-            >
-              Total MSRP
-            </span>
+            <Text className={styles.summaryLabel}>Total MSRP</Text>
             {summary.unknownPriceCount > 0 && (
-              <div
-                style={{
-                  fontSize: theme.typography.fontSizes.xs,
-                  color: theme.colors.warning,
-                  marginTop: '0.25rem',
-                }}
-              >
+              <Text className={styles.unknownPriceWarning} block>
                 {summary.unknownPriceCount} item{summary.unknownPriceCount !== 1 ? 's' : ''} with
                 price TBD
-              </div>
+              </Text>
             )}
           </div>
-          <span
-            style={{
-              fontSize: theme.typography.fontSizes.xl,
-              fontWeight: 700,
-              color: theme.colors.textPrimary,
-            }}
-          >
-            {summary.formattedTotal}
-          </span>
+          <Text className={styles.totalAmount}>{summary.formattedTotal}</Text>
         </div>
 
         {/* Clear BOM Button */}
-        <button
+        <Button
           onClick={onClear}
           disabled={isEmpty}
           aria-label="Clear BOM"
+          appearance="outline"
+          className={styles.clearButton}
+          icon={<Delete24Regular />}
           style={{
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '0.5rem',
-            padding: '0.75rem 1rem',
-            border: `1px solid ${isEmpty ? theme.colors.border : theme.colors.error}`,
-            borderRadius: theme.borderRadius.md,
-            backgroundColor: 'transparent',
-            color: isEmpty ? theme.colors.textMuted : theme.colors.error,
-            cursor: isEmpty ? 'not-allowed' : 'pointer',
-            fontWeight: 600,
-            fontSize: theme.typography.fontSizes.sm,
-            transition: 'background-color 0.2s ease',
+            borderColor: isEmpty ? undefined : axisTokens.error,
+            color: isEmpty ? undefined : axisTokens.error,
           }}
         >
-          <Trash2 size={16} />
           Clear BOM
-        </button>
+        </Button>
       </div>
-    </div>
+    </Card>
   );
 }

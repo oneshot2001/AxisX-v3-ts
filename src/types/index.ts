@@ -762,3 +762,67 @@ export type DeepReadonly<T> = {
 export function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
+
+// =============================================================================
+// 13. BATCH OPERATIONS
+// =============================================================================
+
+/** Single item in a batch search */
+export interface BatchSearchItem {
+  readonly id: string;
+  readonly input: string;
+  readonly response: SearchResponse | null;
+  readonly selected: boolean;
+  readonly quantity: number;
+  readonly status: 'pending' | 'searching' | 'complete' | 'error';
+  readonly error?: string;
+}
+
+/** Batch search state */
+export interface BatchSearchState {
+  readonly items: readonly BatchSearchItem[];
+  readonly processing: boolean;
+  readonly progress: { readonly current: number; readonly total: number };
+}
+
+/** Batch search progress info */
+export interface BatchProgress {
+  readonly current: number;
+  readonly total: number;
+  readonly percent: number;
+}
+
+// =============================================================================
+// 14. SPREADSHEET IMPORT
+// =============================================================================
+
+/** Supported spreadsheet file types */
+export type SpreadsheetFileType = 'csv' | 'xlsx' | 'xls';
+
+/** Parsed spreadsheet data */
+export interface SpreadsheetImportResult {
+  readonly filename: string;
+  readonly fileType: SpreadsheetFileType;
+  readonly rows: readonly string[][];
+  readonly headers: readonly string[];
+  readonly rowCount: number;
+}
+
+/** Column mapping configuration */
+export interface SpreadsheetColumnMapping {
+  readonly modelColumn: number;
+  readonly quantityColumn?: number;
+  readonly manufacturerColumn?: number;
+}
+
+/** Validation status for an imported row */
+export type SpreadsheetValidationStatus = 'found' | 'not-found' | 'duplicate' | 'invalid';
+
+/** Validation result for a single row */
+export interface SpreadsheetValidationResult {
+  readonly row: number;
+  readonly input: string;
+  readonly status: SpreadsheetValidationStatus;
+  readonly searchResponse?: SearchResponse;
+  readonly quantity: number;
+}

@@ -7,14 +7,105 @@
  * - Similar Matches (50-69)
  *
  * Includes optional category filtering via CategoryFilter component.
- * Sections are collapsible with expandable headers.
+ * Sections are collapsible with expandable headers using Fluent UI Accordion.
+ *
+ * Migrated to Fluent UI components.
  */
 
 import { useState, useMemo } from 'react';
+import {
+  Accordion,
+  AccordionItem,
+  AccordionHeader,
+  AccordionPanel,
+  Button,
+  Text,
+  makeStyles,
+  tokens,
+} from '@fluentui/react-components';
 import type { SearchResponse, SearchResult, CategoryId } from '@/types';
 import { ResultCard } from './ResultCard';
 import { CategoryFilter } from './CategoryFilter';
-import { theme } from '../theme';
+import { axisTokens } from '@/styles/fluentTheme';
+
+// =============================================================================
+// STYLES
+// =============================================================================
+
+const useStyles = makeStyles({
+  container: {},
+  metadata: {
+    marginBottom: '1rem',
+    fontSize: tokens.fontSizeBase200,
+    color: tokens.colorNeutralForeground3,
+  },
+  noResults: {
+    textAlign: 'center',
+    padding: '2rem',
+    color: tokens.colorNeutralForeground3,
+  },
+  noResultsTitle: {
+    fontSize: tokens.fontSizeBase500,
+    marginBottom: '0.5rem',
+  },
+  suggestionButton: {
+    marginLeft: '0.5rem',
+    textDecoration: 'underline',
+  },
+  accordionItem: {
+    marginBottom: '1rem',
+  },
+  accordionHeader: {
+    borderLeftWidth: '4px',
+    borderLeftStyle: 'solid',
+    borderRadius: tokens.borderRadiusSmall,
+    backgroundColor: tokens.colorNeutralBackground3,
+  },
+  headerExact: {
+    borderLeftColor: axisTokens.success,
+  },
+  headerPartial: {
+    borderLeftColor: axisTokens.warning,
+  },
+  headerSimilar: {
+    borderLeftColor: tokens.colorNeutralForeground3,
+  },
+  headerContent: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+  },
+  headerTitle: {
+    fontWeight: tokens.fontWeightSemibold,
+  },
+  countBadge: {
+    color: '#fff',
+    padding: '0.125rem 0.5rem',
+    borderRadius: tokens.borderRadiusCircular,
+    fontSize: tokens.fontSizeBase100,
+    fontWeight: tokens.fontWeightSemibold,
+  },
+  countBadgeExact: {
+    backgroundColor: axisTokens.success,
+  },
+  countBadgePartial: {
+    backgroundColor: axisTokens.warning,
+  },
+  countBadgeSimilar: {
+    backgroundColor: tokens.colorNeutralForeground3,
+  },
+  accordionPanel: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.75rem',
+    paddingTop: '0.75rem',
+  },
+  filteredEmpty: {
+    textAlign: 'center',
+    padding: '2rem',
+    color: tokens.colorNeutralForeground3,
+  },
+});
 
 // =============================================================================
 // TYPES
@@ -32,26 +123,6 @@ export interface SearchResultsProps {
 
   /** Show category filter (default: true) */
   showCategoryFilter?: boolean;
-}
-
-interface ResultSectionProps {
-  /** Section title */
-  title: string;
-
-  /** Results to display */
-  results: readonly SearchResult[];
-
-  /** Whether section is expanded */
-  isExpanded: boolean;
-
-  /** Toggle expansion */
-  onToggle: () => void;
-
-  /** Callback when a result is added to cart with optional quantity */
-  onAddToCart: (result: SearchResult, quantity?: number) => void;
-
-  /** Accent color for the header */
-  accentColor: string;
 }
 
 // =============================================================================
@@ -87,92 +158,7 @@ function getCategoryCounts(results: readonly SearchResult[]): Record<CategoryId,
 }
 
 // =============================================================================
-// RESULT SECTION
-// =============================================================================
-
-function ResultSection({
-  title,
-  results,
-  isExpanded,
-  onToggle,
-  onAddToCart,
-  accentColor,
-}: ResultSectionProps) {
-  if (results.length === 0) {
-    return null;
-  }
-
-  return (
-    <div style={{ marginBottom: '1rem' }}>
-      {/* Section header */}
-      <button
-        onClick={onToggle}
-        style={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '0.75rem 1rem',
-          backgroundColor: theme.colors.bgAlt,
-          border: 'none',
-          borderLeft: `4px solid ${accentColor}`,
-          borderRadius: theme.borderRadius.sm,
-          cursor: 'pointer',
-          marginBottom: isExpanded ? '0.75rem' : 0,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span
-            style={{
-              fontWeight: 600,
-              color: theme.colors.textPrimary,
-              fontSize: theme.typography.fontSizes.md,
-            }}
-          >
-            {title}
-          </span>
-          <span
-            style={{
-              backgroundColor: accentColor,
-              color: '#fff',
-              padding: '0.125rem 0.5rem',
-              borderRadius: theme.borderRadius.full,
-              fontSize: theme.typography.fontSizes.xs,
-              fontWeight: 600,
-            }}
-          >
-            {results.length}
-          </span>
-        </div>
-        <span
-          style={{
-            color: theme.colors.textMuted,
-            transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: 'transform 0.2s ease',
-          }}
-        >
-          ▼
-        </span>
-      </button>
-
-      {/* Results list */}
-      {isExpanded && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          {results.map((result, index) => (
-            <ResultCard
-              key={index}
-              result={result}
-              onAddToCart={(quantity) => onAddToCart(result, quantity)}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-// =============================================================================
-// MAIN COMPONENT
+// COMPONENT
 // =============================================================================
 
 export function SearchResults({
@@ -181,6 +167,8 @@ export function SearchResults({
   onSuggestionClick,
   showCategoryFilter = true,
 }: SearchResultsProps) {
+  const styles = useStyles();
+
   // Category filter state
   const [activeCategory, setActiveCategory] = useState<CategoryId>('all');
 
@@ -205,51 +193,46 @@ export function SearchResults({
 
   const hasExactOrPartial = exactMatches.length > 0 || partialMatches.length > 0;
 
-  // Expansion state - similar collapsed by default if better matches exist
-  const [exactExpanded, setExactExpanded] = useState(true);
-  const [partialExpanded, setPartialExpanded] = useState(true);
-  const [similarExpanded, setSimilarExpanded] = useState(!hasExactOrPartial);
+  // Accordion open items - similar collapsed by default if better matches exist
+  const [openItems, setOpenItems] = useState<string[]>(() => {
+    const initial: string[] = [];
+    if (exactMatches.length > 0) initial.push('exact');
+    if (partialMatches.length > 0) initial.push('partial');
+    if (!hasExactOrPartial && similarMatches.length > 0) initial.push('similar');
+    return initial;
+  });
 
   // No results at all
   if (response.results.length === 0) {
     return (
-      <div
-        style={{
-          textAlign: 'center',
-          padding: '2rem',
-          color: theme.colors.textMuted,
-        }}
-      >
-        <p style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>No matches found</p>
-        <p>Try a different model number or manufacturer</p>
+      <div className={styles.noResults}>
+        <Text className={styles.noResultsTitle} block>
+          No matches found
+        </Text>
+        <Text block>Try a different model number or manufacturer</Text>
 
         {response.suggestions.length > 0 && (
-          <p style={{ marginTop: '1rem' }}>
+          <Text block style={{ marginTop: '1rem' }}>
             Did you mean:{' '}
             {response.suggestions.map((suggestion, i) => (
-              <button
+              <Button
                 key={i}
                 onClick={() => onSuggestionClick(suggestion)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: theme.colors.primary,
-                  cursor: 'pointer',
-                  textDecoration: 'underline',
-                  marginLeft: '0.5rem',
-                }}
+                appearance="transparent"
+                className={styles.suggestionButton}
+                style={{ color: axisTokens.primary }}
               >
                 {suggestion}
-              </button>
+              </Button>
             ))}
-          </p>
+          </Text>
         )}
       </div>
     );
   }
 
   return (
-    <div>
+    <div className={styles.container}>
       {/* Category Filter */}
       {showCategoryFilter && (
         <CategoryFilter
@@ -260,71 +243,108 @@ export function SearchResults({
       )}
 
       {/* Results metadata */}
-      <p
-        style={{
-          color: theme.colors.textMuted,
-          marginBottom: '1rem',
-          fontSize: theme.typography.fontSizes.sm,
-        }}
-      >
+      <Text className={styles.metadata} block>
         {filteredResults.length} results
         {activeCategory !== 'all' && ` (filtered from ${response.results.length})`}
-        {' '}• {response.confidence} confidence • {response.durationMs.toFixed(1)}ms
-      </p>
+        {' '}\u2022 {response.confidence} confidence \u2022 {response.durationMs.toFixed(1)}ms
+      </Text>
 
       {/* No results after filtering */}
       {filteredResults.length === 0 && (
-        <div
-          style={{
-            textAlign: 'center',
-            padding: '2rem',
-            color: theme.colors.textMuted,
-          }}
-        >
-          <p>No results in this category</p>
-          <button
+        <div className={styles.filteredEmpty}>
+          <Text block>No results in this category</Text>
+          <Button
             onClick={() => setActiveCategory('all')}
-            style={{
-              marginTop: '0.5rem',
-              background: 'none',
-              border: 'none',
-              color: theme.colors.primary,
-              cursor: 'pointer',
-              textDecoration: 'underline',
-            }}
+            appearance="transparent"
+            style={{ marginTop: '0.5rem', color: axisTokens.primary, textDecoration: 'underline' }}
           >
             Show all results
-          </button>
+          </Button>
         </div>
       )}
 
-      {/* Grouped sections */}
-      <ResultSection
-        title="Exact Matches"
-        results={exactMatches}
-        isExpanded={exactExpanded}
-        onToggle={() => setExactExpanded(!exactExpanded)}
-        onAddToCart={onAddToCart}
-        accentColor={theme.colors.success}
-      />
+      {/* Grouped sections using Accordion */}
+      <Accordion
+        multiple
+        collapsible
+        openItems={openItems}
+        onToggle={(_, data) => setOpenItems(data.openItems as string[])}
+      >
+        {/* Exact Matches */}
+        {exactMatches.length > 0 && (
+          <AccordionItem value="exact" className={styles.accordionItem}>
+            <AccordionHeader
+              className={`${styles.accordionHeader} ${styles.headerExact}`}
+            >
+              <div className={styles.headerContent}>
+                <Text className={styles.headerTitle}>Exact Matches</Text>
+                <span className={`${styles.countBadge} ${styles.countBadgeExact}`}>
+                  {exactMatches.length}
+                </span>
+              </div>
+            </AccordionHeader>
+            <AccordionPanel className={styles.accordionPanel}>
+              {exactMatches.map((result, index) => (
+                <ResultCard
+                  key={index}
+                  result={result}
+                  onAddToCart={(quantity) => onAddToCart(result, quantity)}
+                />
+              ))}
+            </AccordionPanel>
+          </AccordionItem>
+        )}
 
-      <ResultSection
-        title="Partial Matches"
-        results={partialMatches}
-        isExpanded={partialExpanded}
-        onToggle={() => setPartialExpanded(!partialExpanded)}
-        onAddToCart={onAddToCart}
-        accentColor={theme.colors.warning}
-      />
+        {/* Partial Matches */}
+        {partialMatches.length > 0 && (
+          <AccordionItem value="partial" className={styles.accordionItem}>
+            <AccordionHeader
+              className={`${styles.accordionHeader} ${styles.headerPartial}`}
+            >
+              <div className={styles.headerContent}>
+                <Text className={styles.headerTitle}>Partial Matches</Text>
+                <span className={`${styles.countBadge} ${styles.countBadgePartial}`}>
+                  {partialMatches.length}
+                </span>
+              </div>
+            </AccordionHeader>
+            <AccordionPanel className={styles.accordionPanel}>
+              {partialMatches.map((result, index) => (
+                <ResultCard
+                  key={index}
+                  result={result}
+                  onAddToCart={(quantity) => onAddToCart(result, quantity)}
+                />
+              ))}
+            </AccordionPanel>
+          </AccordionItem>
+        )}
 
-      <ResultSection
-        title="Similar Matches"
-        results={similarMatches}
-        isExpanded={similarExpanded}
-        onToggle={() => setSimilarExpanded(!similarExpanded)}
-        onAddToCart={onAddToCart}
-        accentColor={theme.colors.textMuted}
-      />
+        {/* Similar Matches */}
+        {similarMatches.length > 0 && (
+          <AccordionItem value="similar" className={styles.accordionItem}>
+            <AccordionHeader
+              className={`${styles.accordionHeader} ${styles.headerSimilar}`}
+            >
+              <div className={styles.headerContent}>
+                <Text className={styles.headerTitle}>Similar Matches</Text>
+                <span className={`${styles.countBadge} ${styles.countBadgeSimilar}`}>
+                  {similarMatches.length}
+                </span>
+              </div>
+            </AccordionHeader>
+            <AccordionPanel className={styles.accordionPanel}>
+              {similarMatches.map((result, index) => (
+                <ResultCard
+                  key={index}
+                  result={result}
+                  onAddToCart={(quantity) => onAddToCart(result, quantity)}
+                />
+              ))}
+            </AccordionPanel>
+          </AccordionItem>
+        )}
+      </Accordion>
     </div>
   );
 }
