@@ -56,11 +56,13 @@ describe('Cart', () => {
   const onUpdateQuantity = vi.fn();
   const onRemoveItem = vi.fn();
   const onClear = vi.fn();
+  const onExportPDF = vi.fn();
 
   beforeEach(() => {
     onUpdateQuantity.mockClear();
     onRemoveItem.mockClear();
     onClear.mockClear();
+    onExportPDF.mockClear();
   });
 
   describe('Basic rendering', () => {
@@ -266,6 +268,93 @@ describe('Cart', () => {
 
       fireEvent.click(screen.getByRole('button', { name: /remove item/i }));
       expect(onRemoveItem).toHaveBeenCalledWith('test-1');
+    });
+  });
+
+  describe('Export PDF', () => {
+    it('shows Export PDF button when onExportPDF is provided', () => {
+      render(
+        <Cart
+          items={[mockItem1, mockItem2]}
+          summary={mockSummary}
+          onUpdateQuantity={onUpdateQuantity}
+          onRemoveItem={onRemoveItem}
+          onClear={onClear}
+          onExportPDF={onExportPDF}
+        />
+      );
+
+      expect(screen.getByRole('button', { name: /export pdf/i })).toBeInTheDocument();
+    });
+
+    it('does not show Export PDF button when onExportPDF is not provided', () => {
+      render(
+        <Cart
+          items={[mockItem1]}
+          summary={mockSummary}
+          onUpdateQuantity={onUpdateQuantity}
+          onRemoveItem={onRemoveItem}
+          onClear={onClear}
+        />
+      );
+
+      expect(screen.queryByRole('button', { name: /export pdf/i })).not.toBeInTheDocument();
+    });
+
+    it('disables Export PDF button when cart is empty', () => {
+      const emptySummary: CartSummary = {
+        uniqueModels: 0,
+        totalQuantity: 0,
+        totalMSRP: 0,
+        unknownPriceCount: 0,
+        formattedTotal: '$0',
+      };
+
+      render(
+        <Cart
+          items={[]}
+          summary={emptySummary}
+          onUpdateQuantity={onUpdateQuantity}
+          onRemoveItem={onRemoveItem}
+          onClear={onClear}
+          onExportPDF={onExportPDF}
+        />
+      );
+
+      const exportButton = screen.getByRole('button', { name: /export pdf/i });
+      expect(exportButton).toBeDisabled();
+    });
+
+    it('enables Export PDF button when cart has items', () => {
+      render(
+        <Cart
+          items={[mockItem1]}
+          summary={mockSummary}
+          onUpdateQuantity={onUpdateQuantity}
+          onRemoveItem={onRemoveItem}
+          onClear={onClear}
+          onExportPDF={onExportPDF}
+        />
+      );
+
+      const exportButton = screen.getByRole('button', { name: /export pdf/i });
+      expect(exportButton).not.toBeDisabled();
+    });
+
+    it('calls onExportPDF when Export PDF button is clicked', () => {
+      render(
+        <Cart
+          items={[mockItem1]}
+          summary={mockSummary}
+          onUpdateQuantity={onUpdateQuantity}
+          onRemoveItem={onRemoveItem}
+          onClear={onClear}
+          onExportPDF={onExportPDF}
+        />
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: /export pdf/i }));
+      expect(onExportPDF).toHaveBeenCalledTimes(1);
     });
   });
 });

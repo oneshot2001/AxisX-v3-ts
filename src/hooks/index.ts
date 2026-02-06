@@ -12,3 +12,4 @@ export {
   type UseSpreadsheetImportReturn,
   type ImportStep,
 } from './useSpreadsheetImport';
+export { useExportPDF, type UseExportPDFReturn, type UseExportPDFOptions } from './useExportPDF';

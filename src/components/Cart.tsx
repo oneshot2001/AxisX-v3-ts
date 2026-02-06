@@ -17,7 +17,7 @@ import {
   makeStyles,
   tokens,
 } from '@fluentui/react-components';
-import { Cart24Regular, Delete24Regular } from '@fluentui/react-icons';
+import { Cart24Regular, Delete24Regular, DocumentPdf24Regular } from '@fluentui/react-icons';
 import type { CartItem, CartSummary } from '@/types';
 import { CartItemRow } from './CartItemRow';
 import { axisTokens } from '@/styles/fluentTheme';
@@ -108,8 +108,15 @@ const useStyles = makeStyles({
     fontSize: tokens.fontSizeBase600,
     fontWeight: tokens.fontWeightBold,
   },
+  footerButtons: {
+    display: 'flex',
+    gap: '0.5rem',
+  },
+  exportButton: {
+    flex: 1,
+  },
   clearButton: {
-    width: '100%',
+    flex: 1,
   },
 });
 
@@ -133,6 +140,9 @@ export interface CartProps {
   /** Callback when cart is cleared */
   onClear: () => void;
 
+  /** Callback when Export PDF is clicked */
+  onExportPDF?: () => void;
+
   /** Optional title override (default: "BOM Cart") */
   title?: string;
 }
@@ -147,6 +157,7 @@ export function Cart({
   onUpdateQuantity,
   onRemoveItem,
   onClear,
+  onExportPDF,
   title = 'BOM Cart',
 }: CartProps) {
   const styles = useStyles();
@@ -209,21 +220,39 @@ export function Cart({
           <Text className={styles.totalAmount}>{summary.formattedTotal}</Text>
         </div>
 
-        {/* Clear BOM Button */}
-        <Button
-          onClick={onClear}
-          disabled={isEmpty}
-          aria-label="Clear BOM"
-          appearance="outline"
-          className={styles.clearButton}
-          icon={<Delete24Regular />}
-          style={{
-            borderColor: isEmpty ? undefined : axisTokens.error,
-            color: isEmpty ? undefined : axisTokens.error,
-          }}
-        >
-          Clear BOM
-        </Button>
+        {/* Action Buttons */}
+        <div className={styles.footerButtons}>
+          {onExportPDF && (
+            <Button
+              onClick={onExportPDF}
+              disabled={isEmpty}
+              aria-label="Export PDF"
+              appearance="primary"
+              className={styles.exportButton}
+              icon={<DocumentPdf24Regular />}
+              style={{
+                backgroundColor: isEmpty ? undefined : axisTokens.primary,
+                color: isEmpty ? undefined : '#000',
+              }}
+            >
+              Export PDF
+            </Button>
+          )}
+          <Button
+            onClick={onClear}
+            disabled={isEmpty}
+            aria-label="Clear BOM"
+            appearance="outline"
+            className={styles.clearButton}
+            icon={<Delete24Regular />}
+            style={{
+              borderColor: isEmpty ? undefined : axisTokens.error,
+              color: isEmpty ? undefined : axisTokens.error,
+            }}
+          >
+            Clear BOM
+          </Button>
+        </div>
       </div>
     </Card>
   );

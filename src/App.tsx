@@ -25,6 +25,7 @@ import {
   DocumentBulletList24Regular,
   ArrowUpload24Regular,
   Dismiss24Regular,
+  DocumentPdf24Regular,
 } from '@fluentui/react-icons';
 import type { ISearchEngine, SearchResponse, SearchResult, CartItem, BatchSearchItem } from '@/types';
 
@@ -39,6 +40,7 @@ import { useVoice } from '@/hooks/useVoice';
 import { useCart } from '@/hooks/useCart';
 import { useBatchSearch } from '@/hooks/useBatchSearch';
 import { useSpreadsheetImport } from '@/hooks/useSpreadsheetImport';
+import { useExportPDF } from '@/hooks/useExportPDF';
 
 // Components
 import {
@@ -51,6 +53,7 @@ import {
   ColumnMapper,
   ValidationPreview,
   ImportSummary,
+  ExportDialog,
 } from '@/components';
 
 // Theme
@@ -263,6 +266,12 @@ function AxisXApp({ engine }: AxisXAppProps) {
     clear: clearCart,
   } = useCart();
 
+  // PDF export hook
+  const exportPDF = useExportPDF({
+    items: cartItems,
+    summary: cartSummary,
+  });
+
   // Batch search hook
   const batchSearch = useBatchSearch(engine, {
     onComplete: (items) => {
@@ -404,6 +413,7 @@ function AxisXApp({ engine }: AxisXAppProps) {
             onRemove={removeItem}
             onQuantityChange={updateQuantity}
             onClear={clearCart}
+            onExportPDF={exportPDF.openDialog}
           />
         )}
 
@@ -415,6 +425,14 @@ function AxisXApp({ engine }: AxisXAppProps) {
         <span className={styles.footerBrand}>AxisX</span>
         {' '}{'\u2014'} Built with TypeScript for Axis partners
       </footer>
+
+      {/* Export PDF Dialog */}
+      <ExportDialog
+        open={exportPDF.isDialogOpen}
+        onClose={exportPDF.closeDialog}
+        onGenerate={exportPDF.generatePDF}
+        isGenerating={exportPDF.isGenerating}
+      />
 
       {/* Import Modal */}
       <Dialog
@@ -643,9 +661,10 @@ interface CartViewProps {
   onRemove: (id: string) => void;
   onQuantityChange: (id: string, quantity: number) => void;
   onClear: () => void;
+  onExportPDF: () => void;
 }
 
-function CartView({ items, summary, onRemove, onQuantityChange, onClear }: CartViewProps) {
+function CartView({ items, summary, onRemove, onQuantityChange, onClear, onExportPDF }: CartViewProps) {
   const styles = useStyles();
 
   if (items.length === 0) {
@@ -673,13 +692,23 @@ function CartView({ items, summary, onRemove, onQuantityChange, onClear }: CartV
         <Text size={500} weight="semibold">
           BOM ({summaryLine})
         </Text>
-        <Button
-          onClick={onClear}
-          appearance="primary"
-          style={{ backgroundColor: axisTokens.error }}
-        >
-          Clear BOM
-        </Button>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <Button
+            onClick={onExportPDF}
+            appearance="primary"
+            icon={<DocumentPdf24Regular />}
+            style={{ backgroundColor: axisTokens.primary, color: '#000' }}
+          >
+            Export PDF
+          </Button>
+          <Button
+            onClick={onClear}
+            appearance="primary"
+            style={{ backgroundColor: axisTokens.error }}
+          >
+            Clear BOM
+          </Button>
+        </div>
       </div>
 
       <div className={styles.cartList}>

@@ -13,6 +13,8 @@ export { CategoryFilter, type CategoryFilterProps } from './CategoryFilter';
 export { BatchInput, type BatchInputProps } from './BatchInput';
 export { BatchResults, type BatchResultsProps } from './BatchResults';
 
+export { ExportDialog, type ExportDialogProps } from './ExportDialog';
+
 // Spreadsheet Import
 export {
   FileUploader,
