@@ -55,7 +55,7 @@ describe('AxisBrowseResults', () => {
       render(<AxisBrowseResults onAddToCart={onAddToCart} />);
 
       expect(screen.getByText('Affordable mini domes')).toBeInTheDocument();
-      expect(screen.getByText('Versatile AI-powered domes (ARTPEC-9)')).toBeInTheDocument();
+      expect(screen.getByText('Versatile AI-powered domes (ARTPEC-8/9)')).toBeInTheDocument();
     });
   });
 

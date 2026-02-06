@@ -92,7 +92,7 @@ describe('getCatalogModelCount', () => {
 
   it('returns a reasonable number of models', () => {
     const count = getCatalogModelCount();
-    expect(count).toBeGreaterThan(100);
+    expect(count).toBeGreaterThan(180);
     expect(count).toBeLessThan(500);
   });
 });
