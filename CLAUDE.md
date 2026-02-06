@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-AxisX v3 is a camera cross-reference tool for Axis Communications sales professionals. It helps find Axis camera replacements for competitor models, with features for NDAA compliance tracking, voice input, and BOM generation. Built with TypeScript strict mode for 100% type safety.
+AxisX v3 is a camera cross-reference tool for Axis Communications sales professionals. It helps find Axis camera replacements for competitor models, with features for NDAA compliance tracking, voice input, batch search, spreadsheet import, and BOM generation. Built with TypeScript strict mode for 100% type safety.
 
 ## Development Commands
 
@@ -12,7 +12,7 @@ AxisX v3 is a camera cross-reference tool for Axis Communications sales professi
 npm run dev              # Vite dev server (port 5173, auto-opens browser)
 npm run build            # TypeScript compile + Vite production build
 npm run preview          # Preview production build locally
-npm run typecheck        # TypeScript validation only
+npm run typecheck        # TypeScript validation only (tsc --noEmit)
 npm run lint             # ESLint (strict, 0 warnings allowed)
 npm test                 # Run all tests (Vitest)
 npm test -- file.test.ts # Run single test file
@@ -22,27 +22,34 @@ npm run test:coverage    # Coverage report
 npm run deploy           # Build + deploy to Vercel
 ```
 
+Data tooling scripts (run with `tsx`):
+```bash
+npm run merge:v5         # Merge v5 crossref data into v3 format
+npm run scrape           # Scrape Axis.com for product URLs
+npm run scrape:validate  # Validate scraped data
+```
+
 ## Architecture
 
 ### Three-Layer Separation
 
 ```
 src/core/       → Pure TypeScript business logic (NO React imports allowed)
-src/hooks/      → React hooks wrapping core logic
-src/components/ → React UI components consuming hooks
+src/hooks/      → React hooks wrapping core logic (state, side effects, debouncing)
+src/components/ → React UI components consuming hooks (Fluent UI)
 ```
 
-Core algorithms are testable without React and can be reused outside the React context.
+Core algorithms are testable without React and can be reused in Node.js scripts.
 
 ### Type System
 
-All types centralized in `src/types/index.ts` (764 lines, 12 sections). Key interfaces:
+All types centralized in `src/types/index.ts` (~764 lines, 12 sections). Key interfaces:
 
-- `ISearchEngine` - Search contract with query routing
-- `IURLResolver` - URL resolution cascade contract
-- `IMSRPLookup` - Price lookup contract
+- `ISearchEngine` / `IURLResolver` / `IMSRPLookup` - Core API contracts
 - `SearchResponse` / `SearchResult` - Search result structures
 - `CompetitorMapping` / `LegacyAxisMapping` - Data structures
+- `CartItem` / `CartSummary` - BOM cart types
+- `QueryType` / `MatchType` / `URLConfidence` - Discriminated unions
 
 Import types: `import type { SearchResult } from '@/types';`
 
@@ -61,7 +68,7 @@ Import types: `import type { SearchResult } from '@/types';`
 
 Query flow:
 1. `queryParser.ts` detects type: competitor | legacy | axis-model | axis-browse | manufacturer
-2. `engine.ts` routes to appropriate handler with multi-level indexes
+2. `engine.ts` routes to appropriate multi-level index (competitor, legacy, manufacturer, axisModel, type)
 3. `fuzzy.ts` performs Levenshtein matching with thresholds:
    - **EXACT** (90+): near-perfect match
    - **PARTIAL** (70-89): good match with minor differences
@@ -99,48 +106,41 @@ Competitor manufacturers categorized for Section 889 compliance:
 
 ### JSON Data Imports
 
-Data files in `src/data/` require `as any` cast due to TypeScript JSON module limitations:
+Data files in `src/data/` are bundled at build time. They require `as any` cast due to TypeScript JSON module limitations:
 
 ```typescript
 import crossrefRaw from '@/data/crossref_data.json';
 const data = crossrefRaw as CrossRefData;
 ```
 
-### Hook APIs
+### Fluent UI Theming
 
-**useSearch** - Debounced search (150ms):
-```typescript
-const { results, isSearching, query, setQuery } = useSearch();
-```
-
-**useCart** - BOM management with localStorage persistence:
-```typescript
-const { items, addItem, removeItem, updateQuantity, clearCart, totalMSRP } = useCart();
-```
-
-**useVoice** - Web Speech API:
-```typescript
-const { isListening, startListening, stopListening, transcript } = useVoice();
-```
+UI uses Fluent UI 9 with Axis brand customization in `src/styles/fluentTheme.ts`. Primary color is Axis yellow (#FFCC33). Semantic tokens define security category colors (NDAA, cloud, legacy).
 
 ### Data File Structures
 
-**crossref_data.json:**
+**crossref_data.json** — competitor-to-Axis mappings:
 ```json
 {
   "mappings": [{
-    "competitor": "COMPETITOR-MODEL",
-    "manufacturer": "Manufacturer Name",
-    "axis_replacements": ["AXIS-MODEL-1"],
-    "notes": "Optional migration notes"
-  }]
+    "competitor_model": "DS-2CD2143G2-I",
+    "competitor_manufacturer": "Hikvision",
+    "axis_replacement": "P3265-LVE",
+    "match_confidence": 85,
+    "competitor_type": "dome",
+    "notes": "Migration notes",
+    "axis_features": ["Lightfinder 2.0", "Forensic WDR"]
+  }],
+  "axis_legacy_database": {
+    "mappings": [{ "legacy_model": "P3364-LVE", "replacement_model": "P3265-LVE", "notes": "..." }]
+  }
 }
 ```
 
-**axis_msrp_data.json:**
+**axis_msrp_data.json** — pricing by model:
 ```json
 {
-  "AXIS-MODEL-1": { "msrp": 1299.00, "description": "Product description" }
+  "model_lookup": { "P3265-LVE": 1299, "Q6135-LE": 3999 }
 }
 ```
 
@@ -148,9 +148,11 @@ After updating data files: run `npm run typecheck` then `npm test`.
 
 ## Testing
 
-Tests in `tests/` use Vitest with `@testing-library/jest-dom` matchers:
-- `search.test.ts` - Fuzzy matching, query parsing, search engine
-- `url.test.ts` - URL resolution cascade
+Tests in `tests/` use Vitest + `@testing-library/jest-dom`. Test setup (`tests/setup.ts`) initializes mock MSRP data via `initMSRP()` — new test files that depend on pricing should ensure this is loaded.
+
+Key test files:
+- `tests/search.test.ts` - Fuzzy matching, query parsing, search engine
+- `tests/url.test.ts` - URL resolution cascade
 
 ## Deployment
 
