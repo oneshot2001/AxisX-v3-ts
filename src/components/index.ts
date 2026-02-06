@@ -13,6 +13,7 @@ export { CategoryFilter, type CategoryFilterProps } from './CategoryFilter';
 export { BatchInput, type BatchInputProps } from './BatchInput';
 export { BatchResults, type BatchResultsProps } from './BatchResults';
 
+export { AxisBrowseResults, type AxisBrowseResultsProps } from './AxisBrowseResults';
 export { ExportDialog, type ExportDialogProps } from './ExportDialog';
 
 // Spreadsheet Import

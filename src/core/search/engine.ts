@@ -385,58 +385,9 @@ export class SearchEngine implements ISearchEngine {
   // ===========================================================================
 
   private handleAxisBrowse(): SearchResult[] {
-    // Show complete Axis portfolio grouped by camera type
-    // Extract unique Axis models and group by inferred form factor
-    const axisModels = new Map<string, { model: string; mappings: CompetitorMapping[] }>();
-
-    // Collect unique Axis models with their competitor mappings
-    for (const mapping of this.competitorMappings) {
-      const axisModel = mapping.axis_replacement;
-      const existing = axisModels.get(axisModel);
-      if (existing) {
-        existing.mappings.push(mapping);
-      } else {
-        axisModels.set(axisModel, { model: axisModel, mappings: [mapping] });
-      }
-    }
-
-    // Convert to results, sorted by model series and number
-    const results: SearchResult[] = [];
-    const sortedModels = Array.from(axisModels.values()).sort((a, b) => {
-      return a.model.localeCompare(b.model);
-    });
-
-    for (const { mappings } of sortedModels) {
-      if (mappings.length === 0) continue;
-
-      // Use the first mapping with the best features/notes as representative
-      const representativeMapping = mappings.reduce((best, current) => {
-        const bestFeatures = best?.axis_features?.length ?? 0;
-        const currentFeatures = current.axis_features?.length ?? 0;
-        return currentFeatures > bestFeatures ? current : best;
-      }, mappings[0]);
-
-      if (representativeMapping) {
-        results.push(this.createResult(representativeMapping, 100, 'exact'));
-      }
-    }
-
-    // Group by camera type (P = box/bullet/dome, Q = higher-end, M = compact, etc.)
-    // Sort so similar types are grouped together
-    return results.sort((a, b) => {
-      const modelA = (a.mapping as CompetitorMapping).axis_replacement;
-      const modelB = (b.mapping as CompetitorMapping).axis_replacement;
-      const seriesA = modelA.charAt(0);
-      const seriesB = modelB.charAt(0);
-
-      // Sort by series first, then by model number
-      if (seriesA !== seriesB) {
-        // Priority order: P, Q, M, F, T, V, W, D, C, A
-        const order = ['P', 'Q', 'M', 'F', 'T', 'V', 'W', 'D', 'C', 'A'];
-        return order.indexOf(seriesA) - order.indexOf(seriesB);
-      }
-      return modelA.localeCompare(modelB);
-    });
+    // Browse mode — UI renders from static catalog data (axisCatalog.ts)
+    // Return empty results; queryType 'axis-browse' triggers AxisBrowseResults component
+    return [];
   }
 
   private handleAxisModel(model: string): SearchResult[] {

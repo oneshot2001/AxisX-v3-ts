@@ -26,6 +26,7 @@ import {
 import type { SearchResponse, SearchResult, CategoryId } from '@/types';
 import { ResultCard } from './ResultCard';
 import { CategoryFilter } from './CategoryFilter';
+import { AxisBrowseResults } from './AxisBrowseResults';
 import { axisTokens } from '@/styles/fluentTheme';
 
 // =============================================================================
@@ -121,6 +122,9 @@ export interface SearchResultsProps {
   /** Callback when a suggestion is clicked */
   onSuggestionClick: (suggestion: string) => void;
 
+  /** Callback when an Axis model is added directly from browse view */
+  onAddAxisModel?: (model: string, quantity: number) => void;
+
   /** Show category filter (default: true) */
   showCategoryFilter?: boolean;
 }
@@ -165,6 +169,7 @@ export function SearchResults({
   response,
   onAddToCart,
   onSuggestionClick,
+  onAddAxisModel,
   showCategoryFilter = true,
 }: SearchResultsProps) {
   const styles = useStyles();
@@ -201,6 +206,12 @@ export function SearchResults({
     if (!hasExactOrPartial && similarMatches.length > 0) initial.push('similar');
     return initial;
   });
+
+  // Axis Browse mode — show portfolio catalog instead of search results
+  // (placed after all hooks to satisfy React Rules of Hooks)
+  if (response.queryType === 'axis-browse' && onAddAxisModel) {
+    return <AxisBrowseResults onAddToCart={onAddAxisModel} />;
+  }
 
   // No results at all
   if (response.results.length === 0) {

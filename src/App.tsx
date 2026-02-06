@@ -260,11 +260,17 @@ function AxisXApp({ engine }: AxisXAppProps) {
   const {
     items: cartItems,
     summary: cartSummary,
+    addItem,
     addFromResult,
     removeItem,
     updateQuantity,
     clear: clearCart,
   } = useCart();
+
+  // Handler for adding Axis models directly from browse view
+  const handleAddAxisModel = (model: string, quantity: number) => {
+    addItem(model, { quantity, source: 'direct' });
+  };
 
   // PDF export hook
   const exportPDF = useExportPDF({
@@ -383,6 +389,7 @@ function AxisXApp({ engine }: AxisXAppProps) {
             isListening={isListening}
             toggleVoice={toggleVoice}
             onAddToCart={addFromResult}
+            onAddAxisModel={handleAddAxisModel}
           />
         )}
 
@@ -523,6 +530,7 @@ interface SearchViewProps {
   isListening: boolean;
   toggleVoice: () => void;
   onAddToCart: (result: SearchResult, quantity?: number) => void;
+  onAddAxisModel?: (model: string, quantity: number) => void;
 }
 
 function SearchView({
@@ -536,6 +544,7 @@ function SearchView({
   isListening,
   toggleVoice,
   onAddToCart,
+  onAddAxisModel,
 }: SearchViewProps) {
   const styles = useStyles();
 
@@ -564,6 +573,7 @@ function SearchView({
           response={results}
           onAddToCart={onAddToCart}
           onSuggestionClick={setQuery}
+          onAddAxisModel={onAddAxisModel}
         />
       )}
     </div>
