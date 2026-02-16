@@ -33,7 +33,7 @@ import type { ISearchEngine, SearchResponse, SearchResult, CartItem, BatchSearch
 import { createSearchEngine } from '@/core/search';
 import { URLResolver } from '@/core/url';
 import { initMSRP } from '@/core/msrp';
-import { initSpecs } from '@/core/specs';
+import { initSpecs, lookupSpec, getSpecs, hasSpec } from '@/core/specs';
 
 // Hooks
 import { useSearch } from '@/hooks/useSearch';
@@ -194,6 +194,11 @@ export default function App() {
 
     // Initialize spec database
     initSpecs(specData as any);
+
+    // Expose spec API on window for console debugging
+    (window as any).lookupSpec = lookupSpec;
+    (window as any).getSpecs = getSpecs;
+    (window as any).hasSpec = hasSpec;
 
     // Create URL resolver
     const urlResolver = new URLResolver();
