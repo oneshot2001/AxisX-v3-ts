@@ -33,6 +33,7 @@ import type { ISearchEngine, SearchResponse, SearchResult, CartItem, BatchSearch
 import { createSearchEngine } from '@/core/search';
 import { URLResolver } from '@/core/url';
 import { initMSRP } from '@/core/msrp';
+import { initSpecs } from '@/core/specs';
 
 // Hooks
 import { useSearch } from '@/hooks/useSearch';
@@ -62,6 +63,7 @@ import { axisTokens } from '@/styles/fluentTheme';
 // Data (will be imported at build time)
 import crossrefData from '@/data/crossref_data.json';
 import msrpData from '@/data/axis_msrp_data.json';
+import specData from '@/data/axis_spec_data.json';
 
 // =============================================================================
 // STYLES
@@ -189,6 +191,9 @@ export default function App() {
     // Initialize MSRP lookup
     const msrpLookup = (msrpData as any).model_lookup ?? {};
     initMSRP(msrpLookup);
+
+    // Initialize spec database
+    initSpecs(specData as any);
 
     // Create URL resolver
     const urlResolver = new URLResolver();

@@ -20,6 +20,7 @@
  * 13. PDF Export
  * 14. Batch Operations
  * 15. Spreadsheet Import
+ * 16. Axis Product Specs
  */
 
 // =============================================================================
@@ -850,4 +851,91 @@ export interface SpreadsheetValidationResult {
   readonly status: SpreadsheetValidationStatus;
   readonly searchResponse?: SearchResponse;
   readonly quantity: number;
+}
+
+// =============================================================================
+// 16. AXIS PRODUCT SPECS
+// =============================================================================
+
+/** Product type classification */
+export type AxisProductType = 'camera' | 'audio' | 'intercom' | 'radar' | 'access-control' | 'networking';
+
+/** Camera subcategory by form factor */
+export type CameraSubcategory = 'fixed-dome' | 'fixed-bullet' | 'ptz' | 'panoramic' | 'modular' | 'specialty';
+
+/** Video codec types */
+export type VideoCodec = 'H.265' | 'H.264' | 'AV1' | 'MJPEG';
+
+/** ARTPEC chipset generations */
+export type ARTPECGeneration = 'ARTPEC-7' | 'ARTPEC-8' | 'ARTPEC-9';
+
+/** Chipset and DLPU information */
+export interface ChipsetInfo {
+  readonly chipset: string | null;
+  readonly hasDLPU: boolean;
+  readonly generation: ARTPECGeneration | null;
+}
+
+/** Network speed classification */
+export type NetworkSpeed = '10/100' | '10/100/1000';
+
+/** Full product specification record */
+export interface AxisProductSpec {
+  // Identity
+  readonly modelKey: string;
+  readonly displayName: string;
+  readonly family: string;
+  readonly seriesId: string;
+  readonly productType: AxisProductType;
+  readonly cameraType: CameraSubcategory | null;
+
+  // Imaging
+  readonly sensor: string | null;
+  readonly maxResolution: string | null;
+  readonly maxFps: number | null;
+  readonly lens: string | null;
+  readonly isVarifocal: boolean;
+
+  // Processing
+  readonly codecs: readonly VideoCodec[];
+  readonly hasZipstream: boolean;
+  readonly chipset: ChipsetInfo;
+  readonly hasACAP: boolean;
+
+  // Environmental
+  readonly ipRating: string | null;
+  readonly ikRating: string | null;
+  readonly powerType: string | null;
+  readonly maxPowerWatts: number | null;
+
+  // Analytics
+  readonly analytics: readonly string[];
+  readonly hasObjectAnalytics: boolean;
+  readonly hasLPR: boolean;
+  readonly hasAutotracking: boolean;
+
+  // Connectivity
+  readonly networkSpeed: NetworkSpeed | null;
+  readonly edgeStorage: string | null;
+
+  // Links
+  readonly productUrl: string;
+  readonly datasheetUrl: string | null;
+}
+
+/** Spec database JSON structure */
+export interface AxisSpecDatabase {
+  readonly version: string;
+  readonly generatedAt: string;
+  readonly totalProducts: number;
+  readonly products: Record<string, AxisProductSpec>;
+}
+
+/** Spec lookup interface */
+export interface ISpecLookup {
+  lookupSpec(model: string): AxisProductSpec | null;
+  hasSpec(model: string): boolean;
+  getByType(type: AxisProductType): AxisProductSpec[];
+  getByCameraType(subcat: CameraSubcategory): AxisProductSpec[];
+  readonly size: number;
 }
