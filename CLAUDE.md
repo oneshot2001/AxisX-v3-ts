@@ -43,13 +43,14 @@ Core algorithms are testable without React and can be reused in Node.js scripts.
 
 ### Type System
 
-All types centralized in `src/types/index.ts` (~764 lines, 12 sections). Key interfaces:
+All types centralized in `src/types/index.ts` (~941 lines, 16 sections). Key interfaces:
 
 - `ISearchEngine` / `IURLResolver` / `IMSRPLookup` - Core API contracts
 - `SearchResponse` / `SearchResult` - Search result structures
 - `CompetitorMapping` / `LegacyAxisMapping` - Data structures
 - `CartItem` / `CartSummary` - BOM cart types
 - `QueryType` / `MatchType` / `URLConfidence` - Discriminated unions
+- `AxisProductSpec` / `ISpecLookup` / `AxisSpecDatabase` - Spec lookup contracts
 
 Import types: `import type { SearchResult } from '@/types';`
 
@@ -84,6 +85,18 @@ Query flow:
 5. **Generated** - Construct URL from pattern `axis.com/products/axis-{model}`
 
 Confidence levels: `'verified' | 'alias' | 'generated' | 'search-fallback'`
+
+### Spec Database (`src/core/specs/`)
+
+Product specification lookup for 150+ Axis models. Singleton pattern matching `src/core/msrp/`.
+
+- `initSpecs(data)` — initialize from `axis_spec_data.json` (called in App.tsx)
+- `lookupSpec(model)` — get full spec by model key (with base-model fallback)
+- `hasSpec(model)` — boolean check
+- `getSpecs().getByType('camera')` — filter by product type
+- `getSpecs().getByCameraType('fixed-dome')` — filter by camera subcategory
+
+Key fields per spec: sensor, maxResolution, maxFps, codecs, chipset (with DLPU/ARTPEC generation), ipRating, ikRating, analytics, networkSpeed, hasObjectAnalytics, hasLPR, hasAutotracking.
 
 ### NDAA Categories
 
@@ -144,11 +157,31 @@ UI uses Fluent UI 9 with Axis brand customization in `src/styles/fluentTheme.ts`
 }
 ```
 
+**axis_spec_data.json** — product specifications (454 KB, 150+ models):
+```json
+{
+  "version": "1.0.0",
+  "products": {
+    "M3085-V": {
+      "modelKey": "M3085-V",
+      "displayName": "AXIS M3085-V",
+      "family": "M30",
+      "productType": "camera",
+      "cameraType": "fixed-dome",
+      "maxResolution": "1920x1080",
+      "codecs": ["H.265", "H.264", "MJPEG"],
+      "chipset": { "chipset": "ARTPEC-8", "hasDLPU": true, "generation": "ARTPEC-8" },
+      "analytics": ["AXIS Object Analytics"]
+    }
+  }
+}
+```
+
 After updating data files: run `npm run typecheck` then `npm test`.
 
 ## Testing
 
-Tests in `tests/` use Vitest + `@testing-library/jest-dom`. Test setup (`tests/setup.ts`) initializes mock MSRP data via `initMSRP()` — new test files that depend on pricing should ensure this is loaded.
+Tests in `tests/` use Vitest + `@testing-library/jest-dom`. Test setup (`tests/setup.ts`) initializes mock MSRP data via `initMSRP()` — new test files that depend on pricing should ensure this is loaded. Similarly, tests using spec data should call `initSpecs()` in setup.
 
 Key test files:
 - `tests/search.test.ts` - Fuzzy matching, query parsing, search engine
