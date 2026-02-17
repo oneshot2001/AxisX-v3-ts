@@ -5,7 +5,7 @@
  * Migrated to Fluent UI with Axis branding.
  */
 
-import { useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import {
   Button,
   Text,
@@ -25,9 +25,16 @@ import {
   DocumentBulletList24Regular,
   ArrowUpload24Regular,
   Dismiss24Regular,
-  DocumentPdf24Regular,
 } from '@fluentui/react-icons';
-import type { ISearchEngine, SearchResponse, SearchResult, CartItem, BatchSearchItem } from '@/types';
+import type {
+  ISearchEngine,
+  SearchResponse,
+  SearchResult,
+  BatchSearchItem,
+  CrossRefData,
+  MSRPData,
+  AxisSpecDatabase,
+} from '@/types';
 
 // Core modules
 import { createSearchEngine } from '@/core/search';
@@ -47,7 +54,7 @@ import { useExportPDF } from '@/hooks/useExportPDF';
 import {
   SearchInput,
   SearchResults,
-  CartItemRow,
+  Cart,
   BatchInput,
   BatchResults,
   FileUploader,
@@ -60,10 +67,13 @@ import {
 // Theme
 import { axisTokens } from '@/styles/fluentTheme';
 
-// Data (will be imported at build time)
-import crossrefData from '@/data/crossref_data.json';
-import msrpData from '@/data/axis_msrp_data.json';
-import specData from '@/data/axis_spec_data.json';
+declare global {
+  interface Window {
+    lookupSpec?: typeof lookupSpec;
+    getSpecs?: typeof getSpecs;
+    hasSpec?: typeof hasSpec;
+  }
+}
 
 // =============================================================================
 // STYLES
@@ -128,43 +138,14 @@ const useStyles = makeStyles({
     color: axisTokens.primary,
     fontSize: tokens.fontSizeBase500,
   },
+  errorText: {
+    color: tokens.colorPaletteRedForeground1,
+    fontSize: tokens.fontSizeBase300,
+    maxWidth: '560px',
+    textAlign: 'center',
+  },
   searchContainer: {
     marginBottom: '1.5rem',
-  },
-  emptyCart: {
-    textAlign: 'center',
-    padding: '3rem',
-    color: tokens.colorNeutralForeground3,
-  },
-  emptyCartIcon: {
-    fontSize: tokens.fontSizeBase600,
-    marginBottom: '0.5rem',
-  },
-  cartHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '1rem',
-  },
-  cartList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.5rem',
-  },
-  cartSummary: {
-    marginTop: '1.5rem',
-    padding: '1rem',
-    backgroundColor: tokens.colorNeutralBackground3,
-    borderRadius: tokens.borderRadiusMedium,
-    textAlign: 'right',
-  },
-  cartTotal: {
-    fontSize: tokens.fontSizeBase500,
-    fontWeight: tokens.fontWeightBold,
-  },
-  cartTbd: {
-    fontSize: tokens.fontSizeBase200,
-    color: tokens.colorNeutralForeground3,
   },
   infoSection: {
     maxWidth: '600px',
@@ -185,34 +166,67 @@ const useStyles = makeStyles({
 export default function App() {
   const [engine, setEngine] = useState<ISearchEngine | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [initError, setInitError] = useState<string | null>(null);
 
   // Initialize on mount
   useEffect(() => {
-    // Initialize MSRP lookup
-    const msrpLookup = (msrpData as any).model_lookup ?? {};
-    initMSRP(msrpLookup);
+    let isCancelled = false;
 
-    // Initialize spec database
-    initSpecs(specData as any);
+    const initialize = async () => {
+      try {
+        // Lazy-load large data files so initial JS payload stays smaller.
+        const [crossrefModule, msrpModule, specModule] = await Promise.all([
+          import('@/data/crossref_data.json'),
+          import('@/data/axis_msrp_data.json'),
+          import('@/data/axis_spec_data.json'),
+        ]);
 
-    // Expose spec API on window for console debugging
-    (window as any).lookupSpec = lookupSpec;
-    (window as any).getSpecs = getSpecs;
-    (window as any).hasSpec = hasSpec;
+        if (isCancelled) return;
 
-    // Create URL resolver
-    const urlResolver = new URLResolver();
+        const crossrefData = crossrefModule.default as CrossRefData;
+        const msrpData = msrpModule.default as MSRPData;
+        const specData = specModule.default as AxisSpecDatabase;
 
-    // Create search engine
-    const searchEngine = createSearchEngine(
-      (crossrefData as any).mappings ?? [],
-      (crossrefData as any).axis_legacy_database?.mappings ?? [],
-      (model: string) => urlResolver.resolve(model).url
-    );
+        initMSRP(msrpData.model_lookup ?? {});
+        initSpecs(specData);
 
-    setEngine(searchEngine);
-    setIsInitialized(true);
+        // Expose spec API on window for console debugging
+        window.lookupSpec = lookupSpec;
+        window.getSpecs = getSpecs;
+        window.hasSpec = hasSpec;
+
+        const urlResolver = new URLResolver();
+        const searchEngine = createSearchEngine(
+          [...(crossrefData.mappings ?? [])],
+          [...(crossrefData.axis_legacy_database?.mappings ?? [])],
+          (model: string) => urlResolver.resolve(model).url
+        );
+
+        if (!isCancelled) {
+          setEngine(searchEngine);
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unknown initialization error';
+        if (!isCancelled) {
+          setInitError(`Failed to initialize AxisX data: ${message}`);
+        }
+      } finally {
+        if (!isCancelled) {
+          setIsInitialized(true);
+        }
+      }
+    };
+
+    void initialize();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
+
+  if (initError) {
+    return <InitializationError message={initError} />;
+  }
 
   if (!isInitialized || !engine) {
     return <LoadingScreen />;
@@ -232,6 +246,16 @@ function LoadingScreen() {
     <div className={styles.loadingScreen}>
       <Spinner size="large" style={{ color: axisTokens.primary }} />
       <Text className={styles.loadingText}>Loading AxisX...</Text>
+    </div>
+  );
+}
+
+function InitializationError({ message }: { message: string }) {
+  const styles = useStyles();
+
+  return (
+    <div className={styles.loadingScreen}>
+      <Text className={styles.errorText}>{message}</Text>
     </div>
   );
 }
@@ -278,9 +302,9 @@ function AxisXApp({ engine }: AxisXAppProps) {
   } = useCart();
 
   // Handler for adding Axis models directly from browse view
-  const handleAddAxisModel = (model: string, quantity: number) => {
+  const handleAddAxisModel = useCallback((model: string, quantity: number) => {
     addItem(model, { quantity, source: 'direct' });
-  };
+  }, [addItem]);
 
   // PDF export hook
   const exportPDF = useExportPDF({
@@ -289,11 +313,7 @@ function AxisXApp({ engine }: AxisXAppProps) {
   });
 
   // Batch search hook
-  const batchSearch = useBatchSearch(engine, {
-    onComplete: (items) => {
-      console.log(`Batch search complete: ${items.length} items processed`);
-    },
-  });
+  const batchSearch = useBatchSearch(engine);
 
   // View state
   const [view, setView] = useState<'search' | 'batch' | 'cart' | 'info'>('search');
@@ -332,11 +352,13 @@ function AxisXApp({ engine }: AxisXAppProps) {
   const handleAddSpreadsheetToBatch = () => {
     const validItems = spreadsheetImport.getValidItems();
 
-    // Build raw input from valid items
-    const modelLines = validItems.map((item) => item.input).join('\n');
-
-    // Set the raw input (this will parse and create batch items)
-    batchSearch.setRawInput(modelLines);
+    // Preserve validated quantities when populating batch items
+    batchSearch.setImportedItems(
+      validItems.map((item) => ({
+        input: item.input,
+        quantity: item.quantity,
+      }))
+    );
 
     // Close modal and reset spreadsheet import
     setIsImportModalOpen(false);
@@ -424,13 +446,14 @@ function AxisXApp({ engine }: AxisXAppProps) {
         )}
 
         {view === 'cart' && (
-          <CartView
+          <Cart
             items={cartItems}
             summary={cartSummary}
-            onRemove={removeItem}
-            onQuantityChange={updateQuantity}
+            onUpdateQuantity={updateQuantity}
+            onRemoveItem={removeItem}
             onClear={clearCart}
             onExportPDF={exportPDF.openDialog}
+            title="BOM"
           />
         )}
 
@@ -543,7 +566,7 @@ interface SearchViewProps {
   onAddAxisModel?: (model: string, quantity: number) => void;
 }
 
-function SearchView({
+const SearchView = memo(function SearchView({
   query,
   setQuery,
   results,
@@ -588,7 +611,7 @@ function SearchView({
       )}
     </div>
   );
-}
+});
 
 // =============================================================================
 // BATCH VIEW
@@ -612,7 +635,7 @@ interface BatchViewProps {
   onImport: () => void;
 }
 
-function BatchView({
+const BatchView = memo(function BatchView({
   rawInput,
   setRawInput,
   modelCount,
@@ -669,92 +692,7 @@ function BatchView({
       )}
     </div>
   );
-}
-
-// =============================================================================
-// CART VIEW
-// =============================================================================
-
-interface CartViewProps {
-  items: CartItem[];
-  summary: any;
-  onRemove: (id: string) => void;
-  onQuantityChange: (id: string, quantity: number) => void;
-  onClear: () => void;
-  onExportPDF: () => void;
-}
-
-function CartView({ items, summary, onRemove, onQuantityChange, onClear, onExportPDF }: CartViewProps) {
-  const styles = useStyles();
-
-  if (items.length === 0) {
-    return (
-      <div className={styles.emptyCart}>
-        <Text className={styles.emptyCartIcon} block>
-          <ClipboardBulletListLtrRegular style={{ width: 48, height: 48 }} />
-        </Text>
-        <Text block>Your BOM is empty</Text>
-        <Text size={200} block>
-          Search for cameras and add them to build a quote
-        </Text>
-      </div>
-    );
-  }
-
-  // Format summary line
-  const summaryLine = summary.totalQuantity === items.length
-    ? `${items.length} model${items.length === 1 ? '' : 's'}`
-    : `${summary.totalQuantity} units across ${items.length} model${items.length === 1 ? '' : 's'}`;
-
-  return (
-    <div>
-      <div className={styles.cartHeader}>
-        <Text size={500} weight="semibold">
-          BOM ({summaryLine})
-        </Text>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <Button
-            onClick={onExportPDF}
-            appearance="primary"
-            icon={<DocumentPdf24Regular />}
-            style={{ backgroundColor: axisTokens.primary, color: '#000' }}
-          >
-            Export PDF
-          </Button>
-          <Button
-            onClick={onClear}
-            appearance="primary"
-            style={{ backgroundColor: axisTokens.error }}
-          >
-            Clear BOM
-          </Button>
-        </div>
-      </div>
-
-      <div className={styles.cartList}>
-        {items.map((item) => (
-          <CartItemRow
-            key={item.id}
-            item={item}
-            onQuantityChange={(qty) => onQuantityChange(item.id, qty)}
-            onRemove={() => onRemove(item.id)}
-          />
-        ))}
-      </div>
-
-      <div className={styles.cartSummary}>
-        <Text className={styles.cartTotal} block>
-          Total: {summary.formattedTotal}
-        </Text>
-        {summary.unknownPriceCount > 0 && (
-          <Text className={styles.cartTbd} block>
-            + {summary.unknownPriceCount} items with TBD pricing
-          </Text>
-        )}
-      </div>
-    </div>
-  );
-}
+});
 
 // =============================================================================
 // INFO VIEW

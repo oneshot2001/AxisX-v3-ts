@@ -6,8 +6,5 @@
 
 export {
   VoiceInput,
-  getVoiceInput,
   isVoiceSupported,
-  setupVoiceInput,
-  type UseVoiceConfig,
 } from './recognition';

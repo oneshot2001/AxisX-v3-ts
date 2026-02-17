@@ -61,7 +61,7 @@ describe('ResultCard', () => {
 
       fireEvent.click(screen.getByRole('button', { name: /add to bom/i }));
       expect(onAddToCart).toHaveBeenCalledTimes(1);
-      expect(onAddToCart).toHaveBeenCalledWith(1);
+      expect(onAddToCart).toHaveBeenCalledWith(mockResult, 1);
     });
   });
 

@@ -160,5 +160,18 @@ describe('useCart localStorage persistence', () => {
       const savedData = JSON.parse(localStorageMock.store['axisx-cart']);
       expect(savedData).toHaveLength(0);
     });
+
+    it('coalesces duplicate adds in a single update cycle', () => {
+      const { result } = renderHook(() => useCart());
+
+      act(() => {
+        result.current.addItem('P3265-LVE', { quantity: 2 });
+        result.current.addItem('P3265-LVE', { quantity: 3 });
+      });
+
+      expect(result.current.items).toHaveLength(1);
+      expect(result.current.items[0]?.model).toBe('P3265-LVE');
+      expect(result.current.items[0]?.quantity).toBe(5);
+    });
   });
 });

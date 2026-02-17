@@ -78,41 +78,6 @@ html {
   background: #a1a1a1;
 }
 
-/* Voice button animation */
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
-  }
-}
-
-.voice-listening {
-  animation: pulse 1.5s infinite;
-}
-
-/* NDAA badge */
-.badge-ndaa {
-  background-color: #FF0033;
-  color: white;
-}
-
-/* Cloud badge */
-.badge-cloud {
-  background-color: #7C3AED;
-  color: white;
-}
-
-/* Success badge */
-.badge-success {
-  background-color: #10B981;
-  color: white;
-}
-
 /* Print styles */
 @media print {
   body {

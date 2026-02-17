@@ -11,6 +11,7 @@
  * Migrated to Fluent UI components.
  */
 
+import { memo } from 'react';
 import {
   Card,
   Button,
@@ -240,10 +241,10 @@ const useStyles = makeStyles({
 
 export interface ResultCardProps {
   /** The search result to display */
-  result: SearchResult;
+  readonly result: SearchResult;
 
   /** Callback when "Add to BOM" is clicked with quantity */
-  onAddToCart: (quantity?: number) => void;
+  readonly onAddToCart: (result: SearchResult, quantity?: number) => void;
 }
 
 // =============================================================================
@@ -277,7 +278,7 @@ function getWhySwitchPoints(category: string): string[] {
 // COMPONENT
 // =============================================================================
 
-export function ResultCard({ result, onAddToCart }: ResultCardProps) {
+function ResultCardComponent({ result, onAddToCart }: ResultCardProps) {
   const styles = useStyles();
   const mapping = result.mapping;
   const isLegacy = result.isLegacy;
@@ -440,7 +441,7 @@ export function ResultCard({ result, onAddToCart }: ResultCardProps) {
           View on Axis.com
         </Button>
         <Button
-          onClick={() => onAddToCart(1)}
+          onClick={() => onAddToCart(result, 1)}
           appearance="primary"
           icon={<Add24Regular />}
         >
@@ -454,7 +455,7 @@ export function ResultCard({ result, onAddToCart }: ResultCardProps) {
         {[1, 2, 4, 8, 16].map((qty) => (
           <Button
             key={qty}
-            onClick={() => onAddToCart(qty)}
+            onClick={() => onAddToCart(result, qty)}
             appearance="outline"
             size="small"
             className={styles.quickAddButton}
@@ -466,3 +467,8 @@ export function ResultCard({ result, onAddToCart }: ResultCardProps) {
     </Card>
   );
 }
+
+export const ResultCard = memo(ResultCardComponent, (prev, next) =>
+  prev.result === next.result && prev.onAddToCart === next.onAddToCart
+);
+ResultCard.displayName = 'ResultCard';
