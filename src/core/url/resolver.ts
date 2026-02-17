@@ -14,6 +14,7 @@
 import type { ResolvedURL, IURLResolver } from '@/types';
 import { VERIFIED_URLS } from './verified';
 import { MODEL_ALIASES, DISCONTINUED_MODELS } from './aliases';
+import { normalizeModelKey, getBaseModelKey } from '@/core/model/normalize';
 
 // =============================================================================
 // CONSTANTS
@@ -21,27 +22,6 @@ import { MODEL_ALIASES, DISCONTINUED_MODELS } from './aliases';
 
 const AXIS_PRODUCT_BASE = 'https://www.axis.com/products/axis-';
 const AXIS_SEARCH_BASE = 'https://www.axis.com/en-us/products?q=';
-
-/**
- * Variant suffixes to strip when generating URLs
- */
-const VARIANT_SUFFIXES = [
-  // Frequency variants
-  '-60HZ', '-50HZ', '60HZ', '50HZ',
-  // Regional variants
-  '-EUR', '-US', '-BR', '-NM', '-AR',
-  'EUR', 'US', 'BR', 'NM', 'AR',
-  // Hardware variants
-  '-24V', '-M12', '-ZOOM', '24V', 'M12',
-  // Bundle variants
-  '-BULK', 'BULK',
-  // Generation markers (keep MK II in URL)
-] as const;
-
-/**
- * Lens size pattern (e.g., -35MM, -8MM)
- */
-const LENS_PATTERN = /-?\d+MM$/i;
 
 // =============================================================================
 // URL RESOLVER IMPLEMENTATION
@@ -53,26 +33,32 @@ export class URLResolver implements IURLResolver {
   private discontinued: Set<string>;
 
   constructor() {
-    this.verifiedUrls = new Map(Object.entries(VERIFIED_URLS));
-    this.aliases = new Map(Object.entries(MODEL_ALIASES));
-    this.discontinued = new Set(DISCONTINUED_MODELS);
+    this.verifiedUrls = new Map(
+      Object.entries(VERIFIED_URLS).map(([model, url]) => [normalizeModelKey(model), url])
+    );
+    this.aliases = new Map(
+      Object.entries(MODEL_ALIASES)
+        .map(([from, to]) => [normalizeModelKey(from), normalizeModelKey(to)] as const)
+        .filter(([from, to]) => from !== to)
+    );
+    this.discontinued = new Set(DISCONTINUED_MODELS.map((model) => normalizeModelKey(model)));
   }
 
   /**
    * Resolve model to URL
    */
   resolve(model: string): ResolvedURL {
-    const normalized = this.normalize(model);
+    const normalized = normalizeModelKey(model);
 
     // 1. Check aliases first (handle common typos)
     const aliasedModel = this.aliases.get(normalized);
     if (aliasedModel) {
-      const aliasUrl = this.verifiedUrls.get(this.normalize(aliasedModel));
+      const aliasUrl = this.verifiedUrls.get(normalizeModelKey(aliasedModel));
       if (aliasUrl) {
         return {
           url: aliasUrl,
           confidence: 'alias',
-          isDiscontinued: this.discontinued.has(aliasedModel),
+          isDiscontinued: this.discontinued.has(normalizeModelKey(aliasedModel)),
           resolvedModel: aliasedModel,
           warning: `Redirected from ${model} to ${aliasedModel}`,
         };
@@ -91,7 +77,7 @@ export class URLResolver implements IURLResolver {
     }
 
     // 3. Try base model (strip variants)
-    const baseModel = this.getBaseModel(normalized);
+    const baseModel = getBaseModelKey(normalized);
     if (baseModel !== normalized) {
       const baseUrl = this.verifiedUrls.get(baseModel);
       if (baseUrl) {
@@ -129,18 +115,18 @@ export class URLResolver implements IURLResolver {
    * Check if model has verified URL
    */
   isVerified(model: string): boolean {
-    const normalized = this.normalize(model);
+    const normalized = normalizeModelKey(model);
     return this.verifiedUrls.has(normalized) ||
-           this.verifiedUrls.has(this.getBaseModel(normalized));
+           this.verifiedUrls.has(getBaseModelKey(normalized));
   }
 
   /**
    * Check if model is discontinued
    */
   isDiscontinued(model: string): boolean {
-    const normalized = this.normalize(model);
+    const normalized = normalizeModelKey(model);
     return this.discontinued.has(normalized) ||
-           this.discontinued.has(this.getBaseModel(normalized));
+           this.discontinued.has(getBaseModelKey(normalized));
   }
 
   /**
@@ -154,45 +140,12 @@ export class URLResolver implements IURLResolver {
    * Add verified URL at runtime
    */
   addVerifiedUrl(model: string, url: string): void {
-    this.verifiedUrls.set(this.normalize(model), url);
+    this.verifiedUrls.set(normalizeModelKey(model), url);
   }
 
   // ===========================================================================
   // PRIVATE HELPERS
   // ===========================================================================
-
-  /**
-   * Normalize model string for lookup
-   */
-  private normalize(model: string): string {
-    return model
-      .toUpperCase()
-      .replace(/^AXIS\s*/i, '')
-      .replace(/\s+/g, '-')
-      .trim();
-  }
-
-  /**
-   * Get base model by stripping variant suffixes
-   */
-  private getBaseModel(model: string): string {
-    let base = model;
-
-    // Remove known variant suffixes
-    for (const suffix of VARIANT_SUFFIXES) {
-      if (base.endsWith(suffix)) {
-        base = base.slice(0, -suffix.length);
-      }
-    }
-
-    // Remove lens size suffix
-    base = base.replace(LENS_PATTERN, '');
-
-    // Clean up trailing hyphens
-    base = base.replace(/-+$/, '');
-
-    return base;
-  }
 
   /**
    * Build product page URL

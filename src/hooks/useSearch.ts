@@ -7,6 +7,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type { SearchResponse, ISearchEngine } from '@/types';
+import { validateQuery } from '@/core/search/queryParser';
 
 // =============================================================================
 // TYPES
@@ -46,6 +47,8 @@ export interface UseSearchReturn {
   error: string | null;
 }
 
+const MAX_CACHE_ENTRIES = 150;
+
 // =============================================================================
 // HOOK IMPLEMENTATION
 // =============================================================================
@@ -67,17 +70,52 @@ export function useSearch(
 
   // Debounce timer ref
   const debounceRef = useRef<number | null>(null);
+  const cacheRef = useRef<Map<string, SearchResponse>>(new Map());
+
+  const cacheResult = useCallback((cacheKey: string, response: SearchResponse) => {
+    const cache = cacheRef.current;
+    if (cache.has(cacheKey)) {
+      cache.delete(cacheKey);
+    }
+    cache.set(cacheKey, response);
+
+    if (cache.size > MAX_CACHE_ENTRIES) {
+      const oldestKey = cache.keys().next().value;
+      if (oldestKey) {
+        cache.delete(oldestKey);
+      }
+    }
+  }, []);
 
   // Perform search
   const performSearch = useCallback((searchQuery: string) => {
+    const trimmed = searchQuery.trim();
+    const cacheKey = trimmed.toLowerCase();
+
+    const queryValidation = validateQuery(trimmed);
+    if (!queryValidation.valid && trimmed.length >= minLength) {
+      setError(queryValidation.error ?? 'Invalid query');
+      setResults(null);
+      setIsSearching(false);
+      return;
+    }
+
     // Clear previous timer
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
 
     // Check minimum length
-    if (searchQuery.trim().length < minLength) {
+    if (trimmed.length < minLength) {
       setResults(null);
+      setIsSearching(false);
+      return;
+    }
+
+    const cached = cacheRef.current.get(cacheKey);
+    if (cached) {
+      setResults(cached);
+      setError(cached.error ?? null);
       setIsSearching(false);
       return;
     }
@@ -88,7 +126,8 @@ export function useSearch(
     // Debounced search
     debounceRef.current = window.setTimeout(() => {
       try {
-        const response = engine.search(searchQuery);
+        const response = engine.search(trimmed);
+        cacheResult(cacheKey, response);
         setResults(response);
 
         if (response.error) {
@@ -101,7 +140,7 @@ export function useSearch(
         setIsSearching(false);
       }
     }, debounceMs);
-  }, [engine, debounceMs, minLength]);
+  }, [engine, debounceMs, minLength, cacheResult]);
 
   // Update query
   const setQuery = useCallback((newQuery: string) => {
@@ -138,6 +177,10 @@ export function useSearch(
       }
     };
   }, []);
+
+  useEffect(() => {
+    cacheRef.current.clear();
+  }, [engine]);
 
   return {
     query,

@@ -70,6 +70,15 @@ function getCategory(manufacturer: string): CategoryId {
   return CATEGORY_MAP[lower] ?? 'competitive';
 }
 
+function addToIndex<K, V>(index: Map<K, V[]>, key: K, value: V): void {
+  const existing = index.get(key);
+  if (existing) {
+    existing.push(value);
+  } else {
+    index.set(key, [value]);
+  }
+}
+
 // =============================================================================
 // SEARCH ENGINE IMPLEMENTATION
 // =============================================================================
@@ -103,32 +112,27 @@ export class SearchEngine implements ISearchEngine {
     // Competitor model index (normalized)
     for (const mapping of this.competitorMappings) {
       const key = normalizeStrict(mapping.competitor_model);
-      const existing = this.competitorIndex.get(key) ?? [];
-      this.competitorIndex.set(key, [...existing, mapping]);
+      addToIndex(this.competitorIndex, key, mapping);
 
       // Manufacturer index
       const mfrKey = mapping.competitor_manufacturer.toLowerCase();
-      const mfrExisting = this.manufacturerIndex.get(mfrKey) ?? [];
-      this.manufacturerIndex.set(mfrKey, [...mfrExisting, mapping]);
+      addToIndex(this.manufacturerIndex, mfrKey, mapping);
 
       // Axis model index (reverse lookup)
       const axisKey = normalizeStrict(mapping.axis_replacement);
-      const axisExisting = this.axisModelIndex.get(axisKey) ?? [];
-      this.axisModelIndex.set(axisKey, [...axisExisting, mapping]);
+      addToIndex(this.axisModelIndex, axisKey, mapping);
 
       // Type index (camera type grouping)
       if (mapping.competitor_type) {
         const typeKey = this.normalizeType(mapping.competitor_type);
-        const typeExisting = this.typeIndex.get(typeKey) ?? [];
-        this.typeIndex.set(typeKey, [...typeExisting, mapping]);
+        addToIndex(this.typeIndex, typeKey, mapping);
       }
     }
 
     // Legacy model index
     for (const mapping of this.legacyMappings) {
       const key = normalizeStrict(mapping.legacy_model);
-      const existing = this.legacyIndex.get(key) ?? [];
-      this.legacyIndex.set(key, [...existing, mapping]);
+      addToIndex(this.legacyIndex, key, mapping);
     }
   }
 
@@ -221,30 +225,30 @@ export class SearchEngine implements ISearchEngine {
   searchCompetitor(query: string): SearchResult[] {
     const normalizedQuery = normalizeStrict(query);
     const results: SearchResult[] = [];
+    const seenModels = new Set<string>();
 
     // Check exact match first (fast path)
     const exactMatches = this.competitorIndex.get(normalizedQuery);
     if (exactMatches) {
       for (const mapping of exactMatches) {
         results.push(this.createResult(mapping, 100, 'exact'));
+        seenModels.add(normalizeStrict(mapping.competitor_model));
       }
     }
 
     // Fuzzy search if enabled
     if (this.config.fuzzyEnabled) {
       for (const mapping of this.competitorMappings) {
+        const modelKey = normalizeStrict(mapping.competitor_model);
+        if (seenModels.has(modelKey)) {
+          continue;
+        }
+
         const match = scoreMatch(query, mapping.competitor_model);
 
         if (match.score >= this.config.minScore && match.type !== 'none') {
-          // Skip if we already have this as exact match
-          const isDupe = results.some(r =>
-            !r.isLegacy &&
-            (r.mapping as CompetitorMapping).competitor_model === mapping.competitor_model
-          );
-
-          if (!isDupe) {
-            results.push(this.createResult(mapping, match.score, match.type));
-          }
+          results.push(this.createResult(mapping, match.score, match.type));
+          seenModels.add(modelKey);
         }
       }
     }
@@ -258,29 +262,30 @@ export class SearchEngine implements ISearchEngine {
   searchLegacy(query: string): SearchResult[] {
     const normalizedQuery = normalizeStrict(query);
     const results: SearchResult[] = [];
+    const seenModels = new Set<string>();
 
     // Exact match first
     const exactMatches = this.legacyIndex.get(normalizedQuery);
     if (exactMatches) {
       for (const mapping of exactMatches) {
         results.push(this.createLegacyResult(mapping, 100, 'exact'));
+        seenModels.add(normalizeStrict(mapping.legacy_model));
       }
     }
 
     // Fuzzy search
     if (this.config.fuzzyEnabled) {
       for (const mapping of this.legacyMappings) {
+        const modelKey = normalizeStrict(mapping.legacy_model);
+        if (seenModels.has(modelKey)) {
+          continue;
+        }
+
         const match = scoreMatch(query, mapping.legacy_model);
 
         if (match.score >= this.config.minScore && match.type !== 'none') {
-          const isDupe = results.some(r =>
-            r.isLegacy &&
-            (r.mapping as LegacyAxisMapping).legacy_model === mapping.legacy_model
-          );
-
-          if (!isDupe) {
-            results.push(this.createLegacyResult(mapping, match.score, match.type));
-          }
+          results.push(this.createLegacyResult(mapping, match.score, match.type));
+          seenModels.add(modelKey);
         }
       }
     }
@@ -350,27 +355,25 @@ export class SearchEngine implements ISearchEngine {
   getSuggestions(partial: string): string[] {
     if (partial.length < 2) return [];
 
-    const suggestions: Array<{ model: string; score: number }> = [];
+    const suggestions = new Map<string, number>();
     const normalizedPartial = normalizeStrict(partial);
 
     // Check competitor models
     for (const mapping of this.competitorMappings) {
       const normalized = normalizeStrict(mapping.competitor_model);
       if (normalized.startsWith(normalizedPartial) || normalized.includes(normalizedPartial)) {
-        suggestions.push({
-          model: mapping.competitor_model,
-          score: normalized.startsWith(normalizedPartial) ? 100 : 50,
-        });
+        const score = normalized.startsWith(normalizedPartial) ? 100 : 50;
+        const existingScore = suggestions.get(mapping.competitor_model) ?? 0;
+        if (score > existingScore) {
+          suggestions.set(mapping.competitor_model, score);
+        }
       }
     }
 
-    // Sort by score and deduplicate
-    return [...new Set(
-      suggestions
-        .sort((a, b) => b.score - a.score)
-        .slice(0, this.config.maxSuggestions)
-        .map(s => s.model)
-    )];
+    return Array.from(suggestions.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, this.config.maxSuggestions)
+      .map(([model]) => model);
   }
 
   /**
@@ -471,12 +474,20 @@ export class SearchEngine implements ISearchEngine {
     suggestions: string[],
     startTime: number
   ): SearchResponse {
-    // Group results
-    const grouped: GroupedResults = {
-      exact: results.filter(r => r.type === 'exact'),
-      partial: results.filter(r => r.type === 'partial'),
-      similar: results.filter(r => r.type === 'similar'),
-    };
+    // Group results in one pass.
+    const exact: SearchResult[] = [];
+    const partial: SearchResult[] = [];
+    const similar: SearchResult[] = [];
+    for (const result of results) {
+      if (result.type === 'exact') {
+        exact.push(result);
+      } else if (result.type === 'partial') {
+        partial.push(result);
+      } else if (result.type === 'similar') {
+        similar.push(result);
+      }
+    }
+    const grouped: GroupedResults = { exact, partial, similar };
 
     // Determine confidence
     let confidence: 'high' | 'medium' | 'low' | 'none';

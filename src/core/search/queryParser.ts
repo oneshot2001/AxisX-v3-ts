@@ -150,13 +150,30 @@ function findManufacturer(query: string): string | undefined {
 
   // Check full manufacturer names
   for (const mfr of MANUFACTURERS) {
-    if (query === mfr || query.startsWith(mfr + ' ')) {
+    if (query === mfr) {
+      return MANUFACTURER_ALIASES[mfr] ?? capitalizeManufacturer(mfr);
+    }
+
+    if (query.startsWith(mfr + ' ')) {
+      const remainder = query.slice(mfr.length).trim();
+
+      // Inputs like "Hikvision DS-2CD2143..." should be treated as model queries,
+      // not manufacturer browse.
+      if (looksLikeModelQuery(remainder)) {
+        return undefined;
+      }
+
       // Return canonical name
       return MANUFACTURER_ALIASES[mfr] ?? capitalizeManufacturer(mfr);
     }
   }
 
   return undefined;
+}
+
+function looksLikeModelQuery(query: string): boolean {
+  // Most camera model numbers include at least one digit.
+  return /\d/.test(query);
 }
 
 /**

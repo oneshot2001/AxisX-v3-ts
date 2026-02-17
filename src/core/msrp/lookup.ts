@@ -5,6 +5,7 @@
  */
 
 import type { MSRPResult, IMSRPLookup } from '@/types';
+import { normalizeModelKey, getBaseModelKey } from '@/core/model/normalize';
 
 // =============================================================================
 // MSRP LOOKUP IMPLEMENTATION
@@ -16,7 +17,7 @@ export class MSRPLookup implements IMSRPLookup {
   constructor(msrpData: Record<string, number>) {
     // Build lookup map with normalized keys
     for (const [model, price] of Object.entries(msrpData)) {
-      this.data.set(this.normalize(model), price);
+      this.data.set(normalizeModelKey(model), price);
     }
   }
 
@@ -24,7 +25,7 @@ export class MSRPLookup implements IMSRPLookup {
    * Look up price with fallback cascade
    */
   lookup(model: string): MSRPResult {
-    const normalized = this.normalize(model);
+    const normalized = normalizeModelKey(model);
 
     // 1. Direct match
     const directPrice = this.data.get(normalized);
@@ -38,7 +39,7 @@ export class MSRPLookup implements IMSRPLookup {
     }
 
     // 2. Base model (strip variants)
-    const baseModel = this.getBaseModel(normalized);
+    const baseModel = getBaseModelKey(normalized);
     if (baseModel !== normalized) {
       const basePrice = this.data.get(baseModel);
       if (basePrice !== undefined) {
@@ -122,39 +123,6 @@ export class MSRPLookup implements IMSRPLookup {
     return this.lookup(model).price !== null;
   }
 
-  // ===========================================================================
-  // PRIVATE HELPERS
-  // ===========================================================================
-
-  private normalize(model: string): string {
-    return model
-      .toUpperCase()
-      .replace(/^AXIS\s*/i, '')
-      .replace(/\s+/g, '-')
-      .trim();
-  }
-
-  private getBaseModel(model: string): string {
-    const suffixes = [
-      '-60HZ', '-50HZ', '60HZ', '50HZ',
-      '-EUR', '-US', '-BR', '-NM', '-AR',
-      '-24V', '-M12', '-ZOOM',
-      '-BULK', 'BULK',
-    ];
-
-    let base = model;
-    for (const suffix of suffixes) {
-      if (base.endsWith(suffix)) {
-        base = base.slice(0, -suffix.length);
-      }
-    }
-
-    // Remove lens suffixes
-    base = base.replace(/-\d+MM$/i, '');
-
-    // Clean trailing hyphens
-    return base.replace(/-+$/, '');
-  }
 }
 
 // =============================================================================

@@ -12,6 +12,7 @@ import type {
   CameraSubcategory,
   ISpecLookup,
 } from '@/types';
+import { normalizeModelKey, getBaseModelKey } from '@/core/model/normalize';
 
 // =============================================================================
 // SPEC LOOKUP IMPLEMENTATION
@@ -22,7 +23,7 @@ export class SpecLookup implements ISpecLookup {
 
   constructor(specDatabase: AxisSpecDatabase) {
     for (const [key, spec] of Object.entries(specDatabase.products)) {
-      this.data.set(this.normalize(key), spec as AxisProductSpec);
+      this.data.set(normalizeModelKey(key), spec as AxisProductSpec);
     }
   }
 
@@ -30,14 +31,14 @@ export class SpecLookup implements ISpecLookup {
    * Look up spec by model key
    */
   lookupSpec(model: string): AxisProductSpec | null {
-    const normalized = this.normalize(model);
+    const normalized = normalizeModelKey(model);
 
     // Direct match
     const direct = this.data.get(normalized);
     if (direct) return direct;
 
     // Base model fallback (strip variant suffixes)
-    const base = this.getBaseModel(normalized);
+    const base = getBaseModelKey(normalized);
     if (base !== normalized) {
       const baseSpec = this.data.get(base);
       if (baseSpec) return baseSpec;
@@ -86,36 +87,6 @@ export class SpecLookup implements ISpecLookup {
     return this.data.size;
   }
 
-  // ===========================================================================
-  // PRIVATE HELPERS
-  // ===========================================================================
-
-  private normalize(model: string): string {
-    return model
-      .toUpperCase()
-      .replace(/^AXIS\s*/i, '')
-      .replace(/\s+/g, '-')
-      .trim();
-  }
-
-  private getBaseModel(model: string): string {
-    const suffixes = [
-      '-60HZ', '-50HZ', '60HZ', '50HZ',
-      '-EUR', '-US', '-BR', '-NM', '-AR',
-      '-24V', '-M12', '-ZOOM',
-      '-BULK', 'BULK',
-    ];
-
-    let base = model;
-    for (const suffix of suffixes) {
-      if (base.endsWith(suffix)) {
-        base = base.slice(0, -suffix.length);
-      }
-    }
-
-    base = base.replace(/-\d+MM$/i, '');
-    return base.replace(/-+$/, '');
-  }
 }
 
 // =============================================================================

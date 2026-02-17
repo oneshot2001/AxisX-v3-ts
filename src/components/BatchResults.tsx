@@ -222,7 +222,7 @@ function getStatusBadge(item: BatchSearchItem, styles: ReturnType<typeof useStyl
           Searching
         </span>
       );
-    case 'complete':
+    case 'complete': {
       if (!item.response || item.response.results.length === 0) {
         return (
           <span className={mergeClasses(styles.statusBadge, styles.statusNotFound)}>
@@ -246,6 +246,7 @@ function getStatusBadge(item: BatchSearchItem, styles: ReturnType<typeof useStyl
           Partial
         </span>
       );
+    }
     case 'error':
       return (
         <span className={mergeClasses(styles.statusBadge, styles.statusError)}>

@@ -125,6 +125,11 @@ describe('Query Parser', () => {
     expect(parseQuery('Hanwha Vision').type).toBe('manufacturer');
   });
 
+  it('does not classify manufacturer-prefixed model lookups as manufacturer browse', () => {
+    expect(parseQuery('Hikvision DS-2CD2143G2-I').type).toBe('competitor');
+    expect(parseQuery('Sony SNC-EM602RC').type).toBe('competitor');
+  });
+
   it('defaults to competitor search', () => {
     expect(parseQuery('DS-2CD2143G2-I').type).toBe('competitor');
     expect(parseQuery('IPC-HDBW2431E').type).toBe('competitor');

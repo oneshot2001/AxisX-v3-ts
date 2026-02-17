@@ -142,48 +142,47 @@ export function useCart(): UseCartReturn {
 
     const normalizedModel = model.toUpperCase().replace(/^AXIS\s*/i, '').trim();
 
-    // Check if already in cart
-    const existingIndex = items.findIndex(
-      item => item.model.toUpperCase() === normalizedModel
-    );
+    setItems((prev) => {
+      const existingIndex = prev.findIndex(
+        (item) => item.model.toUpperCase() === normalizedModel
+      );
 
-    if (existingIndex >= 0) {
-      // Update quantity
-      setItems(prev => prev.map((item, i) =>
-        i === existingIndex
-          ? { ...item, quantity: item.quantity + quantity }
-          : item
-      ));
-      return;
-    }
+      if (existingIndex >= 0) {
+        return prev.map((item, i) =>
+          i === existingIndex
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      }
 
-    // Get MSRP
-    let msrp: number | null = null;
-    try {
-      msrp = getMSRP().getPrice(normalizedModel);
-    } catch {
-      // MSRP not initialized yet
-    }
+      // Get MSRP
+      let msrp: number | null = null;
+      try {
+        msrp = getMSRP().getPrice(normalizedModel);
+      } catch {
+        // MSRP not initialized yet
+      }
 
-    // Get URL
-    const axisUrl = getAxisURL(normalizedModel);
+      // Get URL
+      const axisUrl = getAxisURL(normalizedModel);
 
-    // Create new item
-    const newItem: CartItem = {
-      id: generateId(),
-      model: normalizedModel,
-      msrp,
-      quantity,
-      source,
-      competitorModel,
-      competitorManufacturer,
-      axisUrl,
-      notes,
-      axisFeatures,
-    };
+      // Create new item
+      const newItem: CartItem = {
+        id: generateId(),
+        model: normalizedModel,
+        msrp,
+        quantity,
+        source,
+        competitorModel,
+        competitorManufacturer,
+        axisUrl,
+        notes,
+        axisFeatures,
+      };
 
-    setItems(prev => [...prev, newItem]);
-  }, [items]);
+      return [...prev, newItem];
+    });
+  }, []);
 
   // Add from search result with optional quantity
   const addFromResult = useCallback((result: SearchResult, quantity: number = 1) => {

@@ -12,7 +12,7 @@
  * Migrated to Fluent UI components.
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Accordion,
   AccordionItem,
@@ -22,6 +22,7 @@ import {
   Text,
   makeStyles,
   tokens,
+  mergeClasses,
 } from '@fluentui/react-components';
 import type { SearchResponse, SearchResult, CategoryId } from '@/types';
 import { ResultCard } from './ResultCard';
@@ -161,6 +162,18 @@ function getCategoryCounts(results: readonly SearchResult[]): Record<CategoryId,
   return counts;
 }
 
+function getResultKey(result: SearchResult, index: number): string {
+  const mapping = result.mapping;
+  const fromModel = 'competitor_model' in mapping
+    ? mapping.competitor_model
+    : mapping.legacy_model;
+  const toModel = 'axis_replacement' in mapping
+    ? mapping.axis_replacement
+    : mapping.replacement_model;
+
+  return `${result.isLegacy ? 'legacy' : 'competitor'}:${fromModel}:${toModel}:${index}`;
+}
+
 // =============================================================================
 // COMPONENT
 // =============================================================================
@@ -191,10 +204,28 @@ export function SearchResults({
     return response.results.filter((r) => r.category === activeCategory);
   }, [response.results, activeCategory]);
 
-  // Group filtered results by quality tier
-  const exactMatches = filteredResults.filter((r) => r.score >= 90);
-  const partialMatches = filteredResults.filter((r) => r.score >= 70 && r.score < 90);
-  const similarMatches = filteredResults.filter((r) => r.score >= 50 && r.score < 70);
+  // Group filtered results by quality tier in a single pass.
+  const groupedResults = useMemo(() => {
+    const exact: SearchResult[] = [];
+    const partial: SearchResult[] = [];
+    const similar: SearchResult[] = [];
+
+    for (const result of filteredResults) {
+      if (result.score >= 90) {
+        exact.push(result);
+      } else if (result.score >= 70) {
+        partial.push(result);
+      } else if (result.score >= 50) {
+        similar.push(result);
+      }
+    }
+
+    return { exact, partial, similar };
+  }, [filteredResults]);
+
+  const exactMatches = groupedResults.exact;
+  const partialMatches = groupedResults.partial;
+  const similarMatches = groupedResults.similar;
 
   const hasExactOrPartial = exactMatches.length > 0 || partialMatches.length > 0;
 
@@ -206,6 +237,21 @@ export function SearchResults({
     if (!hasExactOrPartial && similarMatches.length > 0) initial.push('similar');
     return initial;
   });
+
+  useEffect(() => {
+    const nextOpenItems: string[] = [];
+    if (exactMatches.length > 0) nextOpenItems.push('exact');
+    if (partialMatches.length > 0) nextOpenItems.push('partial');
+    if (!hasExactOrPartial && similarMatches.length > 0) nextOpenItems.push('similar');
+    setOpenItems(nextOpenItems);
+  }, [
+    response.query,
+    activeCategory,
+    exactMatches.length,
+    partialMatches.length,
+    similarMatches.length,
+    hasExactOrPartial,
+  ]);
 
   // Axis Browse mode — show portfolio catalog instead of search results
   // (placed after all hooks to satisfy React Rules of Hooks)
@@ -285,11 +331,11 @@ export function SearchResults({
         {exactMatches.length > 0 && (
           <AccordionItem value="exact" className={styles.accordionItem}>
             <AccordionHeader
-              className={`${styles.accordionHeader} ${styles.headerExact}`}
+              className={mergeClasses(styles.accordionHeader, styles.headerExact)}
             >
               <div className={styles.headerContent}>
                 <Text className={styles.headerTitle}>Exact Matches</Text>
-                <span className={`${styles.countBadge} ${styles.countBadgeExact}`}>
+                <span className={mergeClasses(styles.countBadge, styles.countBadgeExact)}>
                   {exactMatches.length}
                 </span>
               </div>
@@ -297,9 +343,9 @@ export function SearchResults({
             <AccordionPanel className={styles.accordionPanel}>
               {exactMatches.map((result, index) => (
                 <ResultCard
-                  key={index}
+                  key={getResultKey(result, index)}
                   result={result}
-                  onAddToCart={(quantity) => onAddToCart(result, quantity)}
+                  onAddToCart={onAddToCart}
                 />
               ))}
             </AccordionPanel>
@@ -310,11 +356,11 @@ export function SearchResults({
         {partialMatches.length > 0 && (
           <AccordionItem value="partial" className={styles.accordionItem}>
             <AccordionHeader
-              className={`${styles.accordionHeader} ${styles.headerPartial}`}
+              className={mergeClasses(styles.accordionHeader, styles.headerPartial)}
             >
               <div className={styles.headerContent}>
                 <Text className={styles.headerTitle}>Partial Matches</Text>
-                <span className={`${styles.countBadge} ${styles.countBadgePartial}`}>
+                <span className={mergeClasses(styles.countBadge, styles.countBadgePartial)}>
                   {partialMatches.length}
                 </span>
               </div>
@@ -322,9 +368,9 @@ export function SearchResults({
             <AccordionPanel className={styles.accordionPanel}>
               {partialMatches.map((result, index) => (
                 <ResultCard
-                  key={index}
+                  key={getResultKey(result, index)}
                   result={result}
-                  onAddToCart={(quantity) => onAddToCart(result, quantity)}
+                  onAddToCart={onAddToCart}
                 />
               ))}
             </AccordionPanel>
@@ -335,11 +381,11 @@ export function SearchResults({
         {similarMatches.length > 0 && (
           <AccordionItem value="similar" className={styles.accordionItem}>
             <AccordionHeader
-              className={`${styles.accordionHeader} ${styles.headerSimilar}`}
+              className={mergeClasses(styles.accordionHeader, styles.headerSimilar)}
             >
               <div className={styles.headerContent}>
                 <Text className={styles.headerTitle}>Similar Matches</Text>
-                <span className={`${styles.countBadge} ${styles.countBadgeSimilar}`}>
+                <span className={mergeClasses(styles.countBadge, styles.countBadgeSimilar)}>
                   {similarMatches.length}
                 </span>
               </div>
@@ -347,9 +393,9 @@ export function SearchResults({
             <AccordionPanel className={styles.accordionPanel}>
               {similarMatches.map((result, index) => (
                 <ResultCard
-                  key={index}
+                  key={getResultKey(result, index)}
                   result={result}
-                  onAddToCart={(quantity) => onAddToCart(result, quantity)}
+                  onAddToCart={onAddToCart}
                 />
               ))}
             </AccordionPanel>

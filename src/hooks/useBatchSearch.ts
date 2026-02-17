@@ -10,8 +10,10 @@ import type {
   ISearchEngine,
   BatchSearchItem,
   BatchProgress,
+  SearchResponse,
 } from '@/types';
 import { generateId as genId } from '@/types';
+import { parseBatchInput, validateBatch, MAX_BATCH_SIZE } from '@/core/search/queryParser';
 
 // =============================================================================
 // TYPES
@@ -30,6 +32,9 @@ export interface UseBatchSearchReturn {
 
   /** Set raw input text */
   readonly setRawInput: (input: string) => void;
+
+  /** Set parsed batch items directly (preserves quantities from imports) */
+  readonly setImportedItems: (items: readonly { input: string; quantity: number }[]) => void;
 
   /** Parsed batch items */
   readonly items: readonly BatchSearchItem[];
@@ -73,17 +78,6 @@ export interface UseBatchSearchReturn {
 // =============================================================================
 
 /**
- * Parse raw input text into individual search queries.
- * Splits by newlines, filters empty lines, trims whitespace.
- */
-function parseRawInput(input: string): string[] {
-  return input
-    .split(/[\r\n]+/)
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
-}
-
-/**
  * Create a batch item from a raw query string.
  */
 function createBatchItem(input: string): BatchSearchItem {
@@ -93,6 +87,20 @@ function createBatchItem(input: string): BatchSearchItem {
     response: null,
     selected: true,
     quantity: 1,
+    status: 'pending',
+  };
+}
+
+/**
+ * Create a batch item from imported row data.
+ */
+function createImportedBatchItem(input: string, quantity: number): BatchSearchItem {
+  return {
+    id: genId(),
+    input,
+    response: null,
+    selected: true,
+    quantity: Math.max(1, Math.floor(quantity)),
     status: 'pending',
   };
 }
@@ -120,9 +128,25 @@ export function useBatchSearch(
   // Parse raw input into items when input changes
   const handleSetRawInput = useCallback((input: string) => {
     setRawInput(input);
-    const queries = parseRawInput(input);
-    setItems(queries.map(createBatchItem));
-    setProgress({ current: 0, total: queries.length, percent: 0 });
+    const queries = parseBatchInput(input);
+    const limitedQueries = queries.slice(0, MAX_BATCH_SIZE);
+    const validation = validateBatch(limitedQueries);
+    const validQueries = validation.valid ? limitedQueries : [];
+    setItems(validQueries.map(createBatchItem));
+    setProgress({ current: 0, total: validQueries.length, percent: 0 });
+  }, []);
+
+  const setImportedItems = useCallback((importedItems: readonly { input: string; quantity: number }[]) => {
+    const normalized = importedItems
+      .map((item) => ({
+        input: item.input.trim(),
+        quantity: Math.max(1, Math.floor(item.quantity)),
+      }))
+      .filter((item) => item.input.length > 0);
+
+    setRawInput(normalized.map((item) => item.input).join('\n'));
+    setItems(normalized.map((item) => createImportedBatchItem(item.input, item.quantity)));
+    setProgress({ current: 0, total: normalized.length, percent: 0 });
   }, []);
 
   // Process all items in batch
@@ -131,78 +155,66 @@ export function useBatchSearch(
 
     setIsProcessing(true);
     const total = items.length;
+    const workingItems = items.map((item) => ({ ...item }));
+    const flushInterval = 10;
+    const responseCache = new Map<string, SearchResponse>();
 
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
+    const flushState = (current: number) => {
+      setItems([...workingItems]);
+      setProgress({
+        current,
+        total,
+        percent: Math.round((current / total) * 100),
+      });
+    };
+
+    for (let i = 0; i < total; i++) {
+      const item = workingItems[i];
       if (!item) continue;
 
-      const itemId = item.id;
-      const itemInput = item.input;
-
-      // Update status to searching
-      setItems((prev) =>
-        prev.map((it) =>
-          it.id === itemId ? { ...it, status: 'searching' as const } : it
-        )
-      );
+      const searchingItem: BatchSearchItem = {
+        ...item,
+        status: 'searching',
+        error: undefined,
+      };
+      workingItems[i] = searchingItem;
 
       try {
-        // Perform search
-        const response = engine.search(itemInput);
-
-        // Update with results
-        setItems((prev) =>
-          prev.map((it) =>
-            it.id === itemId
-              ? {
-                  ...it,
-                  response,
-                  status: 'complete' as const,
-                  // Auto-deselect if no results found
-                  selected: response.results.length > 0,
-                }
-              : it
-          )
-        );
+        const cacheKey = item.input.trim().toLowerCase();
+        const cachedResponse = responseCache.get(cacheKey);
+        const response = cachedResponse ?? engine.search(item.input);
+        if (!cachedResponse) {
+          responseCache.set(cacheKey, response);
+        }
+        workingItems[i] = {
+          ...searchingItem,
+          response,
+          status: 'complete',
+          selected: response.results.length > 0,
+        };
       } catch (error) {
-        // Handle error
-        setItems((prev) =>
-          prev.map((it) =>
-            it.id === itemId
-              ? {
-                  ...it,
-                  status: 'error' as const,
-                  error: error instanceof Error ? error.message : 'Unknown error',
-                  selected: false,
-                }
-              : it
-          )
-        );
+        workingItems[i] = {
+          ...searchingItem,
+          status: 'error',
+          error: error instanceof Error ? error.message : 'Unknown error',
+          selected: false,
+        };
       }
 
-      // Update progress
-      setProgress({
-        current: i + 1,
-        total,
-        percent: Math.round(((i + 1) / total) * 100),
-      });
+      const current = i + 1;
+      const shouldFlush = current % flushInterval === 0 || current === total;
+      if (shouldFlush) {
+        flushState(current);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      }
 
-      // Add delay between searches
-      if (i < items.length - 1 && searchDelayMs > 0) {
+      if (i < total - 1 && searchDelayMs > 0) {
         await new Promise((resolve) => setTimeout(resolve, searchDelayMs));
       }
     }
 
     setIsProcessing(false);
-
-    // Call onComplete callback if provided
-    if (onComplete) {
-      // Get current items state for callback
-      setItems((currentItems) => {
-        onComplete(currentItems);
-        return currentItems;
-      });
-    }
+    onComplete?.(workingItems);
   }, [items, isProcessing, engine, searchDelayMs, onComplete]);
 
   // Toggle selection for an item
@@ -270,6 +282,7 @@ export function useBatchSearch(
   return {
     rawInput,
     setRawInput: handleSetRawInput,
+    setImportedItems,
     items,
     isProcessing,
     progress,
