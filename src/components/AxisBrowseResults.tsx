@@ -27,6 +27,7 @@ import {
 import { AXIS_CATALOG, getCatalogModelCount } from '@/data/axisCatalog';
 import type { CatalogCategory, CatalogSeries } from '@/data/axisCatalog';
 import { getFormattedPrice } from '@/core/msrp';
+import { getAxisURL } from '@/core/url';
 import { axisTokens } from '@/styles/fluentTheme';
 
 // =============================================================================
@@ -148,8 +149,8 @@ function getCategoryModelCount(category: CatalogCategory): number {
   return category.series.reduce((sum, s) => sum + s.models.length, 0);
 }
 
-function buildAxisUrl(model: string): string {
-  return `https://www.axis.com/products/axis-${model.toLowerCase()}`;
+function getModelUrl(model: string): string {
+  return getAxisURL(model);
 }
 
 // =============================================================================
@@ -187,7 +188,7 @@ function SeriesGroup({
             <div className={styles.modelActions}>
               <Button
                 as="a"
-                href={buildAxisUrl(model)}
+                href={getModelUrl(model)}
                 target="_blank"
                 rel="noopener noreferrer"
                 appearance="subtle"

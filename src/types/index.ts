@@ -858,7 +858,17 @@ export interface SpreadsheetValidationResult {
 // =============================================================================
 
 /** Product type classification */
-export type AxisProductType = 'camera' | 'audio' | 'intercom' | 'radar' | 'access-control' | 'networking';
+export type AxisProductType =
+  | 'camera'
+  | 'audio'
+  | 'intercom'
+  | 'radar'
+  | 'access-control'
+  | 'networking'
+  | 'recorder'
+  | 'mount'
+  | 'encoder'
+  | 'accessory';
 
 /** Camera subcategory by form factor */
 export type CameraSubcategory = 'fixed-dome' | 'fixed-bullet' | 'ptz' | 'panoramic' | 'modular' | 'specialty';
@@ -878,6 +888,51 @@ export interface ChipsetInfo {
 
 /** Network speed classification */
 export type NetworkSpeed = '10/100' | '10/100/1000';
+
+/** Recorder-specific specifications */
+export interface RecorderSpec {
+  readonly storageCapacity?: string;
+  readonly cameraLicenses?: number;
+  readonly raidSupport?: boolean;
+  readonly formFactor?: string;
+}
+
+/** Networking switch specifications */
+export interface NetworkingSpec {
+  readonly portCount?: number;
+  readonly poeBudgetWatts?: number;
+  readonly managed?: boolean;
+  readonly formFactor?: string;
+}
+
+/** Mount/bracket specifications */
+export interface MountSpec {
+  readonly compatibleSeries?: readonly string[];
+  readonly material?: string;
+  readonly indoorOutdoor?: string;
+  readonly loadCapacityKg?: number;
+}
+
+/** Encoder specifications */
+export interface EncoderSpec {
+  readonly channelCount?: number;
+  readonly maxResolution?: string;
+}
+
+/** Accessory specifications */
+export interface AccessorySpec {
+  readonly poeClass?: string;
+  readonly inputOutput?: string;
+  readonly operatingTempRange?: string;
+}
+
+/** Infrastructure spec union for non-camera products */
+export type InfraSpec =
+  | RecorderSpec
+  | NetworkingSpec
+  | MountSpec
+  | EncoderSpec
+  | AccessorySpec;
 
 /** Full product specification record */
 export interface AxisProductSpec {
@@ -921,6 +976,9 @@ export interface AxisProductSpec {
   // Links
   readonly productUrl: string;
   readonly datasheetUrl: string | null;
+
+  // Infrastructure-specific specs (non-camera products)
+  readonly infraSpec?: InfraSpec;
 }
 
 /** Spec database JSON structure */

@@ -1,7 +1,8 @@
 /**
- * Axis Camera Catalog 2026
+ * Axis Product Catalog 2026
  *
- * Static catalog data derived from axis_camera_catalog_2026.json (scraped Jan 2026).
+ * Static catalog data derived from axis_camera_catalog_2026.json (scraped Jan 2026)
+ * and axis_spec_data.json (full portfolio including infrastructure products).
  * Organized by category and series for the Axis Browse portfolio view.
  *
  * Model strings match the format used by VERIFIED_URLS and axis_msrp_data.json
@@ -403,6 +404,281 @@ export const AXIS_CATALOG: readonly CatalogCategory[] = [
         label: 'Specialty Models',
         description: 'Purpose-built for specific environments',
         models: ['P9117-PV', 'Q9216-SLV', 'Q9227-SLV', 'Q9307-LV'],
+      },
+    ],
+  },
+
+  // =========================================================================
+  // INFRASTRUCTURE & NON-CAMERA PRODUCTS
+  // =========================================================================
+
+  // -------------------------------------------------------------------------
+  // RECORDING SOLUTIONS
+  // -------------------------------------------------------------------------
+  {
+    id: 'recorder',
+    label: 'Recording Solutions',
+    description: 'Network video recorders and storage',
+    series: [
+      {
+        id: 'S12',
+        label: 'S12 Series',
+        description: 'Camera Station Pro recorders',
+        models: [
+          'S1216', 'S1224', 'S1228', 'S1232', 'S1264', 'S1296',
+        ],
+      },
+      {
+        id: 'S21',
+        label: 'S21 Series',
+        description: 'Compact desktop recorders',
+        models: ['S2108'],
+      },
+      {
+        id: 'S22',
+        label: 'S22 Series',
+        description: 'All-in-one recorders',
+        models: ['S2208', 'S2212', 'S2216', 'S2224'],
+      },
+      {
+        id: 'S30',
+        label: 'S30 Series',
+        description: 'Mini recorders',
+        models: ['S3008', 'S3016'],
+      },
+      {
+        id: 'S40',
+        label: 'S40 Series',
+        description: 'High-capacity storage',
+        models: ['S4000'],
+      },
+      {
+        id: 'S93',
+        label: 'S93 Series',
+        description: 'Audio management appliances',
+        models: ['S9301', 'S9302'],
+      },
+    ],
+  },
+
+  // -------------------------------------------------------------------------
+  // NETWORK EQUIPMENT
+  // -------------------------------------------------------------------------
+  {
+    id: 'networking',
+    label: 'Network Equipment',
+    description: 'PoE switches and media converters',
+    series: [
+      {
+        id: 'D80',
+        label: 'D80 Series',
+        description: 'Compact industrial switches',
+        models: ['D8004', 'D8208-R', 'D8248', 'D8308'],
+      },
+      {
+        id: 'T85',
+        label: 'T85 Series',
+        description: 'PoE+ network switches',
+        models: ['T8504-E', 'T8504-R', 'T8508', 'T8516', 'T8524'],
+      },
+      {
+        id: 'T86',
+        label: 'T86 Series',
+        description: 'Media converters and switch accessories',
+        models: ['T8604', 'T8606', 'T8611', 'T8612', 'T8613', 'T8640', 'T8645'],
+      },
+    ],
+  },
+
+  // -------------------------------------------------------------------------
+  // VIDEO ENCODERS
+  // -------------------------------------------------------------------------
+  {
+    id: 'encoder',
+    label: 'Video Encoders',
+    description: 'Analog-to-IP video encoders',
+    series: [
+      {
+        id: 'M71',
+        label: 'M71 Series',
+        description: 'Multi-channel video encoders',
+        models: ['M7104', 'M7116'],
+      },
+      {
+        id: 'P73',
+        label: 'P73 Series',
+        description: 'High-performance video encoders',
+        models: ['P7304', 'P7316'],
+      },
+    ],
+  },
+
+  // -------------------------------------------------------------------------
+  // NETWORK AUDIO
+  // -------------------------------------------------------------------------
+  {
+    id: 'audio',
+    label: 'Network Audio',
+    description: 'Speakers, amplifiers, and audio bridges',
+    series: [
+      {
+        id: 'C10',
+        label: 'C10 Series',
+        description: 'Network cabinet speakers',
+        models: ['C1004-E'],
+      },
+      {
+        id: 'C11',
+        label: 'C11 Series',
+        description: 'Network ceiling speakers',
+        models: ['C1110-E', 'C1111-E'],
+      },
+      {
+        id: 'C12',
+        label: 'C12 Series',
+        description: 'Network ceiling speakers (compact)',
+        models: ['C1210-E', 'C1211-E'],
+      },
+      {
+        id: 'C13',
+        label: 'C13 Series',
+        description: 'Network pendant speakers',
+        models: ['C1310-E'],
+      },
+      {
+        id: 'C14',
+        label: 'C14 Series',
+        description: 'Network wall speakers',
+        models: ['C1410'],
+      },
+      {
+        id: 'C15',
+        label: 'C15 Series',
+        description: 'Network horn speakers',
+        models: ['C1510', 'C1511'],
+      },
+      {
+        id: 'C16',
+        label: 'C16 Series',
+        description: 'Network outdoor horn speakers',
+        models: ['C1610-VE'],
+      },
+      {
+        id: 'C17',
+        label: 'C17 Series',
+        description: 'Network audio amplifiers',
+        models: ['C1710', 'C1720'],
+      },
+      {
+        id: 'C61',
+        label: 'C61 Series',
+        description: 'Network audio bridge',
+        models: ['C6110'],
+      },
+      {
+        id: 'C70',
+        label: 'C70 Series',
+        description: 'Network PA system',
+        models: ['C7050'],
+      },
+      {
+        id: 'C8',
+        label: 'C8 Series',
+        description: 'Network microphones',
+        models: ['C8110', 'C8210', 'C8310'],
+      },
+    ],
+  },
+
+  // -------------------------------------------------------------------------
+  // NETWORK INTERCOMS & DOOR STATIONS
+  // -------------------------------------------------------------------------
+  {
+    id: 'intercom',
+    label: 'Network Intercoms',
+    description: 'Door stations, intercoms, and access hardware',
+    series: [
+      {
+        id: 'A12',
+        label: 'A12 Series',
+        description: 'Network door stations',
+        models: ['A1210', 'A1210-B', 'A1214'],
+      },
+      {
+        id: 'A16',
+        label: 'A16 Series',
+        description: 'Network door controllers',
+        models: ['A1601', 'A1610', 'A1610-B'],
+      },
+      {
+        id: 'A17',
+        label: 'A17 Series',
+        description: 'Network door controllers (advanced)',
+        models: ['A1710-B', 'A1711'],
+      },
+      {
+        id: 'A18',
+        label: 'A18 Series',
+        description: 'Network door controllers (enterprise)',
+        models: ['A1810-B', 'A1811'],
+      },
+      {
+        id: 'I-series',
+        label: 'I Series',
+        description: 'Network intercoms and video intercoms',
+        models: ['I5304', 'I7010-VE', 'I7020', 'I8016-LVE', 'I8116-E', 'I8307-VE'],
+      },
+    ],
+  },
+
+  // -------------------------------------------------------------------------
+  // MOUNTS & BRACKETS
+  // -------------------------------------------------------------------------
+  {
+    id: 'mount',
+    label: 'Mounts & Brackets',
+    description: 'Camera mounting accessories',
+    series: [
+      {
+        id: 'T91',
+        label: 'T91 Series',
+        description: 'Wall, pole, ceiling, and corner mounts',
+        models: [
+          'T91A23', 'T91A33', 'T91A64',
+          'T91B47', 'T91B50', 'T91B51', 'T91B53', 'T91B57',
+          'T91B63', 'T91B67',
+          'T91D61', 'T91D62', 'T91F67',
+          'T91G61', 'T91H61', 'T91R61',
+        ],
+      },
+    ],
+  },
+
+  // -------------------------------------------------------------------------
+  // RADAR DETECTION
+  // -------------------------------------------------------------------------
+  {
+    id: 'radar',
+    label: 'Radar Detection',
+    description: 'Area protection and speed monitoring',
+    series: [
+      {
+        id: 'D-indoor',
+        label: 'D Series Indoor',
+        description: 'Indoor area protection radar',
+        models: ['D1110', 'D3110'],
+      },
+      {
+        id: 'D-outdoor',
+        label: 'D Series Outdoor',
+        description: 'Outdoor area protection and speed radar',
+        models: ['D2110-VE', 'D2122-VE', 'D2123-VE', 'D2210-VE', 'D4100-VE', 'D4200-VE'],
+      },
+      {
+        id: 'D-air',
+        label: 'D Series Airborne',
+        description: 'Drone and airborne object detection',
+        models: ['D6210', 'D6310'],
       },
     ],
   },

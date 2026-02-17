@@ -385,31 +385,146 @@ export const VERIFIED_URLS: Record<string, string> = {
   'XQ1785': 'https://www.axis.com/products/axis-xq1785',
 
   // ===========================================================================
-  // I-SERIES (INTERCOMS/DOOR STATIONS)
-  // ===========================================================================
-
-  'I8016-LVE': 'https://www.axis.com/products/axis-i8016-lve',
-  'I8116-E': 'https://www.axis.com/products/axis-i8116-e',
-
-  // ===========================================================================
-  // A-SERIES (DOOR STATIONS)
+  // A-SERIES (DOOR STATIONS) - Legacy entries
   // ===========================================================================
 
   'A8207-VE': 'https://www.axis.com/products/axis-a8207-ve',
   'A8207-VE-MK-II': 'https://www.axis.com/products/axis-a8207-ve-mk-ii',
 
   // ===========================================================================
-  // D-SERIES (RADAR)
+  // RECORDING SOLUTIONS (S-SERIES)
   // ===========================================================================
 
-  'D2210-VE': 'https://www.axis.com/products/axis-d2210-ve',
+  'S1216': 'https://www.axis.com/products/axis-s1216-tower-mk-ii',
+  'S1224': 'https://www.axis.com/products/axis-s1224-rack',
+  'S1228': 'https://www.axis.com/products/axis-s1228-rack',
+  'S1232': 'https://www.axis.com/products/axis-s1232-rack',
+  'S1264': 'https://www.axis.com/products/axis-s1264-rack',
+  'S1296': 'https://www.axis.com/products/axis-s1296-rack',
+  'S2108': 'https://www.axis.com/products/axis-s2108',
+  'S2208': 'https://www.axis.com/products/axis-s2208-mk-ii',
+  'S2212': 'https://www.axis.com/products/axis-s2212-mk-ii',
+  'S2216': 'https://www.axis.com/products/axis-s2216-mk-ii',
+  'S2224': 'https://www.axis.com/products/axis-s2224-mk-ii',
+  'S3008': 'https://www.axis.com/products/axis-s3008-mk-ii',
+  'S3016': 'https://www.axis.com/products/axis-s3016',
+  'S4000': 'https://www.axis.com/products/axis-s4000',
+  'S9301': 'https://www.axis.com/products/axis-s9301-mk-ii',
+  'S9302': 'https://www.axis.com/products/axis-s9302-mk-ii',
 
   // ===========================================================================
-  // C-SERIES (NETWORK SPEAKERS)
+  // NETWORK SWITCHES (D80xx, T85xx, T86xx)
   // ===========================================================================
 
-  'C1310-E': 'https://www.axis.com/products/axis-c1310-e',
+  'D8004': 'https://www.axis.com/products/axis-d8004-unmanaged-poe-switch',
+  'D8208': 'https://www.axis.com/products/axis-d8208-r-industrial-poe-switch',
+  'D8208-R': 'https://www.axis.com/products/axis-d8208-r-industrial-poe-switch',
+  'D8248': 'https://www.axis.com/products/axis-d8248-managed-poe-switch',
+  'D8308': 'https://www.axis.com/products/axis-d8308-fiber-aggregation-switch',
+  'T8504-E': 'https://www.axis.com/products/axis-t8504-e-outdoor-poe-switch',
+  'T8504-R': 'https://www.axis.com/products/axis-t8504-r-industrial-poe-switch',
+  'T8508': 'https://www.axis.com/products/axis-t8508-poe-network-switch',
+  'T8516': 'https://www.axis.com/products/axis-t8516-poe-network-switch',
+  'T8524': 'https://www.axis.com/products/axis-t8524-poe-network-switch',
+  'T8604': 'https://www.axis.com/products/axis-t8604-media-converter-switch',
+  'T8606': 'https://www.axis.com/products/axis-t8606-media-converter-switch-24-v-dc',
+  'T8611': 'https://www.axis.com/products/axis-t8611-sfp-module-lclx',
+  'T8612': 'https://www.axis.com/products/axis-t8612-sfp-module-lcsx',
+  'T8613': 'https://www.axis.com/products/axis-t8613-sfp-module-1000base-t',
+  'T8640': 'https://www.axis.com/products/axis-t8640-poe-over-coax-adapter-kit',
+  'T8641': 'https://www.axis.com/products/axis-t8641-poe-over-coax-base-unit',
+  'T8642': 'https://www.axis.com/products/axis-t8642-poe-over-coax-device-unit',
+  'T8643': 'https://www.axis.com/products/axis-t8643-poe-over-coax-compact-kit',
+  'T8645': 'https://www.axis.com/products/axis-t8645-poe-over-coax-compact-kit',
+
+  // ===========================================================================
+  // VIDEO ENCODERS
+  // ===========================================================================
+
+  'M7104': 'https://www.axis.com/products/axis-m7104',
+  'M7116': 'https://www.axis.com/products/axis-m7116',
+  'P7304': 'https://www.axis.com/products/axis-p7304',
+  'P7316': 'https://www.axis.com/products/axis-p7316',
+
+  // ===========================================================================
+  // NETWORK AUDIO (C-SERIES)
+  // ===========================================================================
+
+  'C1004-E': 'https://www.axis.com/products/axis-c1004-e',
+  'C1110-E': 'https://www.axis.com/products/axis-c1110-e',
+  'C1111-E': 'https://www.axis.com/products/axis-c1111-e',
+  'C1210-E': 'https://www.axis.com/products/axis-c1210-e',
+  'C1211-E': 'https://www.axis.com/products/axis-c1211-e',
+  'C1310-E': 'https://www.axis.com/products/axis-c1310-e-mk-ii',
+  'C1410': 'https://www.axis.com/products/axis-c1410-mk-ii',
+  'C1510': 'https://www.axis.com/products/axis-c1510',
+  'C1511': 'https://www.axis.com/products/axis-c1511',
+  'C1610-VE': 'https://www.axis.com/products/axis-c1610-ve',
+  'C1710': 'https://www.axis.com/products/axis-c1710',
+  'C1720': 'https://www.axis.com/products/axis-c1720',
   'C6110': 'https://www.axis.com/products/axis-c6110',
+  'C7050': 'https://www.axis.com/products/axis-c7050-mk-iii',
+  'C8110': 'https://www.axis.com/products/axis-c8110',
+  'C8210': 'https://www.axis.com/products/axis-c8210',
+  'C8310': 'https://www.axis.com/products/axis-c8310',
+
+  // ===========================================================================
+  // NETWORK INTERCOMS & DOOR STATIONS
+  // ===========================================================================
+
+  'A1001': 'https://www.axis.com/products/axis-a1001',
+  'A1210': 'https://www.axis.com/products/axis-a1210',
+  'A1210-B': 'https://www.axis.com/products/axis-a1210-b',
+  'A1214': 'https://www.axis.com/products/axis-a1214',
+  'A1601': 'https://www.axis.com/products/axis-a1601',
+  'A1610': 'https://www.axis.com/products/axis-a1610',
+  'A1610-B': 'https://www.axis.com/products/axis-a1610-b',
+  'A1710-B': 'https://www.axis.com/products/axis-a1710-b',
+  'A1711': 'https://www.axis.com/products/axis-a1711',
+  'A1810-B': 'https://www.axis.com/products/axis-a1810-b',
+  'A1811': 'https://www.axis.com/products/axis-a1811',
+  'I5304': 'https://www.axis.com/products/axis-i5304',
+  'I7010-VE': 'https://www.axis.com/products/axis-i7010-ve',
+  'I7020': 'https://www.axis.com/products/axis-i7020',
+  'I8016-LVE': 'https://www.axis.com/products/axis-i8016-lve',
+  'I8116-E': 'https://www.axis.com/products/axis-i8116-e',
+  'I8307-VE': 'https://www.axis.com/products/axis-i8307-ve',
+
+  // ===========================================================================
+  // MOUNTS & BRACKETS (T91)
+  // ===========================================================================
+
+  'T91A23': 'https://www.axis.com/products/axis-t91a23-tile-grid-ceiling-mount',
+  'T91A33': 'https://www.axis.com/products/axis-t91a33-lighting-track-mount',
+  'T91A64': 'https://www.axis.com/products/axis-t91a64-corner-bracket',
+  'T91B47': 'https://www.axis.com/products/axis-t91b47-pole-mount',
+  'T91B50': 'https://www.axis.com/products/axis-t91b50-telescopic-ceiling-mount',
+  'T91B51': 'https://www.axis.com/products/axis-t91b51-ceiling-mount',
+  'T91B53': 'https://www.axis.com/products/axis-t91b53-telescopic-ceiling-mount',
+  'T91B57': 'https://www.axis.com/products/axis-t91b57-pole-mount',
+  'T91B63': 'https://www.axis.com/products/axis-t91b63-ceiling-mount',
+  'T91B67': 'https://www.axis.com/products/axis-t91b67-pole-mount',
+  'T91D61': 'https://www.axis.com/products/axis-t91d61-wall-mount-15-nps',
+  'T91D62': 'https://www.axis.com/products/axis-t91d62-telescopic-parapet-mount',
+  'T91F67': 'https://www.axis.com/products/axis-t91f67-pole-mount',
+  'T91G61': 'https://www.axis.com/products/axis-t91g61-wall-mount',
+  'T91H61': 'https://www.axis.com/products/axis-t91h61-wall-mount',
+  'T91R61': 'https://www.axis.com/products/axis-t91r61-wall-mount',
+
+  // ===========================================================================
+  // RADAR & DETECTION (D-SERIES)
+  // ===========================================================================
+
+  'D1110': 'https://www.axis.com/products/axis-d1110-video-decoder-4k',
+  'D2110-VE': 'https://www.axis.com/products/axis-d2110-ve-security-radar',
+  'D2122-VE': 'https://www.axis.com/products/axis-d2122-ve-radar',
+  'D2123-VE': 'https://www.axis.com/products/axis-d2123-ve-radar',
+  'D2210-VE': 'https://www.axis.com/products/axis-d2210-ve-radar',
+  'D3110': 'https://www.axis.com/products/axis-d3110-mk-ii-connectivity-hub',
+  'D4100-VE': 'https://www.axis.com/products/axis-d4100-ve-mk-ii-network-strobe-siren',
+  'D4200-VE': 'https://www.axis.com/products/axis-d4200-ve-network-strobe-speaker',
+  'D6210-AIR': 'https://www.axis.com/products/axis-d6210-air-quality-sensor',
+  'D6310-AIR': 'https://www.axis.com/products/axis-d6310-air-quality-sensor',
 };
 
 /**
