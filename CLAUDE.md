@@ -68,7 +68,7 @@ Import types: `import type { SearchResult } from '@/types';`
 ### Search System (`src/core/search/`)
 
 Query flow:
-1. `queryParser.ts` detects type: competitor | legacy | axis-model | axis-browse | manufacturer
+1. `queryParser.ts` detects type: competitor | legacy | axis-model | axis-browse | manufacturer. Note: "Manufacturer Model" queries (e.g. "Hikvision DS-2CD2143G2-I") route to competitor search, not manufacturer browse
 2. `engine.ts` routes to appropriate multi-level index (competitor, legacy, manufacturer, axisModel, type)
 3. `fuzzy.ts` performs Levenshtein matching with thresholds:
    - **EXACT** (90+): near-perfect match
@@ -86,9 +86,18 @@ Query flow:
 
 Confidence levels: `'verified' | 'alias' | 'generated' | 'search-fallback'`
 
+### Model Normalization (`src/core/model/normalize.ts`)
+
+Shared module centralizing model key normalization across MSRP, specs, and URL resolver:
+
+- `normalizeModelKey(model)` — canonical key: uppercase, trim, strip variant suffixes (-60HZ, -EUR, -24V, lens sizes)
+- `getBaseModelKey(model)` — strip all suffixes to get base model for fallback lookups
+
+Imported by `msrp/lookup.ts`, `specs/index.ts`, and `url/resolver.ts`. Fixes stacked-suffix bug where models like "P3265-LVE-EUR-60HZ" failed to resolve.
+
 ### Spec Database (`src/core/specs/`)
 
-Product specification lookup for 150+ Axis models. Singleton pattern matching `src/core/msrp/`.
+Product specification lookup for 150+ Axis models. Uses shared `normalizeModelKey()` from `src/core/model/normalize.ts`.
 
 - `initSpecs(data)` — initialize from `axis_spec_data.json` (called in App.tsx)
 - `lookupSpec(model)` — get full spec by model key (with base-model fallback)
@@ -106,6 +115,21 @@ Competitor manufacturers categorized for Section 889 compliance:
 - **Korean**: Hanwha Vision
 - **Japanese**: i-PRO, Panasonic
 - **Motorola**: Avigilon, Pelco
+
+### Performance Patterns
+
+- **Search caching**: `useSearch` has an LRU cache (150 entries) to avoid redundant engine calls
+- **Batch flush**: `useBatchSearch` flushes results every 10 items instead of per-item for reduced re-renders
+- **Memoization**: `ResultCard`, `SearchView`, and `BatchView` wrapped in `React.memo()` with stabilized callbacks
+- **Async data loading**: `App.tsx` lazy-loads data files (crossref, MSRP, specs) asynchronously instead of static imports
+
+### Voice Input (`src/hooks/useVoice.ts`)
+
+Voice module uses `VoiceInput` class directly — no singleton or factory. The core voice exports (`getVoiceInput`, `setupVoiceInput`) were removed; the `useVoice` hook instantiates `VoiceInput` directly.
+
+### ESLint Configuration
+
+`.eslintrc.cjs` enforces `react-hooks/exhaustive-deps` as an error (not warning). TypeScript-specific overrides disable rules that TypeScript handles natively.
 
 ## Key Patterns
 
@@ -128,7 +152,7 @@ const data = crossrefRaw as CrossRefData;
 
 ### Fluent UI Theming
 
-UI uses Fluent UI 9 with Axis brand customization in `src/styles/fluentTheme.ts`. Primary color is Axis yellow (#FFCC33). Semantic tokens define security category colors (NDAA, cloud, legacy).
+UI uses Fluent UI 9 with Axis brand customization in `src/styles/fluentTheme.ts`. Primary color is Axis yellow (#FFCC33). Semantic tokens define security category colors (NDAA, cloud, legacy). All styling is consolidated here — `src/theme.ts` and `src/index.css` were removed.
 
 ### Data File Structures
 
@@ -184,8 +208,11 @@ After updating data files: run `npm run typecheck` then `npm test`.
 Tests in `tests/` use Vitest + `@testing-library/jest-dom`. Test setup (`tests/setup.ts`) initializes mock MSRP data via `initMSRP()` — new test files that depend on pricing should ensure this is loaded. Similarly, tests using spec data should call `initSpecs()` in setup.
 
 Key test files:
-- `tests/search.test.ts` - Fuzzy matching, query parsing, search engine
+- `tests/search.test.ts` - Fuzzy matching, query parsing, search engine (includes manufacturer-prefix query tests)
 - `tests/url.test.ts` - URL resolution cascade
+- `tests/hooks/useBatchSearch.test.ts` - Batch quantity coalescing
+- `tests/hooks/useCart.test.ts` - Cart accordion reset behavior
+- `tests/components/SearchResults.test.tsx` - SearchResults component rendering
 
 ## Deployment
 
