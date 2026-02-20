@@ -26,6 +26,8 @@ const TEXT_LIGHT_GRAY = [150, 150, 150] as const;
 const TEXT_GREEN = [0, 100, 50] as const;
 const TEXT_NOTES_GRAY = [80, 80, 80] as const;
 const BG_CARD = [245, 245, 245] as const;
+const BG_ACCESSORY_CARD = [240, 240, 248] as const;
+const ACCESSORY_LEFT = 28; // Indented under parent camera
 
 // =============================================================================
 // HELPERS
@@ -62,10 +64,14 @@ export function buildFilename(projectName: string, date: Date): string {
  * Estimate the vertical space needed for a single cart item card.
  */
 function estimateItemHeight(item: CartItem): number {
+  if (item.source === 'accessory') {
+    return 22; // Compact accessory row
+  }
   const baseHeight = 40;
   const featureLines = item.axisFeatures?.length ?? 0;
   const hasNotes = item.notes && item.notes.trim().length > 0;
-  return baseHeight + (featureLines * 6) + (hasNotes ? 10 : 0);
+  const hasLocation = item.location ? 6 : 0;
+  return baseHeight + (featureLines * 6) + (hasNotes ? 10 : 0) + hasLocation;
 }
 
 /**
@@ -199,6 +205,14 @@ function drawItemCard(
     }
   }
 
+  // Location label
+  if (item.location) {
+    doc.setTextColor(...TEXT_GRAY);
+    doc.setFontSize(8);
+    doc.text(`Location: ${item.location}`, CONTENT_LEFT, contentY);
+    contentY += 6;
+  }
+
   // Notes
   if (item.notes && item.notes.trim().length > 0) {
     doc.setTextColor(...TEXT_NOTES_GRAY);
@@ -210,6 +224,50 @@ function drawItemCard(
   }
 
   return yPos + itemHeight + 8;
+}
+
+/**
+ * Draw an accessory item card (indented under parent camera).
+ */
+function drawAccessoryCard(
+  doc: jsPDF,
+  item: CartItem,
+  yPos: number,
+  pageWidth: number,
+): number {
+  const itemHeight = estimateItemHeight(item);
+
+  // Indented background
+  doc.setFillColor(...BG_ACCESSORY_CARD);
+  doc.rect(ACCESSORY_LEFT - 4, yPos - 3, pageWidth - MARGIN - ACCESSORY_LEFT, itemHeight, 'F');
+
+  // Accessory type badge
+  const typeLabel = item.accessoryType
+    ? item.accessoryType.charAt(0).toUpperCase() + item.accessoryType.slice(1)
+    : 'Accessory';
+  const placementLabel = item.mountPlacement ? ` (${item.mountPlacement})` : '';
+
+  doc.setTextColor(...TEXT_GRAY);
+  doc.setFontSize(7);
+  doc.text(`${typeLabel}${placementLabel}`, ACCESSORY_LEFT, yPos + 2);
+
+  // Accessory model
+  doc.setTextColor(...TEXT_DARK);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.text(`AXIS ${item.model}`, ACCESSORY_LEFT, yPos + 10);
+  doc.setFont('helvetica', 'normal');
+
+  // Qty and MSRP
+  doc.setFontSize(9);
+  doc.text(`Qty: ${item.quantity}`, ACCESSORY_LEFT + 80, yPos + 10);
+
+  const priceStr = item.msrp !== null
+    ? `$${(item.msrp * item.quantity).toLocaleString()}`
+    : 'TBD';
+  doc.text(priceStr, ACCESSORY_LEFT + 110, yPos + 10);
+
+  return yPos + itemHeight + 4;
 }
 
 /**
@@ -237,7 +295,7 @@ export function generateBattleCardPDF(options: BattleCardOptions): jsPDF {
     summary.unknownPriceCount,
   );
 
-  // Item cards
+  // Item cards — accessories rendered indented under their parent camera
   for (const item of items) {
     const itemHeight = estimateItemHeight(item);
 
@@ -247,7 +305,11 @@ export function generateBattleCardPDF(options: BattleCardOptions): jsPDF {
       yPos = drawHeader(doc, pageWidth, dateStr, projectName, customerName);
     }
 
-    yPos = drawItemCard(doc, item, yPos, pageWidth);
+    if (item.source === 'accessory') {
+      yPos = drawAccessoryCard(doc, item, yPos, pageWidth);
+    } else {
+      yPos = drawItemCard(doc, item, yPos, pageWidth);
+    }
   }
 
   // Footer on last page
