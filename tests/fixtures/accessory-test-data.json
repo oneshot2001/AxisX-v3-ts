@@ -1,0 +1,121 @@
+{
+  "version": "test",
+  "generatedAt": "2026-02-20T00:00:00Z",
+  "totalMappings": 3,
+  "compatibility": {
+    "P3285-LVE": {
+      "productVariant": "AXIS P3285-LVE 10 MM",
+      "accessories": [
+        {
+          "model": "T91B47-POLE",
+          "displayName": "AXIS T91B47 Pole Mount",
+          "description": "For different pole diameters",
+          "accessoryType": "mount",
+          "mountPlacement": "pole",
+          "recommendation": "recommended",
+          "requiresAdditional": false,
+          "msrpKey": "T91B47-POLE"
+        },
+        {
+          "model": "T91H61",
+          "displayName": "AXIS T91H61 Wall Mount",
+          "description": "Quick connection and room for more",
+          "accessoryType": "mount",
+          "mountPlacement": "wall",
+          "recommendation": "recommended",
+          "requiresAdditional": true,
+          "msrpKey": "T91H61"
+        },
+        {
+          "model": "T91B50",
+          "displayName": "AXIS T91B50 Telescopic Ceiling Mount",
+          "description": "Telescopic ceiling mount with swivel action",
+          "accessoryType": "mount",
+          "mountPlacement": "ceiling",
+          "recommendation": "recommended",
+          "requiresAdditional": true,
+          "msrpKey": "T91B50"
+        },
+        {
+          "model": "TP3005-E",
+          "displayName": "AXIS TP3005-E Wall Mount",
+          "description": "Wall mount for fixed dome cameras",
+          "accessoryType": "mount",
+          "mountPlacement": "wall",
+          "recommendation": "compatible",
+          "requiresAdditional": false,
+          "msrpKey": "TP3005-E"
+        },
+        {
+          "model": "T8120",
+          "displayName": "AXIS T8120 Midspan 15W 1-port",
+          "description": "PoE midspan for single camera",
+          "accessoryType": "power",
+          "recommendation": "compatible",
+          "requiresAdditional": false,
+          "msrpKey": "T8120"
+        }
+      ]
+    },
+    "M4215-LV": {
+      "productVariant": "AXIS M4215-LV",
+      "accessories": [
+        {
+          "model": "T94C01L",
+          "displayName": "AXIS T94C01L Recessed Mount",
+          "description": "For recessed ceiling installation",
+          "accessoryType": "mount",
+          "mountPlacement": "recessed",
+          "recommendation": "recommended",
+          "requiresAdditional": false,
+          "msrpKey": "T94C01L"
+        },
+        {
+          "model": "TM4201",
+          "displayName": "AXIS TM4201 Recessed Mount",
+          "description": "Alternative recessed mount",
+          "accessoryType": "mount",
+          "mountPlacement": "recessed",
+          "recommendation": "compatible",
+          "requiresAdditional": false,
+          "msrpKey": "TM4201"
+        },
+        {
+          "model": "T91A23-TILE-GRID",
+          "displayName": "AXIS T91A23 Tile Grid Ceiling Mount",
+          "description": "For tile grid ceiling installation",
+          "accessoryType": "mount",
+          "mountPlacement": "ceiling",
+          "recommendation": "recommended",
+          "requiresAdditional": false,
+          "msrpKey": "T91A23-TILE-GRID"
+        }
+      ]
+    },
+    "Q6135-LE": {
+      "productVariant": "AXIS Q6135-LE",
+      "accessories": [
+        {
+          "model": "T91B67-POLE",
+          "displayName": "AXIS T91B67 Pole Mount",
+          "description": "Heavy-duty pole mount for PTZ",
+          "accessoryType": "mount",
+          "mountPlacement": "pole",
+          "recommendation": "recommended",
+          "requiresAdditional": false,
+          "msrpKey": "T91B67-POLE"
+        },
+        {
+          "model": "T91D62",
+          "displayName": "AXIS T91D62 Telescopic Parapet Mount",
+          "description": "For parapet/roof edge installation",
+          "accessoryType": "mount",
+          "mountPlacement": "parapet",
+          "recommendation": "recommended",
+          "requiresAdditional": false,
+          "msrpKey": "T91D62"
+        }
+      ]
+    }
+  }
+}
