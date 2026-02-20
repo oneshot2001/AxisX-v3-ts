@@ -868,10 +868,13 @@ export type AxisProductType =
   | 'recorder'
   | 'mount'
   | 'encoder'
-  | 'accessory';
+  | 'accessory'
+  | 'power'
+  | 'storage'
+  | 'lens';
 
 /** Camera subcategory by form factor */
-export type CameraSubcategory = 'fixed-dome' | 'fixed-bullet' | 'ptz' | 'panoramic' | 'modular' | 'specialty';
+export type CameraSubcategory = 'fixed-dome' | 'fixed-bullet' | 'ptz' | 'panoramic' | 'modular' | 'thermal' | 'body-worn' | 'explosion-protected';
 
 /** Video codec types */
 export type VideoCodec = 'H.265' | 'H.264' | 'AV1' | 'MJPEG';

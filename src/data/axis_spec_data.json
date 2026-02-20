@@ -61,7 +61,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 36.0,
+      "maxPowerWatts": 36,
       "analytics": [
         "Basic motion detection"
       ],
@@ -621,7 +621,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": null,
-      "maxPowerWatts": 90.0,
+      "maxPowerWatts": 90,
       "analytics": [
         "Basic motion detection"
       ],
@@ -656,7 +656,7 @@
       "ipRating": "IP20",
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 4.0,
+      "maxPowerWatts": 4,
       "analytics": [
         "Basic motion detection"
       ],
@@ -3488,7 +3488,7 @@
       "ipRating": "IP54",
       "ikRating": "IK10",
       "powerType": "PoE",
-      "maxPowerWatts": 10.0,
+      "maxPowerWatts": 10,
       "analytics": [
         "Object Analytics",
         "Motion Detection",
@@ -3529,7 +3529,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": "PoE",
-      "maxPowerWatts": 10.0,
+      "maxPowerWatts": 10,
       "analytics": [
         "Object Analytics",
         "Motion Detection",
@@ -3734,7 +3734,7 @@
       "ipRating": "IP54",
       "ikRating": "IK10",
       "powerType": "PoE",
-      "maxPowerWatts": 10.0,
+      "maxPowerWatts": 10,
       "analytics": [
         "Object Analytics",
         "Motion Detection",
@@ -3775,7 +3775,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": "PoE",
-      "maxPowerWatts": 10.0,
+      "maxPowerWatts": 10,
       "analytics": [
         "Object Analytics",
         "Motion Detection",
@@ -4179,7 +4179,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": "PoE",
-      "maxPowerWatts": 18.0,
+      "maxPowerWatts": 18,
       "analytics": [
         "Motion Detection",
         "Fence Guard"
@@ -4218,7 +4218,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": "PoE",
-      "maxPowerWatts": 18.0,
+      "maxPowerWatts": 18,
       "analytics": [
         "Object Analytics",
         "Motion Detection",
@@ -4415,7 +4415,7 @@
       "ipRating": "IP66",
       "ikRating": "IK11",
       "powerType": "PoE",
-      "maxPowerWatts": 23.0,
+      "maxPowerWatts": 23,
       "analytics": [
         "Object Analytics",
         "Motion Detection",
@@ -4619,7 +4619,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": "PoE",
-      "maxPowerWatts": 25.0,
+      "maxPowerWatts": 25,
       "analytics": [
         "Object Analytics",
         "License Plate"
@@ -4658,7 +4658,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": "PoE",
-      "maxPowerWatts": 25.0,
+      "maxPowerWatts": 25,
       "analytics": [
         "Object Analytics",
         "License Plate"
@@ -4777,7 +4777,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": null,
-      "maxPowerWatts": 25.0,
+      "maxPowerWatts": 25,
       "analytics": [
         "Motion Detection",
         "Autotracking"
@@ -4816,7 +4816,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": null,
-      "maxPowerWatts": 20.0,
+      "maxPowerWatts": 20,
       "analytics": [
         "Motion Detection",
         "Autotracking"
@@ -5380,7 +5380,7 @@
       "family": "AXIS P91 Series",
       "seriesId": "P91",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "panoramic",
       "sensor": "1/1.8” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 60,
@@ -5440,7 +5440,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": null,
-      "maxPowerWatts": 185.0,
+      "maxPowerWatts": 185,
       "analytics": [
         "Motion Detection",
         "Fence Guard"
@@ -5479,7 +5479,7 @@
       "ipRating": "IP51",
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 13.0,
+      "maxPowerWatts": 13,
       "analytics": [
         "Motion Detection",
         "Loitering Guard"
@@ -5711,7 +5711,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": "PoE+",
-      "maxPowerWatts": 37.0,
+      "maxPowerWatts": 37,
       "analytics": [
         "Object Analytics",
         "Motion Detection",
@@ -5752,7 +5752,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": "PoE+",
-      "maxPowerWatts": 37.0,
+      "maxPowerWatts": 37,
       "analytics": [
         "Object Analytics",
         "Motion Detection",
@@ -5835,7 +5835,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": "PoE",
-      "maxPowerWatts": 51.0,
+      "maxPowerWatts": 51,
       "analytics": [
         "Object Analytics",
         "Motion Detection",
@@ -6127,7 +6127,7 @@
       "ipRating": "IP66",
       "ikRating": "IK08",
       "powerType": "PoE",
-      "maxPowerWatts": 74.0,
+      "maxPowerWatts": 74,
       "analytics": [
         "Object Analytics",
         "Motion Detection",
@@ -6169,7 +6169,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": "PoE",
-      "maxPowerWatts": 90.0,
+      "maxPowerWatts": 90,
       "analytics": [
         "Object Analytics",
         "Motion Detection",
@@ -6251,7 +6251,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": "PoE",
-      "maxPowerWatts": 51.0,
+      "maxPowerWatts": 51,
       "analytics": [
         "Object Analytics",
         "Motion Detection",
@@ -6293,7 +6293,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": null,
-      "maxPowerWatts": 51.0,
+      "maxPowerWatts": 51,
       "analytics": [
         "Object Analytics",
         "Motion Detection",
@@ -6335,7 +6335,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": null,
-      "maxPowerWatts": 51.0,
+      "maxPowerWatts": 51,
       "analytics": [
         "Object Analytics",
         "Motion Detection",
@@ -6356,7 +6356,7 @@
       "family": "AXIS M20 Series",
       "seriesId": "M20",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "fixed-bullet",
       "sensor": "1/2.9” Progressive Scan Rgb Cmos",
       "maxResolution": "HDTV 1080P",
       "maxFps": 30,
@@ -6396,7 +6396,7 @@
       "family": "AXIS M20 Series",
       "seriesId": "M20",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "fixed-bullet",
       "sensor": "1/2.7” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -6436,7 +6436,7 @@
       "family": "AXIS M42 Series",
       "seriesId": "M42",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "fixed-dome",
       "sensor": "1/2.8” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -6477,7 +6477,7 @@
       "family": "AXIS M42 Series",
       "seriesId": "M42",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "fixed-dome",
       "sensor": "1/2.8” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -6518,7 +6518,7 @@
       "family": "AXIS M42 Series",
       "seriesId": "M42",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "fixed-dome",
       "sensor": "1/2.7” Progressive Scan Rgb Cmos1",
       "maxResolution": null,
       "maxFps": 30,
@@ -6559,7 +6559,7 @@
       "family": "AXIS M42 Series",
       "seriesId": "M42",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "fixed-dome",
       "sensor": "1/2.7” Progressive Scan Rgb Cmos1",
       "maxResolution": null,
       "maxFps": 30,
@@ -6600,7 +6600,7 @@
       "family": "AXIS M42 Series",
       "seriesId": "M42",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "fixed-dome",
       "sensor": "1/2.8” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 15,
@@ -6640,7 +6640,7 @@
       "family": "AXIS M42 Series",
       "seriesId": "M42",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "fixed-dome",
       "sensor": "1/2.8” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 15,
@@ -6680,7 +6680,7 @@
       "family": "AXIS M42 Series",
       "seriesId": "M42",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "fixed-dome",
       "sensor": "1/2.8” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -6720,7 +6720,7 @@
       "family": "AXIS M42 Series",
       "seriesId": "M42",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "fixed-dome",
       "sensor": "1/2.7” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -6760,7 +6760,7 @@
       "family": "AXIS M42 Series",
       "seriesId": "M42",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "fixed-dome",
       "sensor": "1/2.8” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -6800,7 +6800,7 @@
       "family": "AXIS M43 Series",
       "seriesId": "M43",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "panoramic",
       "sensor": "1/1.7” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -6840,7 +6840,7 @@
       "family": "AXIS M43 Series",
       "seriesId": "M43",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "panoramic",
       "sensor": "1/1.8” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 60,
@@ -6879,7 +6879,7 @@
       "family": "AXIS M43 Series",
       "seriesId": "M43",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "panoramic",
       "sensor": "1/1.8” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 60,
@@ -6918,7 +6918,7 @@
       "family": "AXIS M43 Series",
       "seriesId": "M43",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "panoramic",
       "sensor": "1/2.3” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -6957,7 +6957,7 @@
       "family": "AXIS M43 Series",
       "seriesId": "M43",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "panoramic",
       "sensor": "1/2.3” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -6996,7 +6996,7 @@
       "family": "AXIS M43 Series",
       "seriesId": "M43",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "panoramic",
       "sensor": "1/1.8” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -7036,7 +7036,7 @@
       "family": "AXIS M43 Series",
       "seriesId": "M43",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "panoramic",
       "sensor": "1/2.3” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -7135,7 +7135,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": null,
-      "maxPowerWatts": 26.0,
+      "maxPowerWatts": 26,
       "analytics": [
         "Motion Detection"
       ],
@@ -7153,7 +7153,7 @@
       "family": "AXIS P47 Series",
       "seriesId": "P47",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "panoramic",
       "sensor": "2 X 1/2.8” Progressive Scan Rgb Cmos",
       "maxResolution": "HDTV 1080P",
       "maxFps": 30,
@@ -7193,7 +7193,7 @@
       "family": "AXIS P47 Series",
       "seriesId": "P47",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "panoramic",
       "sensor": "2 X 1/2.7” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -7233,7 +7233,7 @@
       "family": "AXIS P47 Series",
       "seriesId": "P47",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "panoramic",
       "sensor": "2 X 1/2.8” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -7333,7 +7333,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": null,
-      "maxPowerWatts": 32.0,
+      "maxPowerWatts": 32,
       "analytics": [
         "Motion Detection"
       ],
@@ -7351,7 +7351,7 @@
       "family": "AXIS Q21 Series",
       "seriesId": "Q21",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "thermal",
       "sensor": "Uncooled Microbolometer 384X288 Pixels, Pixel Size 17",
       "maxResolution": null,
       "maxFps": 3,
@@ -7391,7 +7391,7 @@
       "family": "AXIS Q21 Series",
       "seriesId": "Q21",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "thermal",
       "sensor": "Uncooled Microbolometer 384X288 Pixels, Pixel Size 17",
       "maxResolution": null,
       "maxFps": 3,
@@ -7431,7 +7431,7 @@
       "family": "AXIS Q21 Series",
       "seriesId": "Q21",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "thermal",
       "sensor": "Uncooled Microbolometer 640X480 Pixels, Pixel Size 17",
       "maxResolution": null,
       "maxFps": 3,
@@ -7471,7 +7471,7 @@
       "family": "AXIS Q48 Series",
       "seriesId": "Q48",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "panoramic",
       "sensor": "4 X 12 Mp 1/2.3” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -7511,7 +7511,7 @@
       "family": "AXIS Q92 Series",
       "seriesId": "Q92",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "fixed-dome",
       "sensor": "1/2.5” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 25,
@@ -7551,7 +7551,7 @@
       "family": "AXIS Q92 Series",
       "seriesId": "Q92",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "fixed-dome",
       "sensor": "1/1.7” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -7591,7 +7591,7 @@
       "family": "AXIS Q93 Series",
       "seriesId": "Q93",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "fixed-dome",
       "sensor": "1/2.7” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -7893,7 +7893,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 180.0,
+      "maxPowerWatts": 180,
       "analytics": [
         "Basic motion detection"
       ],
@@ -7928,7 +7928,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 270.0,
+      "maxPowerWatts": 270,
       "analytics": [
         "Basic motion detection"
       ],
@@ -7963,7 +7963,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 270.0,
+      "maxPowerWatts": 270,
       "analytics": [
         "Basic motion detection"
       ],
@@ -7998,7 +7998,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 520.0,
+      "maxPowerWatts": 520,
       "analytics": [
         "Basic motion detection"
       ],
@@ -8033,7 +8033,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 520.0,
+      "maxPowerWatts": 520,
       "analytics": [
         "Basic motion detection"
       ],
@@ -8071,7 +8071,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 180.0,
+      "maxPowerWatts": 180,
       "analytics": [
         "Basic motion detection"
       ],
@@ -8109,7 +8109,7 @@
       "ipRating": "IP20",
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 650.0,
+      "maxPowerWatts": 650,
       "analytics": [
         "Basic motion detection"
       ],
@@ -8182,7 +8182,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": null,
-      "maxPowerWatts": 180.0,
+      "maxPowerWatts": 180,
       "analytics": [
         "Basic motion detection"
       ],
@@ -8392,7 +8392,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 70.0,
+      "maxPowerWatts": 70,
       "analytics": [
         "Basic motion detection"
       ],
@@ -8497,7 +8497,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 60.0,
+      "maxPowerWatts": 60,
       "analytics": [
         "Basic motion detection"
       ],
@@ -8532,7 +8532,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 72.0,
+      "maxPowerWatts": 72,
       "analytics": [
         "Basic motion detection"
       ],
@@ -8567,7 +8567,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 60.0,
+      "maxPowerWatts": 60,
       "analytics": [
         "Basic motion detection"
       ],
@@ -9267,7 +9267,7 @@
       "ipRating": "IP66",
       "ikRating": "IK09",
       "powerType": "PoE",
-      "maxPowerWatts": 60.0,
+      "maxPowerWatts": 60,
       "analytics": [
         "Basic motion detection"
       ],
@@ -9302,7 +9302,7 @@
       "ipRating": "IP66",
       "ikRating": "IK09",
       "powerType": "PoE",
-      "maxPowerWatts": 60.0,
+      "maxPowerWatts": 60,
       "analytics": [
         "Basic motion detection"
       ],
@@ -9337,7 +9337,7 @@
       "ipRating": "IP66",
       "ikRating": "IK09",
       "powerType": "PoE",
-      "maxPowerWatts": 60.0,
+      "maxPowerWatts": 60,
       "analytics": [
         "Basic motion detection"
       ],
@@ -9967,7 +9967,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": null,
-      "maxPowerWatts": 25.0,
+      "maxPowerWatts": 25,
       "analytics": [
         "Basic motion detection"
       ],
@@ -10002,7 +10002,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": null,
-      "maxPowerWatts": 25.0,
+      "maxPowerWatts": 25,
       "analytics": [
         "Basic motion detection"
       ],
@@ -10405,7 +10405,7 @@
       "family": "AXIS W10 Series",
       "seriesId": "W10",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "body-worn",
       "sensor": "Minimize Motion Blur And Maximize Light Sensitivity. Carefully Placed Digital Microphones Clarify Sound",
       "maxResolution": null,
       "maxFps": 25,
@@ -10442,7 +10442,7 @@
       "family": "AXIS W11 Series",
       "seriesId": "W11",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "body-worn",
       "sensor": "1/2.8” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 25,
@@ -10479,7 +10479,7 @@
       "family": "AXIS W12 Series",
       "seriesId": "W12",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "body-worn",
       "sensor": "1/2.9” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 25,
@@ -10515,8 +10515,7 @@
       "displayName": "AXIS W401 BODY WORN ACTIVATION KIT",
       "family": "AXIS W40 Series",
       "seriesId": "W40",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -10543,15 +10542,15 @@
       "networkSpeed": "10/100",
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-w401-body-worn-activation-kit",
-      "datasheetUrl": "https://www.axis.com/dam/public/04/04/eb/datasheet-axis-w401-body-worn-activation-kit-en-US-498958.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/04/04/eb/datasheet-axis-w401-body-worn-activation-kit-en-US-498958.pdf",
+      "cameraType": null
     },
     "W700-MK-II": {
       "modelKey": "W700-MK-II",
       "displayName": "AXIS W700 MK II DOCKING STATION 1 BAY",
       "family": "AXIS W70 Series",
       "seriesId": "W70",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -10568,7 +10567,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": null,
-      "maxPowerWatts": 15.0,
+      "maxPowerWatts": 15,
       "analytics": [
         "Basic motion detection"
       ],
@@ -10578,15 +10577,15 @@
       "networkSpeed": "10/100/1000",
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-w700-mk-ii-docking-station-1-bay",
-      "datasheetUrl": "https://www.axis.com/dam/public/07/13/a8/datasheet-axis-w700-mk-ii-docking-station-1-bay-en-US-436338.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/07/13/a8/datasheet-axis-w700-mk-ii-docking-station-1-bay-en-US-436338.pdf",
+      "cameraType": null
     },
     "W701-MK-II": {
       "modelKey": "W701-MK-II",
       "displayName": "AXIS W701 MK II DOCKING STATION 8 BAY",
       "family": "AXIS W70 Series",
       "seriesId": "W70",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -10603,7 +10602,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": null,
-      "maxPowerWatts": 120.0,
+      "maxPowerWatts": 120,
       "analytics": [
         "Basic motion detection"
       ],
@@ -10613,15 +10612,15 @@
       "networkSpeed": "10/100/1000",
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-w701-mk-ii-docking-station-8-bay",
-      "datasheetUrl": "https://www.axis.com/dam/public/dc/9e/84/datasheet-axis-w701-mk-ii-docking-station-8-bay-en-US-436337.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/dc/9e/84/datasheet-axis-w701-mk-ii-docking-station-8-bay-en-US-436337.pdf",
+      "cameraType": null
     },
     "W702": {
       "modelKey": "W702",
       "displayName": "AXIS W702 DOCKING STATION 1 BAY",
       "family": "AXIS W70 Series",
       "seriesId": "W70",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -10638,7 +10637,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": null,
-      "maxPowerWatts": 15.0,
+      "maxPowerWatts": 15,
       "analytics": [
         "Basic motion detection"
       ],
@@ -10648,15 +10647,15 @@
       "networkSpeed": "10/100",
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-w702-docking-station-1-bay",
-      "datasheetUrl": "https://www.axis.com/dam/public/b0/a9/90/datasheet-axis-w702-docking-station-1-bay-en-US-433752.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/b0/a9/90/datasheet-axis-w702-docking-station-1-bay-en-US-433752.pdf",
+      "cameraType": null
     },
     "W703": {
       "modelKey": "W703",
       "displayName": "AXIS W703 DOCKING STATION 8 BAY",
       "family": "AXIS W70 Series",
       "seriesId": "W70",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -10673,7 +10672,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": null,
-      "maxPowerWatts": 120.0,
+      "maxPowerWatts": 120,
       "analytics": [
         "Basic motion detection"
       ],
@@ -10683,15 +10682,15 @@
       "networkSpeed": "10/100/1000",
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-w703-docking-station-8-bay",
-      "datasheetUrl": "https://www.axis.com/dam/public/7f/e8/aa/datasheet-axis-w703-docking-station-8-bay-en-US-433751.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/7f/e8/aa/datasheet-axis-w703-docking-station-8-bay-en-US-433751.pdf",
+      "cameraType": null
     },
     "W800": {
       "modelKey": "W800",
       "displayName": "AXIS W800 SYSTEM CONTROLLER",
       "family": "AXIS W80 Series",
       "seriesId": "W80",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -10708,7 +10707,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": null,
-      "maxPowerWatts": 16.0,
+      "maxPowerWatts": 16,
       "analytics": [
         "Basic motion detection"
       ],
@@ -10718,7 +10717,8 @@
       "networkSpeed": "10/100",
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-w800-system-controller",
-      "datasheetUrl": "https://www.axis.com/dam/public/17/88/e9/datasheet-axis-w800-system-controller-en-US-490332.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/17/88/e9/datasheet-axis-w800-system-controller-en-US-490332.pdf",
+      "cameraType": null
     },
     "291-1U": {
       "modelKey": "291-1U",
@@ -10743,7 +10743,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": null,
-      "maxPowerWatts": 80.0,
+      "maxPowerWatts": 80,
       "analytics": [
         "Basic motion detection"
       ],
@@ -10760,8 +10760,7 @@
       "displayName": "AXIS 30 W OUTDOOR MIDSPAN",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "power",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -10778,7 +10777,7 @@
       "ipRating": "IP66",
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 30.0,
+      "maxPowerWatts": 30,
       "analytics": [
         "Basic motion detection"
       ],
@@ -10788,15 +10787,15 @@
       "networkSpeed": "10/100/1000",
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-30-w-outdoor-midspan",
-      "datasheetUrl": "https://www.axis.com/dam/public/55/79/c3/datasheet-axis-30-w-outdoor-midspan-en-US-317684.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/55/79/c3/datasheet-axis-30-w-outdoor-midspan-en-US-317684.pdf",
+      "cameraType": null
     },
     "90-W": {
       "modelKey": "90-W",
       "displayName": "AXIS 90 W MIDSPAN ACDC",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "power",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -10813,7 +10812,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 90.0,
+      "maxPowerWatts": 90,
       "analytics": [
         "Basic motion detection"
       ],
@@ -10823,7 +10822,8 @@
       "networkSpeed": "10/100/1000",
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-90-w-midspan-acdc",
-      "datasheetUrl": "https://www.axis.com/dam/public/95/ba/5c/datasheet-axis-90-w-midspan-acdc-en-US-343115.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/95/ba/5c/datasheet-axis-90-w-midspan-acdc-en-US-343115.pdf",
+      "cameraType": null
     },
     "FA1105": {
       "modelKey": "FA1105",
@@ -10831,7 +10831,7 @@
       "family": "",
       "seriesId": "",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "modular",
       "sensor": "1/3” (Effective) Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -10866,7 +10866,7 @@
       "family": "",
       "seriesId": "",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "modular",
       "sensor": "1/3” (Effective) Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -10901,7 +10901,7 @@
       "family": "",
       "seriesId": "",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "modular",
       "sensor": "1/3” (Effective) Progressive Scan Rgb Cmos",
       "maxResolution": "HDTV 1080P",
       "maxFps": 30,
@@ -10936,7 +10936,7 @@
       "family": "",
       "seriesId": "",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "modular",
       "sensor": "1/3” (Effective) Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -10971,7 +10971,7 @@
       "family": "",
       "seriesId": "",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "modular",
       "sensor": null,
       "maxResolution": "HDTV 1080P",
       "maxFps": 30,
@@ -11010,7 +11010,7 @@
       "family": "",
       "seriesId": "",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "modular",
       "sensor": null,
       "maxResolution": "HDTV 1080P",
       "maxFps": 30,
@@ -11049,7 +11049,7 @@
       "family": "",
       "seriesId": "",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "modular",
       "sensor": null,
       "maxResolution": "HDTV 1080P",
       "maxFps": 30,
@@ -11068,7 +11068,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": null,
-      "maxPowerWatts": 30.0,
+      "maxPowerWatts": 30,
       "analytics": [
         "Motion Detection",
         "Fence Guard"
@@ -11086,8 +11086,7 @@
       "displayName": "AXIS LENS M12 28 MM F12",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "lens",
       "sensor": "Is Crucial To Ensure The Optimal Camera Performance. Therefore Choosing The Best Lens",
       "maxResolution": null,
       "maxFps": null,
@@ -11114,15 +11113,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-lens-m12-28-mm-f12",
-      "datasheetUrl": "https://www.axis.com/dam/public/33/1d/f3/datasheet-optional-m12-mount-lenses-en-US-449156.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/33/1d/f3/datasheet-optional-m12-mount-lenses-en-US-449156.pdf",
+      "cameraType": null
     },
     "POE-MIDSPAN-8-PORT": {
       "modelKey": "POE-MIDSPAN-8-PORT",
       "displayName": "AXIS POE MIDSPAN 8 PORT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "power",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11149,15 +11148,15 @@
       "networkSpeed": "10/100/1000",
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-poe-midspan-8-port",
-      "datasheetUrl": "https://www.axis.com/dam/public/75/04/7a/datasheet-axis-power-over-ethernet-midspan-8-port-en-US-509207.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/75/04/7a/datasheet-axis-power-over-ethernet-midspan-8-port-en-US-509207.pdf",
+      "cameraType": null
     },
     "SURVEILLANCE-CARD-1-TB": {
       "modelKey": "SURVEILLANCE-CARD-1-TB",
       "displayName": "AXIS SURVEILLANCE CARD 1 TB",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "storage",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11184,15 +11183,15 @@
       "networkSpeed": null,
       "edgeStorage": "SD card slot",
       "productUrl": "https://www.axis.com/products/axis-surveillance-card-1-tb",
-      "datasheetUrl": "https://www.axis.com/dam/public/b6/d1/f5/datasheet-axis-surveillance-card-1-tb-en-US-478829.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/b6/d1/f5/datasheet-axis-surveillance-card-1-tb-en-US-478829.pdf",
+      "cameraType": null
     },
     "SURVEILLANCE-CARD-128-GB": {
       "modelKey": "SURVEILLANCE-CARD-128-GB",
       "displayName": "AXIS SURVEILLANCE CARD 128 GB",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "storage",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11219,15 +11218,15 @@
       "networkSpeed": null,
       "edgeStorage": "SD card slot",
       "productUrl": "https://www.axis.com/products/axis-surveillance-card-128-gb",
-      "datasheetUrl": "https://www.axis.com/dam/public/bf/d3/3c/datasheet-axis-surveillance-card-128-gb-en-US-480005.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/bf/d3/3c/datasheet-axis-surveillance-card-128-gb-en-US-480005.pdf",
+      "cameraType": null
     },
     "SURVEILLANCE-CARD-256-GB": {
       "modelKey": "SURVEILLANCE-CARD-256-GB",
       "displayName": "AXIS SURVEILLANCE CARD 256 GB",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "storage",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11254,15 +11253,15 @@
       "networkSpeed": null,
       "edgeStorage": "SD card slot",
       "productUrl": "https://www.axis.com/products/axis-surveillance-card-256-gb",
-      "datasheetUrl": "https://www.axis.com/dam/public/78/cb/a6/datasheet-axis-surveillance-card-256-gb-en-US-480006.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/78/cb/a6/datasheet-axis-surveillance-card-256-gb-en-US-480006.pdf",
+      "cameraType": null
     },
     "SURVEILLANCE-CARD-512-GB": {
       "modelKey": "SURVEILLANCE-CARD-512-GB",
       "displayName": "AXIS SURVEILLANCE CARD 512 GB",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "storage",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11289,15 +11288,15 @@
       "networkSpeed": null,
       "edgeStorage": "SD card slot",
       "productUrl": "https://www.axis.com/products/axis-surveillance-card-512-gb",
-      "datasheetUrl": "https://www.axis.com/dam/public/52/3e/94/datasheet-axis-surveillance-card-512-gb-en-US-478827.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/52/3e/94/datasheet-axis-surveillance-card-512-gb-en-US-478827.pdf",
+      "cameraType": null
     },
     "TA1101-B": {
       "modelKey": "TA1101-B",
       "displayName": "AXIS TA1101 B WIEGAND TO OSDP CONVERTER",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "access-control",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11324,15 +11323,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-ta1101-b-wiegand-to-osdp-converter",
-      "datasheetUrl": "https://www.axis.com/dam/public/permalink/238350/datasheet-axis-ta1101-b-wiegand-to-osdp-converter-en-US_238350.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/permalink/238350/datasheet-axis-ta1101-b-wiegand-to-osdp-converter-en-US_238350.pdf",
+      "cameraType": null
     },
     "TA1201": {
       "modelKey": "TA1201",
       "displayName": "AXIS TA1201 WALL MOUNT ENCLOSURE",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "intercom",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11359,15 +11358,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-ta1201-wall-mount-enclosure",
-      "datasheetUrl": "https://www.axis.com/dam/public/permalink/238351/datasheet-axis-ta1201-wall-mount-enclosure-en-US_238351.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/permalink/238351/datasheet-axis-ta1201-wall-mount-enclosure-en-US_238351.pdf",
+      "cameraType": null
     },
     "TA1202": {
       "modelKey": "TA1202",
       "displayName": "AXIS TA1202 ENCLOSURE WITH POWER UNIT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "intercom",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11394,15 +11393,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-ta1202-enclosure-with-power-unit",
-      "datasheetUrl": "https://www.axis.com/dam/public/3f/57/6b/datasheet-axis-ta1202-enclosure-with-power-unit-en-US-503957.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/3f/57/6b/datasheet-axis-ta1202-enclosure-with-power-unit-en-US-503957.pdf",
+      "cameraType": null
     },
     "TA1203": {
       "modelKey": "TA1203",
       "displayName": "AXIS TA1203 ENCLOSURE WITH POWER UNIT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "intercom",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11429,15 +11428,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-ta1203-enclosure-with-power-unit",
-      "datasheetUrl": "https://www.axis.com/dam/public/61/09/fe/datasheet-axis-ta1203-enclosure-with-power-unit-en-US-503956.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/61/09/fe/datasheet-axis-ta1203-enclosure-with-power-unit-en-US-503956.pdf",
+      "cameraType": null
     },
     "TA4711-ACCESS": {
       "modelKey": "TA4711-ACCESS",
       "displayName": "AXIS TA4711 ACCESS CARD",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "access-control",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11464,15 +11463,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-ta4711-access-card",
-      "datasheetUrl": "https://www.axis.com/dam/public/e7/26/2e/datasheet-axis-ta4711-access-card-en-US-437669.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/e7/26/2e/datasheet-axis-ta4711-access-card-en-US-437669.pdf",
+      "cameraType": null
     },
     "TA4712-KEY-FOB": {
       "modelKey": "TA4712-KEY-FOB",
       "displayName": "AXIS TA4712 KEY FOB",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "access-control",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11499,15 +11498,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-ta4712-key-fob",
-      "datasheetUrl": "https://www.axis.com/dam/public/e1/99/e8/datasheet-axis-ta4712-key-fob-en-US-437668.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/e1/99/e8/datasheet-axis-ta4712-key-fob-en-US-437668.pdf",
+      "cameraType": null
     },
     "TA8201": {
       "modelKey": "TA8201",
       "displayName": "AXIS TA8201 RECESSED MOUNT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11534,15 +11533,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-ta8201-recessed-mount",
-      "datasheetUrl": "https://www.axis.com/dam/public/d7/49/01/datasheet-axis-ta8201-recessed-mount-en-US-307984.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/d7/49/01/datasheet-axis-ta8201-recessed-mount-en-US-307984.pdf",
+      "cameraType": null
     },
     "TC1705": {
       "modelKey": "TC1705",
       "displayName": "AXIS TC1705 MESH COVER BLACKWHITE",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11569,15 +11568,15 @@
       "networkSpeed": "10/100",
       "edgeStorage": "SD card slot",
       "productUrl": "https://www.axis.com/products/axis-tc1705-mesh-cover-blackwhite",
-      "datasheetUrl": "https://www.axis.com/dam/public/02/59/56/datasheet-axis-c1110-e-network-cabinet-speaker-en-US-517485.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/02/59/56/datasheet-axis-c1110-e-network-cabinet-speaker-en-US-517485.pdf",
+      "cameraType": null
     },
     "TC1706": {
       "modelKey": "TC1706",
       "displayName": "AXIS TC1706 MESH COVER BLACKWHITE",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11604,15 +11603,15 @@
       "networkSpeed": "10/100",
       "edgeStorage": "SD card slot",
       "productUrl": "https://www.axis.com/products/axis-tc1706-mesh-cover-blackwhite",
-      "datasheetUrl": "https://www.axis.com/dam/public/02/59/56/datasheet-axis-c1110-e-network-cabinet-speaker-en-US-517485.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/02/59/56/datasheet-axis-c1110-e-network-cabinet-speaker-en-US-517485.pdf",
+      "cameraType": null
     },
     "TC6901": {
       "modelKey": "TC6901",
       "displayName": "AXIS TC6901 GOOSENECK MICROPHONE",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "audio",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11639,15 +11638,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tc6901-gooseneck-microphone",
-      "datasheetUrl": "https://www.axis.com/dam/public/b5/0d/14/datasheet-axis-tc6901-gooseneck-microphone-en-US-446002.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/b5/0d/14/datasheet-axis-tc6901-gooseneck-microphone-en-US-446002.pdf",
+      "cameraType": null
     },
     "TD8901-SFP": {
       "modelKey": "TD8901-SFP",
       "displayName": "AXIS TD8901 SFP MODULE LCLRX",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "networking",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11674,15 +11673,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-td8901-sfp-module-lclrx",
-      "datasheetUrl": "https://www.axis.com/dam/public/f8/98/95/datasheet-axis-td8901-sfp+-module-lclrx-en-US-389781.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/f8/98/95/datasheet-axis-td8901-sfp+-module-lclrx-en-US-389781.pdf",
+      "cameraType": null
     },
     "TD8902-SFP": {
       "modelKey": "TD8902-SFP",
       "displayName": "AXIS TD8902 SFP MODULE LCSRX",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "networking",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11709,15 +11708,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-td8902-sfp-module-lcsrx",
-      "datasheetUrl": "https://www.axis.com/dam/public/4c/26/58/datasheet-axis-td8902-sfp+-module-lcsrx-en-US-431892.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/4c/26/58/datasheet-axis-td8902-sfp+-module-lcsrx-en-US-431892.pdf",
+      "cameraType": null
     },
     "TD8911-SFP28": {
       "modelKey": "TD8911-SFP28",
       "displayName": "AXIS TD8911 SFP28 MODULE LCLRX",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "networking",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11744,15 +11743,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-td8911-sfp28-module-lclrx",
-      "datasheetUrl": "https://www.axis.com/dam/public/d4/be/5a/datasheet-axis-td8911-sfp28-module-lclrx-en-US-450145.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/d4/be/5a/datasheet-axis-td8911-sfp28-module-lclrx-en-US-450145.pdf",
+      "cameraType": null
     },
     "TD8912-SFP28": {
       "modelKey": "TD8912-SFP28",
       "displayName": "AXIS TD8912 SFP28 MODULE LCSRX",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "networking",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11779,15 +11778,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-td8912-sfp28-module-lcsrx",
-      "datasheetUrl": "https://www.axis.com/dam/public/a1/dc/59/datasheet-axis-td8912-sfp28-module-lcsrx-en-US-450144.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/a1/dc/59/datasheet-axis-td8912-sfp28-module-lcsrx-en-US-450144.pdf",
+      "cameraType": null
     },
     "TD9301": {
       "modelKey": "TD9301",
       "displayName": "AXIS TD9301 OUTDOOR MIDSPAN POLE MOUNT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "power",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11814,15 +11813,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-td9301-outdoor-midspan-pole-mount",
-      "datasheetUrl": "https://www.axis.com/dam/public/a6/45/8b/datasheet-axis-td9301-midspan-pole-mount-en-US-318918.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/a6/45/8b/datasheet-axis-td9301-midspan-pole-mount-en-US-318918.pdf",
+      "cameraType": null
     },
     "TI8202": {
       "modelKey": "TI8202",
       "displayName": "AXIS TI8202 RECESSED MOUNT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11849,15 +11848,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-ti8202-recessed-mount",
-      "datasheetUrl": "https://www.axis.com/dam/public/a3/72/4e/datasheet-axis-ti8202-recessed-mount-en-US-321789.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/a3/72/4e/datasheet-axis-ti8202-recessed-mount-en-US-321789.pdf",
+      "cameraType": null
     },
     "TI8204": {
       "modelKey": "TI8204",
       "displayName": "AXIS TI8204 RECESSED MOUNT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11884,15 +11883,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-ti8204-recessed-mount",
-      "datasheetUrl": "https://www.axis.com/dam/public/e4/2f/76/datasheet-axis-ti8204-recessed-mount-en-US-411593.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/e4/2f/76/datasheet-axis-ti8204-recessed-mount-en-US-411593.pdf",
+      "cameraType": null
     },
     "TI8602": {
       "modelKey": "TI8602",
       "displayName": "AXIS TI8602 WALL MOUNT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11919,15 +11918,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-ti8602-wall-mount",
-      "datasheetUrl": "https://www.axis.com/dam/public/b8/4c/d8/datasheet-axis-ti8602-wall-mount-en-US-321788.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/b8/4c/d8/datasheet-axis-ti8602-wall-mount-en-US-321788.pdf",
+      "cameraType": null
     },
     "TI8605": {
       "modelKey": "TI8605",
       "displayName": "AXIS TI8605 PROTECTION COVER",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11954,15 +11953,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-ti8605-protection-cover",
-      "datasheetUrl": "https://www.axis.com/dam/public/65/0c/ba/datasheet-axis-t8605-protection-cover-en-US-455054.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/65/0c/ba/datasheet-axis-t8605-protection-cover-en-US-455054.pdf",
+      "cameraType": null
     },
     "TI8606-WEDGE": {
       "modelKey": "TI8606-WEDGE",
       "displayName": "AXIS TI8606 WEDGE MOUNT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -11989,15 +11988,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-ti8606-wedge-mount",
-      "datasheetUrl": "https://www.axis.com/dam/public/10/73/7e/datasheet-axis-t8606-wedge-mount-en-US-455053.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/10/73/7e/datasheet-axis-t8606-wedge-mount-en-US-455053.pdf",
+      "cameraType": null
     },
     "TM1804-LE": {
       "modelKey": "TM1804-LE",
       "displayName": "AXIS TM1804 LE HOUSING",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12014,7 +12013,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": null,
-      "maxPowerWatts": 48.0,
+      "maxPowerWatts": 48,
       "analytics": [
         "Basic motion detection"
       ],
@@ -12024,15 +12023,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tm1804-le-housing",
-      "datasheetUrl": "https://www.axis.com/dam/public/84/24/28/datasheet-axis-tm1804-le-housing-en-US-460353.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/84/24/28/datasheet-axis-tm1804-le-housing-en-US-460353.pdf",
+      "cameraType": null
     },
     "TM1901": {
       "modelKey": "TM1901",
       "displayName": "AXIS TM1901 WIRELESS KIT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12059,15 +12058,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tm1901-wireless-kit",
-      "datasheetUrl": "https://www.axis.com/dam/public/da/e8/18/datasheet-axis-tm1901-wireless-kit-en-US-499653.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/da/e8/18/datasheet-axis-tm1901-wireless-kit-en-US-499653.pdf",
+      "cameraType": null
     },
     "TM3101": {
       "modelKey": "TM3101",
       "displayName": "AXIS TM3101 PENDANT WALL MOUNT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12094,15 +12093,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tm3101-pendant-wall-mount",
-      "datasheetUrl": "https://www.axis.com/dam/public/f2/89/68/datasheet-axis-tm3101-pendant-wall-mounts-en-US-311858.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/f2/89/68/datasheet-axis-tm3101-pendant-wall-mounts-en-US-311858.pdf",
+      "cameraType": null
     },
     "TP1001-E": {
       "modelKey": "TP1001-E",
       "displayName": "AXIS TP1001 E WALL AND POLE MOUNT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12129,15 +12128,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tp1001-e-wall-and-pole-mount",
-      "datasheetUrl": "https://www.axis.com/dam/public/11/de/84/datasheet-axis-tp1001-e-wall-and-pole-mount-en-US-499223.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/11/de/84/datasheet-axis-tp1001-e-wall-and-pole-mount-en-US-499223.pdf",
+      "cameraType": null
     },
     "TP3004-E": {
       "modelKey": "TP3004-E",
       "displayName": "AXIS TP3004 E WALL MOUNT BLACK",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12164,15 +12163,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tp3004-e-wall-mount-black",
-      "datasheetUrl": "https://www.axis.com/dam/public/7b/51/2a/datasheet-axis-tp3004%E2%80%93e-wall-mount-black-en-US-417756.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/7b/51/2a/datasheet-axis-tp3004%E2%80%93e-wall-mount-black-en-US-417756.pdf",
+      "cameraType": null
     },
     "TP3005-E": {
       "modelKey": "TP3005-E",
       "displayName": "AXIS TP3005 E WALL MOUNT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12199,15 +12198,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tp3005-e-wall-mount",
-      "datasheetUrl": "https://www.axis.com/dam/public/fe/d8/be/datasheet-axis-tp3005-e-wall-mount-en-US-486839.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/fe/d8/be/datasheet-axis-tp3005-e-wall-mount-en-US-486839.pdf",
+      "cameraType": null
     },
     "TP3101": {
       "modelKey": "TP3101",
       "displayName": "AXIS TP3101 PENDANT WALL MOUNT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12234,15 +12233,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tp3101-pendant-wall-mount",
-      "datasheetUrl": "https://www.axis.com/dam/public/54/56/f8/datasheet-axis-tp3101-pendant-wall-mount-en-US-311821.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/54/56/f8/datasheet-axis-tp3101-pendant-wall-mount-en-US-311821.pdf",
+      "cameraType": null
     },
     "TP3301-E-POLE": {
       "modelKey": "TP3301-E-POLE",
       "displayName": "AXIS TP3301 E POLE MOUNT BLACK",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12269,15 +12268,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tp3301-e-pole-mount-black",
-      "datasheetUrl": "https://www.axis.com/dam/public/82/dc/84/datasheet-axis-tp3301%E2%80%93e-pole-mount-black-en-US-417755.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/82/dc/84/datasheet-axis-tp3301%E2%80%93e-pole-mount-black-en-US-417755.pdf",
+      "cameraType": null
     },
     "TP3302-E": {
       "modelKey": "TP3302-E",
       "displayName": "AXIS TP3302 E CORNER MOUNT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12304,15 +12303,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tp3302-e-corner-mount",
-      "datasheetUrl": "https://www.axis.com/dam/public/permalink/245722/datasheet-axis-tp3302-e-corner-mount-en-US_245722.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/permalink/245722/datasheet-axis-tp3302-e-corner-mount-en-US_245722.pdf",
+      "cameraType": null
     },
     "TP3826-E": {
       "modelKey": "TP3826-E",
       "displayName": "AXIS TP3826 E HOUSING",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12339,15 +12338,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tp3826-e-housing",
-      "datasheetUrl": "https://www.axis.com/dam/public/ab/a4/ff/datasheet-axis-tp3826-e-housing-en-US-396790.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/ab/a4/ff/datasheet-axis-tp3826-e-housing-en-US-396790.pdf",
+      "cameraType": null
     },
     "TP3908-E-EXTENSION-PIPE": {
       "modelKey": "TP3908-E-EXTENSION-PIPE",
       "displayName": "AXIS TP3908 E EXTENSION PIPE",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12374,15 +12373,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tp3908-e-extension-pipe",
-      "datasheetUrl": "https://www.axis.com/dam/public/permalink/250620/datasheet-axis-tp3908%E2%80%93e-extension-pipe-en-US_250620.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/permalink/250620/datasheet-axis-tp3908%E2%80%93e-extension-pipe-en-US_250620.pdf",
+      "cameraType": null
     },
     "TP4601-E": {
       "modelKey": "TP4601-E",
       "displayName": "AXIS TP4601 E CONDUIT BACK BOX",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12409,15 +12408,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tp4601-e-conduit-back-box",
-      "datasheetUrl": "https://www.axis.com/dam/public/77/42/4c/datasheet-axis-tp4601-e-conduit-back-box-en-US-493801.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/77/42/4c/datasheet-axis-tp4601-e-conduit-back-box-en-US-493801.pdf",
+      "cameraType": null
     },
     "TQ1003-E": {
       "modelKey": "TQ1003-E",
       "displayName": "AXIS TQ1003 E WALL MOUNT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12444,15 +12443,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1003-e-wall-mount",
-      "datasheetUrl": "https://www.axis.com/dam/public/0e/f1/b7/datasheet-axis-tq1003-e-wall-mount-en-US-459523.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/0e/f1/b7/datasheet-axis-tq1003-e-wall-mount-en-US-459523.pdf",
+      "cameraType": null
     },
     "TQ1501-E-CRANE-AND-TRAFFIC": {
       "modelKey": "TQ1501-E-CRANE-AND-TRAFFIC",
       "displayName": "AXIS TQ1501 E CRANE AND TRAFFIC MOUNT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12479,15 +12478,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1501-e-crane-and-traffic-mount",
-      "datasheetUrl": "https://www.axis.com/dam/public/63/56/0b/datasheet-axis-tq1501-e-crane-and-traffic-mount-en-US-350013.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/63/56/0b/datasheet-axis-tq1501-e-crane-and-traffic-mount-en-US-350013.pdf",
+      "cameraType": null
     },
     "TQ1503-E": {
       "modelKey": "TQ1503-E",
       "displayName": "AXIS TQ1503 E DUAL CAMERA MOUNT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12514,15 +12513,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1503-e-dual-camera-mount",
-      "datasheetUrl": "https://www.axis.com/dam/public/permalink/228809/datasheet-axis-tq1503-e-dual-camera-mount-en-US_228809.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/permalink/228809/datasheet-axis-tq1503-e-dual-camera-mount-en-US_228809.pdf",
+      "cameraType": null
     },
     "TQ1601-E": {
       "modelKey": "TQ1601-E",
       "displayName": "AXIS TQ1601 E CONDUIT BACK BOX",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12549,15 +12548,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1601-e-conduit-back-box",
-      "datasheetUrl": "https://www.axis.com/dam/public/6a/3d/6b/datasheet-axis-tq1601-e-conduit-back-box-en-US-338807.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/6a/3d/6b/datasheet-axis-tq1601-e-conduit-back-box-en-US-338807.pdf",
+      "cameraType": null
     },
     "TQ1602-E": {
       "modelKey": "TQ1602-E",
       "displayName": "AXIS TQ1602 E CONDUIT BACK BOX",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12584,15 +12583,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1602-e-conduit-back-box",
-      "datasheetUrl": "https://www.axis.com/dam/public/ef/4e/16/datasheet-axis-tq1602-e-conduit-back-box-en-US-405622.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/ef/4e/16/datasheet-axis-tq1602-e-conduit-back-box-en-US-405622.pdf",
+      "cameraType": null
     },
     "TQ1603-E": {
       "modelKey": "TQ1603-E",
       "displayName": "AXIS TQ1603 E CONDUIT BACK BOX",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12619,15 +12618,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1603-e-conduit-back-box",
-      "datasheetUrl": "https://www.axis.com/dam/public/92/84/a8/datasheet-axis-tq1603-e-conduit-back-box-en-US-442453.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/92/84/a8/datasheet-axis-tq1603-e-conduit-back-box-en-US-442453.pdf",
+      "cameraType": null
     },
     "TQ1808-VE": {
       "modelKey": "TQ1808-VE",
       "displayName": "AXIS TQ1808 VE SURVEILLANCE CABINET",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12654,15 +12653,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1808-ve-surveillance-cabinet",
-      "datasheetUrl": "https://www.axis.com/dam/public/f9/96/2d/datasheet-axis-tq1808-ve-surveillance-cabinet-en-US-376979.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/f9/96/2d/datasheet-axis-tq1808-ve-surveillance-cabinet-en-US-376979.pdf",
+      "cameraType": null
     },
     "TQ1815-E": {
       "modelKey": "TQ1815-E",
       "displayName": "AXIS TQ1815 E HOUSING",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12689,15 +12688,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1815-e-housing",
-      "datasheetUrl": "https://www.axis.com/dam/public/b0/bc/f6/datasheet-axis-tq1815-e-housing-en-US-503948.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/b0/bc/f6/datasheet-axis-tq1815-e-housing-en-US-503948.pdf",
+      "cameraType": null
     },
     "TQ1817-VE": {
       "modelKey": "TQ1817-VE",
       "displayName": "AXIS TQ1817 VE SURVEILLANCE CABINET",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12724,15 +12723,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1817-ve-surveillance-cabinet",
-      "datasheetUrl": "https://www.axis.com/dam/public/93/dd/09/datasheet-axis-tq1817-ve-surveillance-cabinet-en-US-451619.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/93/dd/09/datasheet-axis-tq1817-ve-surveillance-cabinet-en-US-451619.pdf",
+      "cameraType": null
     },
     "TQ1818-E": {
       "modelKey": "TQ1818-E",
       "displayName": "AXIS TQ1818 E POSITIONING UNIT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12749,7 +12748,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": null,
-      "maxPowerWatts": 150.0,
+      "maxPowerWatts": 150,
       "analytics": [
         "Basic motion detection"
       ],
@@ -12759,15 +12758,15 @@
       "networkSpeed": "10/100",
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1818-e-positioning-unit",
-      "datasheetUrl": "https://www.axis.com/dam/public/81/cd/e3/datasheet-axis-tq1818%E2%80%93e-positioning-unit-en-US-501738.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/81/cd/e3/datasheet-axis-tq1818%E2%80%93e-positioning-unit-en-US-501738.pdf",
+      "cameraType": null
     },
     "TQ1819-E": {
       "modelKey": "TQ1819-E",
       "displayName": "AXIS TQ1819 E HOUSING",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12794,15 +12793,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1819-e-housing",
-      "datasheetUrl": "https://www.axis.com/dam/public/f4/37/e1/datasheet-axis-tq1819-e-housing-en-US-503955.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/f4/37/e1/datasheet-axis-tq1819-e-housing-en-US-503955.pdf",
+      "cameraType": null
     },
     "TQ1902-E": {
       "modelKey": "TQ1902-E",
       "displayName": "AXIS TQ1902 E IR ILLUMINATOR KIT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12829,15 +12828,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1902-e-ir-illuminator-kit",
-      "datasheetUrl": "https://www.axis.com/dam/public/c0/61/8d/datasheet-axis-tq1902-e-ir-illuminator-kit-en-US-443041.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/c0/61/8d/datasheet-axis-tq1902-e-ir-illuminator-kit-en-US-443041.pdf",
+      "cameraType": null
     },
     "TQ1915": {
       "modelKey": "TQ1915",
       "displayName": "AXIS TQ1915 PLUG THREAD M25X15",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12864,15 +12863,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1915-plug-thread-m25x15",
-      "datasheetUrl": "https://www.axis.com/dam/public/70/e7/de/datasheet-axis-tq1915-plug-thread-m25x15-en-US-411670.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/70/e7/de/datasheet-axis-tq1915-plug-thread-m25x15-en-US-411670.pdf",
+      "cameraType": null
     },
     "TQ1916": {
       "modelKey": "TQ1916",
       "displayName": "AXIS TQ1916 PLUG THREAD M20X15",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12899,15 +12898,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1916-plug-thread-m20x15",
-      "datasheetUrl": "https://www.axis.com/dam/public/1a/08/8b/datasheet-axis-tq1916-plug-thread-m20x15-en-US-411676.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/1a/08/8b/datasheet-axis-tq1916-plug-thread-m20x15-en-US-411676.pdf",
+      "cameraType": null
     },
     "TQ1917": {
       "modelKey": "TQ1917",
       "displayName": "AXIS TQ1917 ADAPTER M25X15 34 NPT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12934,15 +12933,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1917-adapter-m25x15-34-npt",
-      "datasheetUrl": "https://www.axis.com/dam/public/9a/99/0c/datasheet-axis-tq1917-adapter-m25x15-34-npt-en-US-411675.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/9a/99/0c/datasheet-axis-tq1917-adapter-m25x15-34-npt-en-US-411675.pdf",
+      "cameraType": null
     },
     "TQ1918": {
       "modelKey": "TQ1918",
       "displayName": "AXIS TQ1918 ADAPTER M20X15 34 NPT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12969,15 +12968,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1918-adapter-m20x15-34-npt",
-      "datasheetUrl": "https://www.axis.com/dam/public/8f/b0/d8/datasheet-axis-tq1918-adapter-m20x15-34-npt-en-US-411673.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/8f/b0/d8/datasheet-axis-tq1918-adapter-m20x15-34-npt-en-US-411673.pdf",
+      "cameraType": null
     },
     "TQ1919-E": {
       "modelKey": "TQ1919-E",
       "displayName": "AXIS TQ1919 E IR ILLUMINATOR KIT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -12994,7 +12993,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": null,
-      "maxPowerWatts": 10.0,
+      "maxPowerWatts": 10,
       "analytics": [
         "Basic motion detection"
       ],
@@ -13004,15 +13003,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1919-e-ir-illuminator-kit",
-      "datasheetUrl": "https://www.axis.com/dam/public/permalink/241232/datasheet-axis-tq1919-e-ir-illuminator-kit-en-US_241232.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/permalink/241232/datasheet-axis-tq1919-e-ir-illuminator-kit-en-US_241232.pdf",
+      "cameraType": null
     },
     "TQ1920": {
       "modelKey": "TQ1920",
       "displayName": "AXIS TQ1920 ADAPTER M25X15 12 NPT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13039,15 +13038,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1920-adapter-m25x15-12-npt",
-      "datasheetUrl": "https://www.axis.com/dam/public/8c/11/2b/datasheet-axis-tq1920-adapter-m25x15-12-npt-en-US-411672.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/8c/11/2b/datasheet-axis-tq1920-adapter-m25x15-12-npt-en-US-411672.pdf",
+      "cameraType": null
     },
     "TQ1921": {
       "modelKey": "TQ1921",
       "displayName": "AXIS TQ1921 ADAPTER M20X15 12 NPT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13074,15 +13073,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1921-adapter-m20x15-12-npt",
-      "datasheetUrl": "https://www.axis.com/dam/public/d3/f7/a8/datasheet-axis-tq1921-adapter-m20x15-12-npt-en-US-411671.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/d3/f7/a8/datasheet-axis-tq1921-adapter-m20x15-12-npt-en-US-411671.pdf",
+      "cameraType": null
     },
     "TQ1925": {
       "modelKey": "TQ1925",
       "displayName": "AXIS TQ1925 ADAPTER M25X15 M20X15",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13109,15 +13108,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1925-adapter-m25x15-m20x15",
-      "datasheetUrl": "https://www.axis.com/dam/public/ad/53/e9/datasheet-axis-tq1925-adapter-m25x15-m20x15--en-US-411677.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/ad/53/e9/datasheet-axis-tq1925-adapter-m25x15-m20x15--en-US-411677.pdf",
+      "cameraType": null
     },
     "TQ1937-E": {
       "modelKey": "TQ1937-E",
       "displayName": "AXIS TQ1937 E IR ILLUMINATOR KIT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13144,15 +13143,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1937-e-ir-illuminator-kit",
-      "datasheetUrl": "https://www.axis.com/dam/public/00/78/79/datasheet-axis-tq1937-e-ir-illuminator-kit-en-US-451640.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/00/78/79/datasheet-axis-tq1937-e-ir-illuminator-kit-en-US-451640.pdf",
+      "cameraType": null
     },
     "TQ1943-E": {
       "modelKey": "TQ1943-E",
       "displayName": "AXIS TQ1943 E CABLE GLAND EX D ARMORED",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13179,15 +13178,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1943-e-cable-gland-ex-d-armored",
-      "datasheetUrl": "https://www.axis.com/dam/public/05/82/c6/datasheet-axis-tq1943-e-cable-gland-ex-d-armored-en-US-446087.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/05/82/c6/datasheet-axis-tq1943-e-cable-gland-ex-d-armored-en-US-446087.pdf",
+      "cameraType": null
     },
     "TQ1944-E": {
       "modelKey": "TQ1944-E",
       "displayName": "AXIS TQ1944 E CABLE GLAND EX D NON ARMORED",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13214,15 +13213,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1944-e-cable-gland-ex-d-non-armored",
-      "datasheetUrl": "https://www.axis.com/dam/public/ec/8d/b2/datasheet-axis-tq1944-e-cable-gland-ex-d-non-armored-en-US-436388.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/ec/8d/b2/datasheet-axis-tq1944-e-cable-gland-ex-d-non-armored-en-US-436388.pdf",
+      "cameraType": null
     },
     "TQ1952-E": {
       "modelKey": "TQ1952-E",
       "displayName": "AXIS TQ1952 E CABLE GLAND EX E NON ARMORED",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13249,15 +13248,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq1952-e-cable-gland-ex-e-non-armored",
-      "datasheetUrl": "https://www.axis.com/dam/public/c0/70/f5/datasheet-axis-tq1952-e-cable-gland-ex-e-non-armored-en-US-439371.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/c0/70/f5/datasheet-axis-tq1952-e-cable-gland-ex-e-non-armored-en-US-439371.pdf",
+      "cameraType": null
     },
     "TQ3003-SE": {
       "modelKey": "TQ3003-SE",
       "displayName": "AXIS TQ3003 SE WALL MOUNT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13284,15 +13283,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq3003-se-wall-mount",
-      "datasheetUrl": "https://www.axis.com/dam/public/permalink/240791/datasheet-axis-tq3003-se-wall-mount-en-US_240791.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/permalink/240791/datasheet-axis-tq3003-se-wall-mount-en-US_240791.pdf",
+      "cameraType": null
     },
     "TQ3106-SE": {
       "modelKey": "TQ3106-SE",
       "displayName": "AXIS TQ3106 SE PENDANT KIT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13319,15 +13318,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq3106-se-pendant-kit",
-      "datasheetUrl": "https://www.axis.com/dam/public/permalink/240790/datasheet-axis-tq3106-se-pendant-kit-en-US_240790.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/permalink/240790/datasheet-axis-tq3106-se-pendant-kit-en-US_240790.pdf",
+      "cameraType": null
     },
     "TQ3107-SE": {
       "modelKey": "TQ3107-SE",
       "displayName": "AXIS TQ3107 SE PENDANT KIT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13354,15 +13353,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq3107-se-pendant-kit",
-      "datasheetUrl": "https://www.axis.com/dam/public/permalink/240789/datasheet-axis-tq3107-se-pendant-kit-en-US_240789.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/permalink/240789/datasheet-axis-tq3107-se-pendant-kit-en-US_240789.pdf",
+      "cameraType": null
     },
     "TQ3601-E": {
       "modelKey": "TQ3601-E",
       "displayName": "AXIS TQ3601 E CONDUIT BACK BOX",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13389,15 +13388,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq3601-e-conduit-back-box",
-      "datasheetUrl": "https://www.axis.com/dam/public/c1/5c/2c/datasheet-axis-tq3601-e-conduit-back-box-en-US-416639.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/c1/5c/2c/datasheet-axis-tq3601-e-conduit-back-box-en-US-416639.pdf",
+      "cameraType": null
     },
     "TQ3801": {
       "modelKey": "TQ3801",
       "displayName": "AXIS TQ3801 HYDROPHILIC DOME",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13424,15 +13423,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq3801-hydrophilic-dome",
-      "datasheetUrl": "https://www.axis.com/dam/public/cc/7e/20/datasheet-axis-tq3801-hydrophilic-dome-en-US-321675.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/cc/7e/20/datasheet-axis-tq3801-hydrophilic-dome-en-US-321675.pdf",
+      "cameraType": null
     },
     "TQ4901": {
       "modelKey": "TQ4901",
       "displayName": "AXIS TQ4901 COVER SLEEVE",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": "1/2.7” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -13464,15 +13463,15 @@
       "networkSpeed": "10/100",
       "edgeStorage": "SD card slot",
       "productUrl": "https://www.axis.com/products/axis-tq4901-cover-sleeve",
-      "datasheetUrl": "https://www.axis.com/dam/public/10/e4/49/datasheet-axis-q9307-lv-dome-camera-en-US-506867.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/10/e4/49/datasheet-axis-q9307-lv-dome-camera-en-US-506867.pdf",
+      "cameraType": null
     },
     "TQ5001-E": {
       "modelKey": "TQ5001-E",
       "displayName": "AXIS TQ5001 E WALL AND POLE MOUNT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13499,15 +13498,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq5001-e-wall-and-pole-mount",
-      "datasheetUrl": "https://www.axis.com/dam/public/3b/2b/8d/datasheet-axis-tq5001-e-wall-and-pole-mount-en-US-499222.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/3b/2b/8d/datasheet-axis-tq5001-e-wall-and-pole-mount-en-US-499222.pdf",
+      "cameraType": null
     },
     "TQ5301-E": {
       "modelKey": "TQ5301-E",
       "displayName": "AXIS TQ5301 E CORNER MOUNT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13534,15 +13533,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq5301-e-corner-mount",
-      "datasheetUrl": "https://www.axis.com/dam/public/permalink/245721/datasheet-axis-tq5301-e-corner-mount-en-US_245721.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/permalink/245721/datasheet-axis-tq5301-e-corner-mount-en-US_245721.pdf",
+      "cameraType": null
     },
     "TQ6501-E": {
       "modelKey": "TQ6501-E",
       "displayName": "AXIS TQ6501 E PARAPET MOUNT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "mount",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13569,15 +13568,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq6501-e-parapet-mount",
-      "datasheetUrl": "https://www.axis.com/dam/public/84/25/ca/datasheet-axis-tq6501-e-parapet-mount-en-US-359081.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/84/25/ca/datasheet-axis-tq6501-e-parapet-mount-en-US-359081.pdf",
+      "cameraType": null
     },
     "TQ6802": {
       "modelKey": "TQ6802",
       "displayName": "AXIS TQ6802 HYDROPHILIC CLEAR DOME",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13604,15 +13603,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tq6802-hydrophilic-clear-dome",
-      "datasheetUrl": "https://www.axis.com/dam/public/4d/b7/6a/datasheet-axis-tq6802-hydrophilic-clear-dome-en-US-321632.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/4d/b7/6a/datasheet-axis-tq6802-hydrophilic-clear-dome-en-US-321632.pdf",
+      "cameraType": null
     },
     "TU1001-V": {
       "modelKey": "TU1001-V",
       "displayName": "AXIS TU1001 V MICROPHONE",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "audio",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13639,15 +13638,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tu1001-v-microphone",
-      "datasheetUrl": "https://www.axis.com/dam/public/9b/ec/cb/datasheet-axis-tu1001-v-microphone-en-US-321775.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/9b/ec/cb/datasheet-axis-tu1001-v-microphone-en-US-321775.pdf",
+      "cameraType": null
     },
     "TU1001-VE": {
       "modelKey": "TU1001-VE",
       "displayName": "AXIS TU1001 VE MICROPHONE",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "audio",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13674,15 +13673,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tu1001-ve-microphone",
-      "datasheetUrl": "https://www.axis.com/dam/public/84/be/77/datasheet-axis-tu1001-ve-microphone-en-US-321773.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/84/be/77/datasheet-axis-tu1001-ve-microphone-en-US-321773.pdf",
+      "cameraType": null
     },
     "TU1002-VE": {
       "modelKey": "TU1002-VE",
       "displayName": "AXIS TU1002 VE MICROPHONE KIT",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "audio",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13709,15 +13708,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tu1002-ve-microphone-kit",
-      "datasheetUrl": "https://www.axis.com/dam/public/04/5a/80/datasheet-axis-tu1002-ve-microphone-kit-en-US-397153.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/04/5a/80/datasheet-axis-tu1002-ve-microphone-kit-en-US-397153.pdf",
+      "cameraType": null
     },
     "TU6004-E": {
       "modelKey": "TU6004-E",
       "displayName": "AXIS TU6004 E CABLE",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13744,15 +13743,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tu6004-e-cable",
-      "datasheetUrl": "https://www.axis.com/dam/public/64/11/a3/datasheet-axis-tu6004-e-cable-en-US-399142.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/64/11/a3/datasheet-axis-tu6004-e-cable-en-US-399142.pdf",
+      "cameraType": null
     },
     "TU6005-PLENUM": {
       "modelKey": "TU6005-PLENUM",
       "displayName": "AXIS TU6005 PLENUM CABLE",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13779,15 +13778,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tu6005-plenum-cable",
-      "datasheetUrl": "https://www.axis.com/dam/public/73/5f/7a/datasheet-axis-tu6005-plenum-cable-en-US-387824.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/73/5f/7a/datasheet-axis-tu6005-plenum-cable-en-US-387824.pdf",
+      "cameraType": null
     },
     "TU6007-E": {
       "modelKey": "TU6007-E",
       "displayName": "AXIS TU6007 E CABLE",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13814,15 +13813,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tu6007-e-cable",
-      "datasheetUrl": "https://www.axis.com/dam/public/bc/2f/de/datasheet-axis-tu6007-e-cable-en-US-405683.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/bc/2f/de/datasheet-axis-tu6007-e-cable-en-US-405683.pdf",
+      "cameraType": null
     },
     "TU8001": {
       "modelKey": "TU8001",
       "displayName": "AXIS TU8001 ETHERNET SURGE PROTECTOR",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "power",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13849,15 +13848,15 @@
       "networkSpeed": "10/100/1000",
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tu8001-ethernet-surge-protector",
-      "datasheetUrl": "https://www.axis.com/dam/public/60/c7/27/datasheet-axis-tu8001-ethernet-surge-protector-en-US-321787.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/60/c7/27/datasheet-axis-tu8001-ethernet-surge-protector-en-US-321787.pdf",
+      "cameraType": null
     },
     "TU8002-E-90-W": {
       "modelKey": "TU8002-E-90-W",
       "displayName": "AXIS TU8002 E 90 W MIDSPAN",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "power",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13884,15 +13883,15 @@
       "networkSpeed": "10/100/1000",
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tu8002-e-90-w-midspan",
-      "datasheetUrl": "https://www.axis.com/dam/public/c9/40/31/datasheet-axis-tu8002%E2%80%93e-90-w-midspan-en-US-376154.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/c9/40/31/datasheet-axis-tu8002%E2%80%93e-90-w-midspan-en-US-376154.pdf",
+      "cameraType": null
     },
     "TU8003-90-W": {
       "modelKey": "TU8003-90-W",
       "displayName": "AXIS TU8003 90 W CONNECTIVITY MIDSPAN",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "power",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13919,15 +13918,15 @@
       "networkSpeed": "10/100/1000",
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tu8003-90-w-connectivity-midspan",
-      "datasheetUrl": "https://www.axis.com/dam/public/17/39/ff/datasheet-axis-tu8003-90-w-connectivity-midspan-en-US-426903.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/17/39/ff/datasheet-axis-tu8003-90-w-connectivity-midspan-en-US-426903.pdf",
+      "cameraType": null
     },
     "TU8004-90-W": {
       "modelKey": "TU8004-90-W",
       "displayName": "AXIS TU8004 90 W MIDSPAN",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "power",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13944,7 +13943,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 90.0,
+      "maxPowerWatts": 90,
       "analytics": [
         "Basic motion detection"
       ],
@@ -13954,15 +13953,15 @@
       "networkSpeed": "10/100/1000",
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tu8004-90-w-midspan",
-      "datasheetUrl": "https://www.axis.com/dam/public/2d/5a/91/datasheet-axis-tu8004-90-w-midspan-en-US-416802.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/2d/5a/91/datasheet-axis-tu8004-90-w-midspan-en-US-416802.pdf",
+      "cameraType": null
     },
     "TU8010-2-PORT": {
       "modelKey": "TU8010-2-PORT",
       "displayName": "AXIS TU8010 2 PORT POE EXTENDER",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "power",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -13979,7 +13978,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 60.0,
+      "maxPowerWatts": 60,
       "analytics": [
         "Basic motion detection"
       ],
@@ -13989,15 +13988,15 @@
       "networkSpeed": "10/100/1000",
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tu8010-2-port-poe-extender",
-      "datasheetUrl": "https://www.axis.com/dam/public/71/f4/de/datasheet-axis-tu8010-2-port-poe-extender-en-US-436657.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/71/f4/de/datasheet-axis-tu8010-2-port-poe-extender-en-US-436657.pdf",
+      "cameraType": null
     },
     "TU8011-4-PORT": {
       "modelKey": "TU8011-4-PORT",
       "displayName": "AXIS TU8011 4 PORT POE EXTENDER",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "power",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -14014,7 +14013,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 60.0,
+      "maxPowerWatts": 60,
       "analytics": [
         "Basic motion detection"
       ],
@@ -14024,15 +14023,15 @@
       "networkSpeed": "10/100/1000",
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tu8011-4-port-poe-extender",
-      "datasheetUrl": "https://www.axis.com/dam/public/40/b4/02/datasheet-axis-tu8011-4-port-poe-extender-en-US-436656.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/40/b4/02/datasheet-axis-tu8011-4-port-poe-extender-en-US-436656.pdf",
+      "cameraType": null
     },
     "TU9001-CONTROL-BOARD": {
       "modelKey": "TU9001-CONTROL-BOARD",
       "displayName": "AXIS TU9001 CONTROL BOARD",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -14059,15 +14058,15 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tu9001-control-board",
-      "datasheetUrl": "https://www.axis.com/dam/public/14/83/0c/datasheet-axis-tu9001-control-board-en-US-457721.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/14/83/0c/datasheet-axis-tu9001-control-board-en-US-457721.pdf",
+      "cameraType": null
     },
     "TU9004": {
       "modelKey": "TU9004",
       "displayName": "AXIS TU9004 WIRELESS DONGLE",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "accessory",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -14094,7 +14093,8 @@
       "networkSpeed": null,
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-tu9004-wireless-dongle",
-      "datasheetUrl": "https://www.axis.com/dam/public/80/ae/c3/datasheet-axis-tu9004-wireless-dongle-en-US-499655.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/80/ae/c3/datasheet-axis-tu9004-wireless-dongle-en-US-499655.pdf",
+      "cameraType": null
     },
     "TW1200": {
       "modelKey": "TW1200",
@@ -14102,7 +14102,7 @@
       "family": "",
       "seriesId": "",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "body-worn",
       "sensor": "1/2.9” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 25,
@@ -14138,8 +14138,7 @@
       "displayName": "AXIS XC1311 EXPLOSION PROTECTED HORN SPEAKER",
       "family": "",
       "seriesId": "",
-      "productType": "camera",
-      "cameraType": "specialty",
+      "productType": "audio",
       "sensor": null,
       "maxResolution": null,
       "maxFps": null,
@@ -14166,7 +14165,8 @@
       "networkSpeed": "10/100",
       "edgeStorage": null,
       "productUrl": "https://www.axis.com/products/axis-xc1311-explosion-protected-horn-speaker",
-      "datasheetUrl": "https://www.axis.com/dam/public/6b/57/81/datasheet-axis-xc1311-explosion-protected-horn-speaker-en-US-506762.pdf"
+      "datasheetUrl": "https://www.axis.com/dam/public/6b/57/81/datasheet-axis-xc1311-explosion-protected-horn-speaker-en-US-506762.pdf",
+      "cameraType": null
     },
     "XFQ1656": {
       "modelKey": "XFQ1656",
@@ -14174,7 +14174,7 @@
       "family": "",
       "seriesId": "",
       "productType": "camera",
-      "cameraType": "specialty",
+      "cameraType": "explosion-protected",
       "sensor": "1/1.8” Progressive Scan Rgb Cmos",
       "maxResolution": null,
       "maxFps": 30,
@@ -14194,7 +14194,7 @@
       "ipRating": "IP66",
       "ikRating": "IK08",
       "powerType": "PoE",
-      "maxPowerWatts": 51.0,
+      "maxPowerWatts": 51,
       "analytics": [
         "Object Analytics",
         "License Plate"
@@ -14230,7 +14230,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 36.0,
+      "maxPowerWatts": 36,
       "analytics": [
         "Basic motion detection"
       ],
@@ -14265,7 +14265,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": "PoE",
-      "maxPowerWatts": 36.0,
+      "maxPowerWatts": 36,
       "analytics": [
         "Basic motion detection"
       ],
@@ -14300,7 +14300,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 36.0,
+      "maxPowerWatts": 36,
       "analytics": [
         "Basic motion detection"
       ],
@@ -14335,7 +14335,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 36.0,
+      "maxPowerWatts": 36,
       "analytics": [
         "Basic motion detection"
       ],
@@ -14370,7 +14370,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 36.0,
+      "maxPowerWatts": 36,
       "analytics": [
         "Basic motion detection"
       ],
@@ -14405,7 +14405,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 36.0,
+      "maxPowerWatts": 36,
       "analytics": [
         "Basic motion detection"
       ],
@@ -14510,7 +14510,7 @@
       "ipRating": "IP55",
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 12.0,
+      "maxPowerWatts": 12,
       "analytics": [
         "Basic motion detection"
       ],
@@ -14547,7 +14547,7 @@
       "ipRating": "IP66",
       "ikRating": "IK08",
       "powerType": "PoE",
-      "maxPowerWatts": 22.0,
+      "maxPowerWatts": 22,
       "analytics": [
         "Motion Detection",
         "Fence Guard",
@@ -14584,7 +14584,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE+",
-      "maxPowerWatts": 26.0,
+      "maxPowerWatts": 26,
       "analytics": [
         "Basic motion detection"
       ],
@@ -14726,7 +14726,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 12.0,
+      "maxPowerWatts": 12,
       "analytics": [
         "Basic motion detection"
       ],
@@ -14949,7 +14949,7 @@
       "ipRating": "IP66",
       "ikRating": "IK08",
       "powerType": "PoE",
-      "maxPowerWatts": 25.0,
+      "maxPowerWatts": 25,
       "analytics": [
         "Object Analytics",
         "Motion Detection",
@@ -14986,7 +14986,7 @@
       "ipRating": "IP20",
       "ikRating": null,
       "powerType": "PoE+",
-      "maxPowerWatts": 30.0,
+      "maxPowerWatts": 30,
       "analytics": [
         "Basic motion detection"
       ],
@@ -15024,7 +15024,7 @@
       "ipRating": "IP30",
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 17.0,
+      "maxPowerWatts": 17,
       "analytics": [
         "Basic motion detection"
       ],
@@ -15062,7 +15062,7 @@
       "ipRating": "IP66",
       "ikRating": "IK08",
       "powerType": "PoE",
-      "maxPowerWatts": 15.0,
+      "maxPowerWatts": 15,
       "analytics": [
         "Motion Detection",
         "Autotracking"
@@ -15102,7 +15102,7 @@
       "ipRating": "IP66",
       "ikRating": "IK09",
       "powerType": "PoE",
-      "maxPowerWatts": 15.0,
+      "maxPowerWatts": 15,
       "analytics": [
         "Autotracking"
       ],
@@ -15179,7 +15179,7 @@
       "ipRating": "IP66",
       "ikRating": "IK10",
       "powerType": "PoE",
-      "maxPowerWatts": 8.0,
+      "maxPowerWatts": 8,
       "analytics": [
         "Motion Detection",
         "Autotracking"
@@ -15393,7 +15393,7 @@
       "ipRating": null,
       "ikRating": null,
       "powerType": "PoE",
-      "maxPowerWatts": 62.0,
+      "maxPowerWatts": 62,
       "analytics": [
         "Basic motion detection"
       ],
