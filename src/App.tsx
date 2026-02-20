@@ -31,6 +31,7 @@ import type {
   SearchResponse,
   SearchResult,
   BatchSearchItem,
+  CompetitorMapping,
   CrossRefData,
   MSRPData,
   AxisSpecDatabase,
@@ -296,6 +297,7 @@ function AxisXApp({ engine }: AxisXAppProps) {
     summary: cartSummary,
     addItem,
     addFromResult,
+    addAccessoryItem,
     removeItem,
     updateQuantity,
     clear: clearCart,
@@ -334,6 +336,20 @@ function AxisXApp({ engine }: AxisXAppProps) {
         const bestResult = response.results[0];
         if (bestResult) {
           addFromResult(bestResult, item.quantity);
+
+          // Add paired mount if mount pairing resolved
+          if (item.mountPairing?.mount) {
+            const mapping = bestResult.mapping;
+            const axisModel = 'axis_replacement' in mapping
+              ? (mapping as CompetitorMapping).axis_replacement
+              : mapping.replacement_model;
+            addAccessoryItem(
+              item.mountPairing.mount,
+              axisModel,
+              item.quantity,
+              item.location
+            );
+          }
         }
       }
     });
