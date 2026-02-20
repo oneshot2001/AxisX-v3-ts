@@ -357,6 +357,8 @@ function AxisXApp({ engine }: AxisXAppProps) {
       validItems.map((item) => ({
         input: item.input,
         quantity: item.quantity,
+        mountType: item.mountType,
+        location: item.location,
       }))
     );
 
