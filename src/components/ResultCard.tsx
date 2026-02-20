@@ -11,7 +11,7 @@
  * Migrated to Fluent UI components.
  */
 
-import { memo } from 'react';
+import { memo, useState, useCallback, useMemo } from 'react';
 import {
   Card,
   Button,
@@ -26,10 +26,14 @@ import {
   Open24Regular,
   Add24Regular,
   Lightbulb24Regular,
+  ChevronDown24Regular,
+  ChevronUp24Regular,
 } from '@fluentui/react-icons';
-import type { SearchResult, CompetitorMapping, LegacyAxisMapping } from '@/types';
+import type { SearchResult, CompetitorMapping, LegacyAxisMapping, AccessoryCompatEntry } from '@/types';
 import { getFormattedPrice } from '@/core/msrp';
 import { lookupSpec } from '@/core/specs';
+import { useAccessory } from '@/hooks/useAccessory';
+import { AccessoryPanel } from './AccessoryPanel';
 import { axisTokens } from '@/styles/fluentTheme';
 
 // =============================================================================
@@ -258,6 +262,9 @@ const useStyles = makeStyles({
     minWidth: 'auto',
     padding: '0.25rem 0.5rem',
   },
+  accessorySection: {
+    marginTop: '0.75rem',
+  },
 });
 
 // =============================================================================
@@ -270,6 +277,12 @@ export interface ResultCardProps {
 
   /** Callback when "Add to BOM" is clicked with quantity */
   readonly onAddToCart: (result: SearchResult, quantity?: number) => void;
+
+  /** Callback when an accessory is added to BOM */
+  readonly onAddAccessoryToCart?: (accessory: AccessoryCompatEntry, parentModel: string) => void;
+
+  /** Set of accessory model keys already in cart */
+  readonly cartAccessoryModels?: ReadonlySet<string>;
 }
 
 // =============================================================================
@@ -303,8 +316,10 @@ function getWhySwitchPoints(category: string): string[] {
 // COMPONENT
 // =============================================================================
 
-function ResultCardComponent({ result, onAddToCart }: ResultCardProps) {
+function ResultCardComponent({ result, onAddToCart, onAddAccessoryToCart, cartAccessoryModels }: ResultCardProps) {
   const styles = useStyles();
+  const [showAccessories, setShowAccessories] = useState(false);
+  const { getAccessories, isLoaded: accessoryLoaded } = useAccessory();
   const mapping = result.mapping;
   const isLegacy = result.isLegacy;
 
@@ -338,6 +353,23 @@ function ResultCardComponent({ result, onAddToCart }: ResultCardProps) {
   } catch {
     // Specs not initialized yet
   }
+
+  // Accessory data
+  const accessories = useMemo(
+    () => (accessoryLoaded && showAccessories ? getAccessories(axisModel) : []),
+    [accessoryLoaded, showAccessories, getAccessories, axisModel]
+  );
+
+  const handleToggleAccessories = useCallback(() => {
+    setShowAccessories((prev) => !prev);
+  }, []);
+
+  const handleAddAccessory = useCallback(
+    (accessory: AccessoryCompatEntry) => {
+      onAddAccessoryToCart?.(accessory, axisModel);
+    },
+    [onAddAccessoryToCart, axisModel]
+  );
 
   // Confidence badge logic
   const isHighConfidence = result.score >= 85;
@@ -536,11 +568,39 @@ function ResultCardComponent({ result, onAddToCart }: ResultCardProps) {
           </Button>
         ))}
       </div>
+
+      {/* Accessories Toggle */}
+      {accessoryLoaded && (
+        <div className={styles.accessorySection}>
+          <Button
+            appearance="subtle"
+            size="small"
+            icon={showAccessories ? <ChevronUp24Regular /> : <ChevronDown24Regular />}
+            onClick={handleToggleAccessories}
+          >
+            {showAccessories ? 'Hide Accessories' : 'Show Accessories'}
+          </Button>
+
+          {showAccessories && accessories.length > 0 && (
+            <div style={{ marginTop: '0.5rem' }}>
+              <AccessoryPanel
+                cameraModel={axisModel}
+                accessories={accessories}
+                onAddToCart={handleAddAccessory}
+                cartAccessoryModels={cartAccessoryModels}
+              />
+            </div>
+          )}
+        </div>
+      )}
     </Card>
   );
 }
 
 export const ResultCard = memo(ResultCardComponent, (prev, next) =>
-  prev.result === next.result && prev.onAddToCart === next.onAddToCart
+  prev.result === next.result &&
+  prev.onAddToCart === next.onAddToCart &&
+  prev.onAddAccessoryToCart === next.onAddAccessoryToCart &&
+  prev.cartAccessoryModels === next.cartAccessoryModels
 );
 ResultCard.displayName = 'ResultCard';
