@@ -67,6 +67,12 @@ const MANUFACTURER_COLUMN_KEYWORDS = [
   'mfr',
 ];
 
+/** Keywords that suggest a column contains mount type descriptions */
+const MOUNT_TYPE_COLUMN_KEYWORDS = ['mount', 'mount type', 'mounting', 'installation'];
+
+/** Keywords that suggest a column contains location/zone info */
+const LOCATION_COLUMN_KEYWORDS = ['location', 'zone', 'area', 'building', 'floor', 'site'];
+
 // =============================================================================
 // FILE TYPE DETECTION
 // =============================================================================
@@ -347,6 +353,46 @@ function scoreManufacturerColumn(header: string): number {
 }
 
 /**
+ * Score a column header for how likely it is to contain mount type descriptions.
+ */
+function scoreMountTypeColumn(header: string): number {
+  const lower = header.toLowerCase();
+  let score = 0;
+
+  for (const keyword of MOUNT_TYPE_COLUMN_KEYWORDS) {
+    if (lower.includes(keyword)) {
+      score += 10;
+    }
+  }
+
+  if (lower === 'mount type' || lower === 'mount' || lower === 'mounting') {
+    score += 20;
+  }
+
+  return score;
+}
+
+/**
+ * Score a column header for how likely it is to contain location/zone info.
+ */
+function scoreLocationColumn(header: string): number {
+  const lower = header.toLowerCase();
+  let score = 0;
+
+  for (const keyword of LOCATION_COLUMN_KEYWORDS) {
+    if (lower.includes(keyword)) {
+      score += 10;
+    }
+  }
+
+  if (lower === 'location' || lower === 'zone' || lower === 'area') {
+    score += 20;
+  }
+
+  return score;
+}
+
+/**
  * Auto-detect column mapping based on headers.
  */
 export function detectColumnMapping(
@@ -355,15 +401,21 @@ export function detectColumnMapping(
   let modelColumn = 0;
   let quantityColumn: number | undefined;
   let manufacturerColumn: number | undefined;
+  let mountTypeColumn: number | undefined;
+  let locationColumn: number | undefined;
 
   let bestModelScore = -1;
   let bestQuantityScore = 0;
   let bestManufacturerScore = 0;
+  let bestMountTypeScore = 0;
+  let bestLocationScore = 0;
 
   headers.forEach((header, index) => {
     const modelScore = scoreModelColumn(header);
     const quantityScore = scoreQuantityColumn(header);
     const manufacturerScore = scoreManufacturerColumn(header);
+    const mountTypeScore = scoreMountTypeColumn(header);
+    const locationScore = scoreLocationColumn(header);
 
     if (modelScore > bestModelScore) {
       bestModelScore = modelScore;
@@ -379,12 +431,24 @@ export function detectColumnMapping(
       bestManufacturerScore = manufacturerScore;
       manufacturerColumn = index;
     }
+
+    if (mountTypeScore > bestMountTypeScore) {
+      bestMountTypeScore = mountTypeScore;
+      mountTypeColumn = index;
+    }
+
+    if (locationScore > bestLocationScore) {
+      bestLocationScore = locationScore;
+      locationColumn = index;
+    }
   });
 
   return {
     modelColumn,
     quantityColumn: bestQuantityScore > 0 ? quantityColumn : undefined,
     manufacturerColumn: bestManufacturerScore > 0 ? manufacturerColumn : undefined,
+    mountTypeColumn: bestMountTypeScore > 0 ? mountTypeColumn : undefined,
+    locationColumn: bestLocationScore > 0 ? locationColumn : undefined,
   };
 }
 
@@ -396,6 +460,8 @@ export interface ExtractedRow {
   readonly model: string;
   readonly quantity: number;
   readonly manufacturer?: string;
+  readonly mountType?: string;
+  readonly location?: string;
   readonly rowIndex: number;
 }
 
@@ -434,10 +500,24 @@ export function extractData(
       manufacturer = (row[mapping.manufacturerColumn] ?? '').trim() || undefined;
     }
 
+    // Get mount type if mapped
+    let mountType: string | undefined;
+    if (mapping.mountTypeColumn !== undefined) {
+      mountType = (row[mapping.mountTypeColumn] ?? '').trim() || undefined;
+    }
+
+    // Get location if mapped
+    let location: string | undefined;
+    if (mapping.locationColumn !== undefined) {
+      location = (row[mapping.locationColumn] ?? '').trim() || undefined;
+    }
+
     extracted.push({
       model,
       quantity,
       manufacturer,
+      mountType,
+      location,
       rowIndex: index,
     });
   });

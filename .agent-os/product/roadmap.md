@@ -1,8 +1,8 @@
 # Product Roadmap
 
-> Last Updated: 2026-02-06
-> Version: 1.0.0
-> Status: Phase 1 - UI Migration
+> Last Updated: 2026-02-20
+> Version: 1.1.0
+> Status: Phase 2 - Enhanced Features (in progress)
 
 ## Phase 0: Already Completed
 
@@ -75,8 +75,13 @@ The following features have been implemented in the v3 TypeScript codebase:
 
 ### Must-Have Features
 
-- [ ] Mount recommendations UI with visual selector `L`
-- [ ] Enhanced batch processing for multiple cameras `M`
+- [x] **Accessory compatibility data layer** — Scraper built, 156 cameras mapped to compatible accessories `L`
+- [x] **Spec enrichment** — Resolution, FPS, codecs, PoE detail, chipset gaps filled via combined scraper `L`
+- [x] **Mount recommendations with batch pairing** — Upload CSV with mount types → paired camera + mount BOM `L`
+- [x] **Enhanced batch processing** — Mount type column, location column, normalized placement, paired results `M`
+- [x] **Single-search accessory browsing** — "mounts for P3285-LVE" queries, AccessoryPanel on ResultCard `M`
+- [x] **Enriched spec display** — Resolution, FPS, codecs, PoE, analytics shown inline on results `M`
+- [x] **PDF Battle Card with mounts** — Paired mounts indented under cameras, location labels, spec details `S`
 - [ ] Search history and recent lookups `S`
 
 ### Should-Have Features
@@ -88,7 +93,8 @@ The following features have been implemented in the v3 TypeScript codebase:
 ### Dependencies
 
 - Phase 1 UI migration complete
-- User feedback from v3 beta testing
+- ~~User feedback from v3 beta testing~~
+- Accessory compatibility data (completed 2026-02-20)
 
 ## Phase 3: Mobile/PWA
 

@@ -176,6 +176,8 @@ export function useSpreadsheetImport(
         status,
         searchResponse,
         quantity: row.quantity,
+        mountType: row.mountType,
+        location: row.location,
       });
 
       // Update progress

@@ -31,9 +31,11 @@ import type {
   SearchResponse,
   SearchResult,
   BatchSearchItem,
+  CompetitorMapping,
   CrossRefData,
   MSRPData,
   AxisSpecDatabase,
+  AccessoryCompatDatabase,
 } from '@/types';
 
 // Core modules
@@ -41,6 +43,7 @@ import { createSearchEngine } from '@/core/search';
 import { URLResolver } from '@/core/url';
 import { initMSRP } from '@/core/msrp';
 import { initSpecs, lookupSpec, getSpecs, hasSpec } from '@/core/specs';
+import { initAccessoryData } from '@/core/accessory';
 
 // Hooks
 import { useSearch } from '@/hooks/useSearch';
@@ -190,6 +193,17 @@ export default function App() {
         initMSRP(msrpData.model_lookup ?? {});
         initSpecs(specData);
 
+        // Load accessory data (non-blocking — feature degrades gracefully if absent)
+        import('@/data/accessory_compatibility.json')
+          .then((accModule) => {
+            if (!isCancelled) {
+              initAccessoryData(accModule.default as AccessoryCompatDatabase);
+            }
+          })
+          .catch(() => {
+            // Accessory data not available yet — feature will be hidden
+          });
+
         // Expose spec API on window for console debugging
         window.lookupSpec = lookupSpec;
         window.getSpecs = getSpecs;
@@ -296,6 +310,7 @@ function AxisXApp({ engine }: AxisXAppProps) {
     summary: cartSummary,
     addItem,
     addFromResult,
+    addAccessoryItem,
     removeItem,
     updateQuantity,
     clear: clearCart,
@@ -334,6 +349,20 @@ function AxisXApp({ engine }: AxisXAppProps) {
         const bestResult = response.results[0];
         if (bestResult) {
           addFromResult(bestResult, item.quantity);
+
+          // Add paired mount if mount pairing resolved
+          if (item.mountPairing?.mount) {
+            const mapping = bestResult.mapping;
+            const axisModel = 'axis_replacement' in mapping
+              ? (mapping as CompetitorMapping).axis_replacement
+              : mapping.replacement_model;
+            addAccessoryItem(
+              item.mountPairing.mount,
+              axisModel,
+              item.quantity,
+              item.location
+            );
+          }
         }
       }
     });
@@ -357,6 +386,8 @@ function AxisXApp({ engine }: AxisXAppProps) {
       validItems.map((item) => ({
         input: item.input,
         quantity: item.quantity,
+        mountType: item.mountType,
+        location: item.location,
       }))
     );
 

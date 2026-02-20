@@ -6,7 +6,7 @@
  */
 
 import { useState, useCallback, useMemo, useEffect } from 'react';
-import type { CartItem, CartSummary, SearchResult, CompetitorMapping } from '@/types';
+import type { CartItem, CartSummary, SearchResult, CompetitorMapping, AccessoryCompatEntry, PlacementType } from '@/types';
 import { generateId } from '@/types';
 import { getMSRP } from '@/core/msrp';
 import { getAxisURL } from '@/core/url';
@@ -27,6 +27,9 @@ export interface UseCartReturn {
   
   /** Add from search result with optional quantity */
   addFromResult: (result: SearchResult, quantity?: number) => void;
+
+  /** Add an accessory item linked to a parent camera */
+  addAccessoryItem: (accessory: AccessoryCompatEntry, parentModel: string, quantity?: number, location?: string) => void;
   
   /** Remove item by ID */
   removeItem: (id: string) => void;
@@ -210,6 +213,72 @@ export function useCart(): UseCartReturn {
     }
   }, [addItem]);
 
+  // Add accessory item linked to a parent camera
+  const addAccessoryItem = useCallback((
+    accessory: AccessoryCompatEntry,
+    parentModel: string,
+    quantity: number = 1,
+    location?: string
+  ) => {
+    const normalizedModel = accessory.model.toUpperCase().replace(/^AXIS\s*/i, '').trim();
+
+    setItems((prev) => {
+      // Check if this accessory is already in cart for this parent
+      const existingIndex = prev.findIndex(
+        (item) => item.model.toUpperCase() === normalizedModel && item.parentModel === parentModel
+      );
+
+      if (existingIndex >= 0) {
+        return prev.map((item, i) =>
+          i === existingIndex
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      }
+
+      // Get MSRP
+      let msrp: number | null = null;
+      try {
+        msrp = getMSRP().getPrice(normalizedModel);
+      } catch {
+        // MSRP not initialized yet
+      }
+
+      const axisUrl = getAxisURL(normalizedModel);
+
+      const newItem: CartItem = {
+        id: generateId(),
+        model: normalizedModel,
+        msrp,
+        quantity,
+        source: 'accessory',
+        parentModel,
+        accessoryType: accessory.accessoryType,
+        mountPlacement: accessory.mountPlacement as PlacementType | undefined,
+        axisUrl,
+        location,
+      };
+
+      // Insert after the parent camera in the list
+      const parentIndex = prev.findIndex(
+        (item) => item.model.toUpperCase() === parentModel.toUpperCase()
+      );
+
+      if (parentIndex >= 0) {
+        // Find the last accessory of this parent
+        let insertIndex = parentIndex + 1;
+        while (insertIndex < prev.length && prev[insertIndex]?.parentModel === parentModel) {
+          insertIndex++;
+        }
+        const newItems = [...prev];
+        newItems.splice(insertIndex, 0, newItem);
+        return newItems;
+      }
+
+      return [...prev, newItem];
+    });
+  }, []);
+
   // Remove item
   const removeItem = useCallback((id: string) => {
     setItems(prev => prev.filter(item => item.id !== id));
@@ -257,6 +326,7 @@ export function useCart(): UseCartReturn {
     summary,
     addItem,
     addFromResult,
+    addAccessoryItem,
     removeItem,
     updateQuantity,
     updateNotes,

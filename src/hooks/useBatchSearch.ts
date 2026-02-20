@@ -10,10 +10,13 @@ import type {
   ISearchEngine,
   BatchSearchItem,
   BatchProgress,
+  PlacementType,
   SearchResponse,
 } from '@/types';
 import { generateId as genId } from '@/types';
 import { parseBatchInput, validateBatch, MAX_BATCH_SIZE } from '@/core/search/queryParser';
+import { normalizeMountType } from '@/core/accessory/mountNormalizer';
+import { pairMountsForBatch } from '@/core/accessory/mountPairer';
 
 // =============================================================================
 // TYPES
@@ -34,7 +37,7 @@ export interface UseBatchSearchReturn {
   readonly setRawInput: (input: string) => void;
 
   /** Set parsed batch items directly (preserves quantities from imports) */
-  readonly setImportedItems: (items: readonly { input: string; quantity: number }[]) => void;
+  readonly setImportedItems: (items: readonly { input: string; quantity: number; mountType?: string; location?: string }[]) => void;
 
   /** Parsed batch items */
   readonly items: readonly BatchSearchItem[];
@@ -94,7 +97,12 @@ function createBatchItem(input: string): BatchSearchItem {
 /**
  * Create a batch item from imported row data.
  */
-function createImportedBatchItem(input: string, quantity: number): BatchSearchItem {
+function createImportedBatchItem(
+  input: string,
+  quantity: number,
+  mountType?: PlacementType,
+  location?: string
+): BatchSearchItem {
   return {
     id: genId(),
     input,
@@ -102,6 +110,8 @@ function createImportedBatchItem(input: string, quantity: number): BatchSearchIt
     selected: true,
     quantity: Math.max(1, Math.floor(quantity)),
     status: 'pending',
+    mountType,
+    location,
   };
 }
 
@@ -136,16 +146,18 @@ export function useBatchSearch(
     setProgress({ current: 0, total: validQueries.length, percent: 0 });
   }, []);
 
-  const setImportedItems = useCallback((importedItems: readonly { input: string; quantity: number }[]) => {
+  const setImportedItems = useCallback((importedItems: readonly { input: string; quantity: number; mountType?: string; location?: string }[]) => {
     const normalized = importedItems
       .map((item) => ({
         input: item.input.trim(),
         quantity: Math.max(1, Math.floor(item.quantity)),
+        mountType: item.mountType ? normalizeMountType(item.mountType) ?? undefined : undefined,
+        location: item.location?.trim() || undefined,
       }))
       .filter((item) => item.input.length > 0);
 
     setRawInput(normalized.map((item) => item.input).join('\n'));
-    setItems(normalized.map((item) => createImportedBatchItem(item.input, item.quantity)));
+    setItems(normalized.map((item) => createImportedBatchItem(item.input, item.quantity, item.mountType, item.location)));
     setProgress({ current: 0, total: normalized.length, percent: 0 });
   }, []);
 
@@ -210,6 +222,20 @@ export function useBatchSearch(
 
       if (i < total - 1 && searchDelayMs > 0) {
         await new Promise((resolve) => setTimeout(resolve, searchDelayMs));
+      }
+    }
+
+    // Run mount pairing on items that have a mountType
+    const hasMountTypes = workingItems.some((item) => item.mountType);
+    if (hasMountTypes) {
+      try {
+        const paired = pairMountsForBatch(workingItems);
+        for (let i = 0; i < paired.length; i++) {
+          workingItems[i] = paired[i]!;
+        }
+        flushState(total);
+      } catch {
+        // Accessory data not loaded — skip mount pairing
       }
     }
 

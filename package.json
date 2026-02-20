@@ -15,6 +15,7 @@
     "merge:v5": "tsx scripts/merge-v5.ts",
     "scrape": "tsx scripts/scrape.ts",
     "scrape:validate": "tsx scripts/validate.ts",
+    "scrape:axis": "tsx scripts/scraper/axis-product-enrichment.ts",
     "deploy": "npm run build && npx vercel --prod"
   },
   "dependencies": {

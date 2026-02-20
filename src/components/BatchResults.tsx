@@ -22,7 +22,8 @@ import {
   Search24Regular,
   Add24Regular,
 } from '@fluentui/react-icons';
-import type { BatchSearchItem, SearchResult, CompetitorMapping } from '@/types';
+import type { BatchSearchItem, SearchResult, CompetitorMapping, MountPairingResult } from '@/types';
+import { lookupSpec } from '@/core/specs';
 import { axisTokens } from '@/styles/fluentTheme';
 
 // =============================================================================
@@ -147,6 +148,62 @@ const useStyles = makeStyles({
   quantityInput: {
     width: '60px',
   },
+  specLine: {
+    fontSize: tokens.fontSizeBase100,
+    color: tokens.colorNeutralForeground3,
+    marginBottom: '0.25rem',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  mountRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    marginTop: '0.25rem',
+    padding: '0.25rem 0.5rem',
+    backgroundColor: tokens.colorNeutralBackground3,
+    borderRadius: tokens.borderRadiusSmall,
+    fontSize: tokens.fontSizeBase200,
+  },
+  mountLabel: {
+    color: tokens.colorNeutralForeground3,
+    fontSize: tokens.fontSizeBase100,
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.5px',
+  },
+  mountModel: {
+    fontWeight: tokens.fontWeightSemibold,
+  },
+  mountBadgeExact: {
+    display: 'inline-flex',
+    padding: '0 0.25rem',
+    borderRadius: tokens.borderRadiusSmall,
+    fontSize: tokens.fontSizeBase100,
+    backgroundColor: axisTokens.success,
+    color: '#fff',
+  },
+  mountBadgeFallback: {
+    display: 'inline-flex',
+    padding: '0 0.25rem',
+    borderRadius: tokens.borderRadiusSmall,
+    fontSize: tokens.fontSizeBase100,
+    backgroundColor: axisTokens.primary,
+    color: '#000',
+  },
+  mountBadgeNone: {
+    display: 'inline-flex',
+    padding: '0 0.25rem',
+    borderRadius: tokens.borderRadiusSmall,
+    fontSize: tokens.fontSizeBase100,
+    backgroundColor: tokens.colorNeutralForeground3,
+    color: '#fff',
+  },
+  locationLabel: {
+    fontSize: tokens.fontSizeBase100,
+    color: tokens.colorNeutralForeground3,
+    marginLeft: 'auto',
+  },
   noResults: {
     color: tokens.colorNeutralForeground3,
     fontStyle: 'italic',
@@ -257,6 +314,37 @@ function getStatusBadge(item: BatchSearchItem, styles: ReturnType<typeof useStyl
   }
 }
 
+function getMountConfidenceBadge(
+  pairing: MountPairingResult,
+  styles: ReturnType<typeof useStyles>
+) {
+  switch (pairing.mountConfidence) {
+    case 'exact':
+      return <span className={styles.mountBadgeExact}>Exact</span>;
+    case 'series-fallback':
+      return <span className={styles.mountBadgeFallback}>Series</span>;
+    case 'form-factor-default':
+      return <span className={styles.mountBadgeFallback}>Suggested</span>;
+    case 'none':
+      return <span className={styles.mountBadgeNone}>No Match</span>;
+  }
+}
+
+function getSpecLine(axisModel: string): string | null {
+  try {
+    const spec = lookupSpec(axisModel);
+    if (!spec) return null;
+    const parts: string[] = [];
+    if (spec.maxResolution) parts.push(spec.maxResolution);
+    if (spec.maxFps) parts.push(`${spec.maxFps}fps`);
+    if (spec.codecs.length > 0) parts.push(spec.codecs.join('/'));
+    if (spec.poeTypeClass || spec.powerType) parts.push(spec.poeTypeClass || spec.powerType || '');
+    return parts.length > 0 ? parts.join(' \u2022 ') : null;
+  } catch {
+    return null;
+  }
+}
+
 function getBestResult(item: BatchSearchItem): SearchResult | undefined {
   if (!item.response || item.response.results.length === 0) {
     return undefined;
@@ -357,6 +445,42 @@ export function BatchResults({
                           </Text>
                         )}
                       </div>
+
+                      {/* Spec Summary Line */}
+                      {(() => {
+                        const model = 'axis_replacement' in bestResult.mapping
+                          ? (bestResult.mapping as CompetitorMapping).axis_replacement
+                          : bestResult.mapping.replacement_model;
+                        const specLine = getSpecLine(model);
+                        return specLine ? (
+                          <Text className={styles.specLine}>{specLine}</Text>
+                        ) : null;
+                      })()}
+
+                      {/* Mount Pairing */}
+                      {item.mountPairing && (
+                        <div className={styles.mountRow}>
+                          <span className={styles.mountLabel}>Mount:</span>
+                          {item.mountPairing.mount ? (
+                            <>
+                              <Text className={styles.mountModel}>
+                                {item.mountPairing.mount.displayName}
+                              </Text>
+                              {getMountConfidenceBadge(item.mountPairing, styles)}
+                            </>
+                          ) : (
+                            <>
+                              <Text className={styles.noResults}>
+                                No {item.mountType} mount found
+                              </Text>
+                              {getMountConfidenceBadge(item.mountPairing, styles)}
+                            </>
+                          )}
+                          {item.location && (
+                            <span className={styles.locationLabel}>{item.location}</span>
+                          )}
+                        </div>
+                      )}
 
                       {/* Quantity Control */}
                       {canSelect && (

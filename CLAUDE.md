@@ -43,14 +43,17 @@ Core algorithms are testable without React and can be reused in Node.js scripts.
 
 ### Type System
 
-All types centralized in `src/types/index.ts` (~941 lines, 16 sections). Key interfaces:
+All types centralized in `src/types/index.ts` (~1130 lines, 17 sections). Key interfaces:
 
 - `ISearchEngine` / `IURLResolver` / `IMSRPLookup` - Core API contracts
 - `SearchResponse` / `SearchResult` - Search result structures
 - `CompetitorMapping` / `LegacyAxisMapping` - Data structures
-- `CartItem` / `CartSummary` - BOM cart types
+- `CartItem` / `CartSummary` - BOM cart types (CartItem supports source='accessory' with parentModel)
 - `QueryType` / `MatchType` / `URLConfidence` - Discriminated unions
 - `AxisProductSpec` / `ISpecLookup` / `AxisSpecDatabase` - Spec lookup contracts
+- `AccessoryCompatDatabase` / `AccessoryCompatEntry` / `IAccessoryLookup` - Accessory compatibility (Section 17)
+- `MountPairingResult` / `PlacementType` / `AccessoryType` - Mount pairing types
+- `AccessorySearchResponse` - Accessory query results
 
 Import types: `import type { SearchResult } from '@/types';`
 
@@ -68,8 +71,8 @@ Import types: `import type { SearchResult } from '@/types';`
 ### Search System (`src/core/search/`)
 
 Query flow:
-1. `queryParser.ts` detects type: competitor | legacy | axis-model | axis-browse | manufacturer. Note: "Manufacturer Model" queries (e.g. "Hikvision DS-2CD2143G2-I") route to competitor search, not manufacturer browse
-2. `engine.ts` routes to appropriate multi-level index (competitor, legacy, manufacturer, axisModel, type)
+1. `queryParser.ts` detects type: competitor | legacy | axis-model | axis-browse | manufacturer | accessory-lookup. Accessory queries (e.g. "mounts for P3285-LVE", "wall mount for M4215") extract model + optional placement filter. Note: "Manufacturer Model" queries (e.g. "Hikvision DS-2CD2143G2-I") route to competitor search, not manufacturer browse
+2. `engine.ts` routes to appropriate handler (competitor, legacy, manufacturer, axisModel, accessory-lookup)
 3. `fuzzy.ts` performs Levenshtein matching with thresholds:
    - **EXACT** (90+): near-perfect match
    - **PARTIAL** (70-89): good match with minor differences
@@ -105,7 +108,24 @@ Product specification lookup for 150+ Axis models. Uses shared `normalizeModelKe
 - `getSpecs().getByType('camera')` — filter by product type
 - `getSpecs().getByCameraType('fixed-dome')` — filter by camera subcategory
 
-Key fields per spec: sensor, maxResolution, maxFps, codecs, chipset (with DLPU/ARTPEC generation), ipRating, ikRating, analytics, networkSpeed, hasObjectAnalytics, hasLPR, hasAutotracking.
+Key fields per spec: sensor, maxResolution, maxFps, codecs, chipset (with DLPU/ARTPEC generation), ipRating, ikRating, analytics, networkSpeed, hasObjectAnalytics, hasLPR, hasAutotracking. Enriched fields (from scraper): resolutionPixels, resolutionLabel, poeStandard, poeTypeClass, typicalPowerWatts, powerFeatures.
+
+### Accessory Compatibility (`src/core/accessory/`)
+
+Camera-to-accessory compatibility lookup with three-step fallback: exact model → base model → series prefix.
+
+- `initAccessoryData(data)` — initialize from `accessory_compatibility.json` (called in App.tsx, non-blocking)
+- `getAccessoryLookup()` — get singleton instance
+- `getCompatible(model)` — all accessories for a camera
+- `getByType(model, type)` — filter by type ('mount', 'power', etc.)
+- `getMountsByPlacement(model, placement)` — filter mounts by placement
+- `resolveMountPair(model, placement)` — best mount for camera + placement (priority: recommended > compatible, no-additional > requires-additional)
+
+Mount sub-modules:
+- `src/core/accessory/mountNormalizer.ts` — `normalizeMountType(input)`: free-text → PlacementType (37-entry exact map + Levenshtein fuzzy)
+- `src/core/accessory/mountPairer.ts` — `pairMountsForBatch(items)`: orchestrates mount pairing across batch results
+
+PlacementType values: `wall | ceiling | pole | parapet | pendant | corner | flush | recessed`
 
 ### NDAA Categories
 
@@ -121,7 +141,7 @@ Competitor manufacturers categorized for Section 889 compliance:
 - **Search caching**: `useSearch` has an LRU cache (150 entries) to avoid redundant engine calls
 - **Batch flush**: `useBatchSearch` flushes results every 10 items instead of per-item for reduced re-renders
 - **Memoization**: `ResultCard`, `SearchView`, and `BatchView` wrapped in `React.memo()` with stabilized callbacks
-- **Async data loading**: `App.tsx` lazy-loads data files (crossref, MSRP, specs) asynchronously instead of static imports
+- **Async data loading**: `App.tsx` lazy-loads data files (crossref, MSRP, specs, accessories) asynchronously instead of static imports. Accessory data loads non-blocking — features degrade gracefully if absent
 
 ### Voice Input (`src/hooks/useVoice.ts`)
 
@@ -201,6 +221,30 @@ UI uses Fluent UI 9 with Axis brand customization in `src/styles/fluentTheme.ts`
 }
 ```
 
+**accessory_compatibility.json** — camera-to-accessory compatibility (3.1 MB, 156 cameras):
+```json
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-02-20T...",
+  "totalMappings": 156,
+  "compatibility": {
+    "P3285-LVE": {
+      "productVariant": "AXIS P3285-LVE 10 MM",
+      "accessories": [{
+        "model": "T91B47-POLE",
+        "displayName": "AXIS T91B47 Pole Mount",
+        "description": "For different pole diameters",
+        "accessoryType": "mount",
+        "mountPlacement": "pole",
+        "recommendation": "recommended",
+        "requiresAdditional": false,
+        "msrpKey": "T91B47-POLE"
+      }]
+    }
+  }
+}
+```
+
 After updating data files: run `npm run typecheck` then `npm test`.
 
 ## Testing
@@ -209,10 +253,20 @@ Tests in `tests/` use Vitest + `@testing-library/jest-dom`. Test setup (`tests/s
 
 Key test files:
 - `tests/search.test.ts` - Fuzzy matching, query parsing, search engine (includes manufacturer-prefix query tests)
+- `tests/search-accessory.test.ts` - Accessory query detection and engine routing
+- `tests/accessory.test.ts` - Core accessory lookup (29 tests)
+- `tests/mountNormalizer.test.ts` - Mount type normalization (26 tests)
+- `tests/mountPairer.test.ts` - Batch mount pairing (22 tests)
 - `tests/url.test.ts` - URL resolution cascade
+- `tests/export.test.ts` - PDF export with mount pairing
 - `tests/hooks/useBatchSearch.test.ts` - Batch quantity coalescing
-- `tests/hooks/useCart.test.ts` - Cart accordion reset behavior
+- `tests/hooks/useCart.test.ts` - Cart with accessory support
+- `tests/hooks/useSpreadsheetImport.test.ts` - Mount type column detection
+- `tests/hooks/useAccessory.test.ts` - Accessory hook wrapper
+- `tests/components/AccessoryPanel.test.tsx` - Accessory browser panel
 - `tests/components/SearchResults.test.tsx` - SearchResults component rendering
+
+Test fixture: `tests/fixtures/accessory-test-data.json` — 3 cameras (P3285-LVE, M4215-LV, Q6135-LE) with 10 accessories. Tests needing accessory data call `initAccessoryData(testAccessoryData)` in `beforeAll`.
 
 ## Deployment
 

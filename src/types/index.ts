@@ -21,6 +21,7 @@
  * 14. Batch Operations
  * 15. Spreadsheet Import
  * 16. Axis Product Specs
+ * 17. Accessory Compatibility
  */
 
 // =============================================================================
@@ -246,12 +247,13 @@ export type MatchType = 'exact' | 'partial' | 'similar' | 'none';
 
 /** Query type for routing */
 export type QueryType =
-  | 'competitor'      // Default: competitor model search
-  | 'legacy'          // Discontinued Axis model
-  | 'axis-model'      // Direct Axis model lookup (P3265, Q6135, etc.)
-  | 'axis-browse'     // User typed "axis" - show all series
-  | 'axis-type-browse'// Browse Axis portfolio by camera type
-  | 'manufacturer';   // User typed manufacturer name
+  | 'competitor'        // Default: competitor model search
+  | 'legacy'            // Discontinued Axis model
+  | 'axis-model'        // Direct Axis model lookup (P3265, Q6135, etc.)
+  | 'axis-browse'       // User typed "axis" - show all series
+  | 'axis-type-browse'  // Browse Axis portfolio by camera type
+  | 'manufacturer'      // User typed manufacturer name
+  | 'accessory-lookup'; // "mounts for X", "accessories for X"
 
 /** Individual search result */
 export interface SearchResult {
@@ -309,6 +311,9 @@ export interface SearchResponse {
 
   /** Error message if search failed */
   readonly error?: string;
+
+  /** Accessory results (for accessory-lookup queries) */
+  readonly accessoryResults?: AccessorySearchResponse;
 }
 
 /** Search engine configuration */
@@ -430,7 +435,7 @@ export interface CartItem {
   quantity: number;
 
   /** How this was added */
-  readonly source: 'search' | 'legacy' | 'direct' | 'batch';
+  readonly source: 'search' | 'legacy' | 'direct' | 'batch' | 'accessory';
 
   /** Original competitor model (if from search) */
   readonly competitorModel?: string;
@@ -446,6 +451,18 @@ export interface CartItem {
 
   /** Key Axis features / "Why Switch" selling points (from competitor mapping) */
   readonly axisFeatures?: readonly string[];
+
+  /** Camera this accessory is paired with (for source='accessory') */
+  readonly parentModel?: string;
+
+  /** Accessory type (mount, power, etc.) */
+  readonly accessoryType?: AccessoryType;
+
+  /** Mount placement (wall, pole, ceiling, etc.) */
+  readonly mountPlacement?: PlacementType;
+
+  /** Location from spreadsheet (e.g., "Parking Lot", "Hallway") */
+  readonly location?: string;
 }
 
 /** Cart summary */
@@ -802,6 +819,12 @@ export interface BatchSearchItem {
   readonly quantity: number;
   readonly status: 'pending' | 'searching' | 'complete' | 'error';
   readonly error?: string;
+  /** Mount type from spreadsheet (normalized to PlacementType) */
+  readonly mountType?: PlacementType;
+  /** Resolved mount pairing result */
+  readonly mountPairing?: MountPairingResult;
+  /** Location from spreadsheet */
+  readonly location?: string;
 }
 
 /** Batch search state */
@@ -839,6 +862,10 @@ export interface SpreadsheetColumnMapping {
   readonly modelColumn: number;
   readonly quantityColumn?: number;
   readonly manufacturerColumn?: number;
+  /** Column containing mount type descriptions (e.g., "wall", "pole mount") */
+  readonly mountTypeColumn?: number;
+  /** Column containing location/zone info (e.g., "Parking Lot") */
+  readonly locationColumn?: number;
 }
 
 /** Validation status for an imported row */
@@ -851,6 +878,10 @@ export interface SpreadsheetValidationResult {
   readonly status: SpreadsheetValidationStatus;
   readonly searchResponse?: SearchResponse;
   readonly quantity: number;
+  /** Raw mount type string from spreadsheet (not yet normalized) */
+  readonly mountType?: string;
+  /** Location/zone from spreadsheet */
+  readonly location?: string;
 }
 
 // =============================================================================
@@ -868,10 +899,16 @@ export type AxisProductType =
   | 'recorder'
   | 'mount'
   | 'encoder'
-  | 'accessory';
+  | 'accessory'
+  | 'power'
+  | 'storage'
+  | 'lens'
+  | 'sensor-unit'
+  | 'modular-host'
+  | 'body-worn';
 
 /** Camera subcategory by form factor */
-export type CameraSubcategory = 'fixed-dome' | 'fixed-bullet' | 'ptz' | 'panoramic' | 'modular' | 'specialty';
+export type CameraSubcategory = 'fixed-dome' | 'fixed-bullet' | 'ptz' | 'panoramic' | 'modular' | 'thermal' | 'body-worn' | 'explosion-protected';
 
 /** Video codec types */
 export type VideoCodec = 'H.265' | 'H.264' | 'AV1' | 'MJPEG';
@@ -957,11 +994,21 @@ export interface AxisProductSpec {
   readonly chipset: ChipsetInfo;
   readonly hasACAP: boolean;
 
+  // Resolution enrichment (from scraper)
+  readonly resolutionPixels?: string;
+  readonly resolutionLabel?: string;
+
   // Environmental
   readonly ipRating: string | null;
   readonly ikRating: string | null;
   readonly powerType: string | null;
   readonly maxPowerWatts: number | null;
+
+  // Power enrichment (from scraper)
+  readonly poeStandard?: string;
+  readonly poeTypeClass?: string;
+  readonly typicalPowerWatts?: number;
+  readonly powerFeatures?: readonly string[];
 
   // Analytics
   readonly analytics: readonly string[];
@@ -996,4 +1043,83 @@ export interface ISpecLookup {
   getByType(type: AxisProductType): AxisProductSpec[];
   getByCameraType(subcat: CameraSubcategory): AxisProductSpec[];
   readonly size: number;
+}
+
+// =============================================================================
+// 17. ACCESSORY COMPATIBILITY
+// =============================================================================
+
+/** Accessory type categories matching Axis.com filter tabs */
+export type AccessoryType =
+  | 'mount'
+  | 'cables-connectors'
+  | 'edge-storage'
+  | 'housings-cabinets'
+  | 'io-devices'
+  | 'power'
+  | 'switches'
+  | 'tools-extras';
+
+/** Recommendation status from Axis.com */
+export type AccessoryRecommendation = 'recommended' | 'included' | 'compatible';
+
+/** Single accessory compatibility entry */
+export interface AccessoryCompatEntry {
+  readonly model: string;
+  readonly displayName: string;
+  readonly description: string;
+  readonly accessoryType: AccessoryType;
+  readonly mountPlacement?: PlacementType;
+  readonly recommendation: AccessoryRecommendation;
+  readonly requiresAdditional: boolean;
+  readonly msrpKey: string;
+}
+
+/** Compatibility entry for a single camera model */
+export interface CameraAccessoryMap {
+  readonly productVariant: string;
+  readonly accessories: readonly AccessoryCompatEntry[];
+}
+
+/** Complete compatibility database */
+export interface AccessoryCompatDatabase {
+  readonly version: string;
+  readonly generatedAt: string;
+  readonly totalMappings: number;
+  readonly compatibility: Readonly<Record<string, CameraAccessoryMap>>;
+}
+
+/** Accessory lookup interface */
+export interface IAccessoryLookup {
+  getCompatible(cameraModel: string): readonly AccessoryCompatEntry[];
+  getByType(cameraModel: string, type: AccessoryType): readonly AccessoryCompatEntry[];
+  getRecommended(cameraModel: string): readonly AccessoryCompatEntry[];
+  getMountsByPlacement(cameraModel: string, placement: PlacementType): readonly AccessoryCompatEntry[];
+  /** Resolve best mount for a camera + placement combination (used by batch processor) */
+  resolveMountPair(cameraModel: string, placement: PlacementType): AccessoryCompatEntry | null;
+  hasCompatibility(cameraModel: string): boolean;
+  readonly size: number;
+}
+
+/** Mount pairing result for batch processing */
+export interface MountPairingResult {
+  /** The resolved Axis camera model */
+  readonly cameraModel: string;
+  /** The resolved Axis mount (null if no compatible mount found) */
+  readonly mount: AccessoryCompatEntry | null;
+  /** How the mount was resolved */
+  readonly mountConfidence: 'exact' | 'series-fallback' | 'form-factor-default' | 'none';
+  /** Warning if mount resolution was imperfect */
+  readonly mountWarning?: string;
+}
+
+/** Accessory search response (for single-search queries) */
+export interface AccessorySearchResponse {
+  readonly cameraModel: string;
+  readonly cameraDisplayName: string;
+  readonly accessories: readonly AccessoryCompatEntry[];
+  readonly filters: {
+    readonly type?: AccessoryType;
+    readonly placement?: PlacementType;
+  };
 }

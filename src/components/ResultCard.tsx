@@ -11,7 +11,7 @@
  * Migrated to Fluent UI components.
  */
 
-import { memo } from 'react';
+import { memo, useState, useCallback, useMemo } from 'react';
 import {
   Card,
   Button,
@@ -26,9 +26,14 @@ import {
   Open24Regular,
   Add24Regular,
   Lightbulb24Regular,
+  ChevronDown24Regular,
+  ChevronUp24Regular,
 } from '@fluentui/react-icons';
-import type { SearchResult, CompetitorMapping, LegacyAxisMapping } from '@/types';
+import type { SearchResult, CompetitorMapping, LegacyAxisMapping, AccessoryCompatEntry } from '@/types';
 import { getFormattedPrice } from '@/core/msrp';
+import { lookupSpec } from '@/core/specs';
+import { useAccessory } from '@/hooks/useAccessory';
+import { AccessoryPanel } from './AccessoryPanel';
 import { axisTokens } from '@/styles/fluentTheme';
 
 // =============================================================================
@@ -118,6 +123,30 @@ const useStyles = makeStyles({
     marginLeft: 'auto',
     color: tokens.colorNeutralForeground3,
     fontSize: tokens.fontSizeBase200,
+  },
+  specSummary: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '0.375rem',
+    marginBottom: '0.75rem',
+    padding: '0.5rem 0.75rem',
+    backgroundColor: 'rgba(255, 204, 51, 0.06)',
+    borderRadius: tokens.borderRadiusSmall,
+    border: '1px solid rgba(255, 204, 51, 0.15)',
+  },
+  specPill: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    padding: '0.125rem 0.5rem',
+    borderRadius: tokens.borderRadiusCircular,
+    fontSize: tokens.fontSizeBase100,
+    backgroundColor: tokens.colorNeutralBackground3,
+    color: tokens.colorNeutralForeground2,
+  },
+  specPillLabel: {
+    fontWeight: tokens.fontWeightSemibold,
+    marginRight: '0.25rem',
+    color: tokens.colorNeutralForeground3,
   },
   specGrid: {
     display: 'grid',
@@ -233,6 +262,9 @@ const useStyles = makeStyles({
     minWidth: 'auto',
     padding: '0.25rem 0.5rem',
   },
+  accessorySection: {
+    marginTop: '0.75rem',
+  },
 });
 
 // =============================================================================
@@ -245,6 +277,12 @@ export interface ResultCardProps {
 
   /** Callback when "Add to BOM" is clicked with quantity */
   readonly onAddToCart: (result: SearchResult, quantity?: number) => void;
+
+  /** Callback when an accessory is added to BOM */
+  readonly onAddAccessoryToCart?: (accessory: AccessoryCompatEntry, parentModel: string) => void;
+
+  /** Set of accessory model keys already in cart */
+  readonly cartAccessoryModels?: ReadonlySet<string>;
 }
 
 // =============================================================================
@@ -278,8 +316,10 @@ function getWhySwitchPoints(category: string): string[] {
 // COMPONENT
 // =============================================================================
 
-function ResultCardComponent({ result, onAddToCart }: ResultCardProps) {
+function ResultCardComponent({ result, onAddToCart, onAddAccessoryToCart, cartAccessoryModels }: ResultCardProps) {
   const styles = useStyles();
+  const [showAccessories, setShowAccessories] = useState(false);
+  const { getAccessories, isLoaded: accessoryLoaded } = useAccessory();
   const mapping = result.mapping;
   const isLegacy = result.isLegacy;
 
@@ -305,6 +345,31 @@ function ResultCardComponent({ result, onAddToCart }: ResultCardProps) {
 
   // Get MSRP for the Axis model
   const msrpDisplay = getFormattedPrice(axisModel);
+
+  // Get enriched specs for the Axis model
+  let axisSpec: ReturnType<typeof lookupSpec> = null;
+  try {
+    axisSpec = lookupSpec(axisModel);
+  } catch {
+    // Specs not initialized yet
+  }
+
+  // Accessory data
+  const accessories = useMemo(
+    () => (accessoryLoaded && showAccessories ? getAccessories(axisModel) : []),
+    [accessoryLoaded, showAccessories, getAccessories, axisModel]
+  );
+
+  const handleToggleAccessories = useCallback(() => {
+    setShowAccessories((prev) => !prev);
+  }, []);
+
+  const handleAddAccessory = useCallback(
+    (accessory: AccessoryCompatEntry) => {
+      onAddAccessoryToCart?.(accessory, axisModel);
+    },
+    [onAddAccessoryToCart, axisModel]
+  );
 
   // Confidence badge logic
   const isHighConfidence = result.score >= 85;
@@ -357,6 +422,45 @@ function ResultCardComponent({ result, onAddToCart }: ResultCardProps) {
         <span className={styles.axisModel}>{axisModel}</span>
         <span className={styles.msrp}>{msrpDisplay}</span>
       </div>
+
+      {/* Enriched Spec Summary */}
+      {axisSpec && (
+        <div className={styles.specSummary}>
+          {axisSpec.maxResolution && (
+            <span className={styles.specPill}>
+              <span className={styles.specPillLabel}>Res:</span>
+              {axisSpec.maxResolution}
+              {axisSpec.resolutionLabel ? ` (${axisSpec.resolutionLabel})` : ''}
+            </span>
+          )}
+          {axisSpec.maxFps && (
+            <span className={styles.specPill}>
+              <span className={styles.specPillLabel}>FPS:</span>
+              {axisSpec.maxFps}
+            </span>
+          )}
+          {axisSpec.codecs.length > 0 && (
+            <span className={styles.specPill}>
+              <span className={styles.specPillLabel}>Codec:</span>
+              {axisSpec.codecs.join(', ')}
+            </span>
+          )}
+          {(axisSpec.powerType || axisSpec.poeTypeClass) && (
+            <span className={styles.specPill}>
+              <span className={styles.specPillLabel}>PoE:</span>
+              {axisSpec.poeTypeClass || axisSpec.powerType}
+              {axisSpec.maxPowerWatts ? ` (${axisSpec.maxPowerWatts}W)` : ''}
+            </span>
+          )}
+          {axisSpec.analytics.length > 0 && (
+            <span className={styles.specPill}>
+              <span className={styles.specPillLabel}>Analytics:</span>
+              {axisSpec.analytics.slice(0, 2).join(', ')}
+              {axisSpec.analytics.length > 2 ? ` +${axisSpec.analytics.length - 2}` : ''}
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Spec Comparison Grid - only show if we have spec data */}
       {!isLegacy && (competitorResolution || competitorType) && (
@@ -464,11 +568,39 @@ function ResultCardComponent({ result, onAddToCart }: ResultCardProps) {
           </Button>
         ))}
       </div>
+
+      {/* Accessories Toggle */}
+      {accessoryLoaded && (
+        <div className={styles.accessorySection}>
+          <Button
+            appearance="subtle"
+            size="small"
+            icon={showAccessories ? <ChevronUp24Regular /> : <ChevronDown24Regular />}
+            onClick={handleToggleAccessories}
+          >
+            {showAccessories ? 'Hide Accessories' : 'Show Accessories'}
+          </Button>
+
+          {showAccessories && accessories.length > 0 && (
+            <div style={{ marginTop: '0.5rem' }}>
+              <AccessoryPanel
+                cameraModel={axisModel}
+                accessories={accessories}
+                onAddToCart={handleAddAccessory}
+                cartAccessoryModels={cartAccessoryModels}
+              />
+            </div>
+          )}
+        </div>
+      )}
     </Card>
   );
 }
 
 export const ResultCard = memo(ResultCardComponent, (prev, next) =>
-  prev.result === next.result && prev.onAddToCart === next.onAddToCart
+  prev.result === next.result &&
+  prev.onAddToCart === next.onAddToCart &&
+  prev.onAddAccessoryToCart === next.onAddAccessoryToCart &&
+  prev.cartAccessoryModels === next.cartAccessoryModels
 );
 ResultCard.displayName = 'ResultCard';
