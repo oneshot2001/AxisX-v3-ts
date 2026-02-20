@@ -35,6 +35,7 @@ import type {
   CrossRefData,
   MSRPData,
   AxisSpecDatabase,
+  AccessoryCompatDatabase,
 } from '@/types';
 
 // Core modules
@@ -42,6 +43,7 @@ import { createSearchEngine } from '@/core/search';
 import { URLResolver } from '@/core/url';
 import { initMSRP } from '@/core/msrp';
 import { initSpecs, lookupSpec, getSpecs, hasSpec } from '@/core/specs';
+import { initAccessoryData } from '@/core/accessory';
 
 // Hooks
 import { useSearch } from '@/hooks/useSearch';
@@ -190,6 +192,17 @@ export default function App() {
 
         initMSRP(msrpData.model_lookup ?? {});
         initSpecs(specData);
+
+        // Load accessory data (non-blocking — feature degrades gracefully if absent)
+        import('@/data/accessory_compatibility.json')
+          .then((accModule) => {
+            if (!isCancelled) {
+              initAccessoryData(accModule.default as AccessoryCompatDatabase);
+            }
+          })
+          .catch(() => {
+            // Accessory data not available yet — feature will be hidden
+          });
 
         // Expose spec API on window for console debugging
         window.lookupSpec = lookupSpec;
