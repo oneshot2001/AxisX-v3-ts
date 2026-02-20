@@ -198,6 +198,40 @@ export function ColumnMapper({
     }
   };
 
+  const handleMountTypeColumnChange = (
+    _e: unknown,
+    option: { optionValue?: string } | undefined
+  ) => {
+    if (option?.optionValue === 'none') {
+      onMappingChange({
+        ...mapping,
+        mountTypeColumn: undefined,
+      });
+    } else if (option?.optionValue !== undefined) {
+      onMappingChange({
+        ...mapping,
+        mountTypeColumn: parseInt(option.optionValue, 10),
+      });
+    }
+  };
+
+  const handleLocationColumnChange = (
+    _e: unknown,
+    option: { optionValue?: string } | undefined
+  ) => {
+    if (option?.optionValue === 'none') {
+      onMappingChange({
+        ...mapping,
+        locationColumn: undefined,
+      });
+    } else if (option?.optionValue !== undefined) {
+      onMappingChange({
+        ...mapping,
+        locationColumn: parseInt(option.optionValue, 10),
+      });
+    }
+  };
+
   // Preview rows (first 5)
   const previewRows = data.rows.slice(0, 5);
 
@@ -289,6 +323,60 @@ export function ColumnMapper({
                 ))}
               </Dropdown>
             </div>
+
+            {/* Mount Type column (optional) */}
+            <div className={styles.mappingField}>
+              <Text className={styles.fieldLabel}>
+                Mount Type <span className={styles.fieldOptional}>(optional)</span>
+              </Text>
+              <Dropdown
+                value={
+                  mapping.mountTypeColumn !== undefined
+                    ? columnOptions[mapping.mountTypeColumn]?.text ?? ''
+                    : 'None'
+                }
+                selectedOptions={[
+                  mapping.mountTypeColumn !== undefined
+                    ? String(mapping.mountTypeColumn)
+                    : 'none',
+                ]}
+                onOptionSelect={handleMountTypeColumnChange}
+              >
+                <Option value="none">None</Option>
+                {columnOptions.map((opt) => (
+                  <Option key={opt.key} value={opt.key}>
+                    {opt.text}
+                  </Option>
+                ))}
+              </Dropdown>
+            </div>
+
+            {/* Location column (optional) */}
+            <div className={styles.mappingField}>
+              <Text className={styles.fieldLabel}>
+                Location <span className={styles.fieldOptional}>(optional)</span>
+              </Text>
+              <Dropdown
+                value={
+                  mapping.locationColumn !== undefined
+                    ? columnOptions[mapping.locationColumn]?.text ?? ''
+                    : 'None'
+                }
+                selectedOptions={[
+                  mapping.locationColumn !== undefined
+                    ? String(mapping.locationColumn)
+                    : 'none',
+                ]}
+                onOptionSelect={handleLocationColumnChange}
+              >
+                <Option value="none">None</Option>
+                {columnOptions.map((opt) => (
+                  <Option key={opt.key} value={opt.key}>
+                    {opt.text}
+                  </Option>
+                ))}
+              </Dropdown>
+            </div>
           </div>
         </div>
       </Card>
@@ -307,7 +395,9 @@ export function ColumnMapper({
                     className={`${styles.previewHeader} ${
                       idx === mapping.modelColumn ||
                       idx === mapping.quantityColumn ||
-                      idx === mapping.manufacturerColumn
+                      idx === mapping.manufacturerColumn ||
+                      idx === mapping.mountTypeColumn ||
+                      idx === mapping.locationColumn
                         ? styles.previewHighlight
                         : ''
                     }`}

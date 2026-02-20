@@ -878,6 +878,10 @@ export interface SpreadsheetValidationResult {
   readonly status: SpreadsheetValidationStatus;
   readonly searchResponse?: SearchResponse;
   readonly quantity: number;
+  /** Raw mount type string from spreadsheet (not yet normalized) */
+  readonly mountType?: string;
+  /** Location/zone from spreadsheet */
+  readonly location?: string;
 }
 
 // =============================================================================
