@@ -23,6 +23,7 @@ import {
   Add24Regular,
 } from '@fluentui/react-icons';
 import type { BatchSearchItem, SearchResult, CompetitorMapping, MountPairingResult } from '@/types';
+import { lookupSpec } from '@/core/specs';
 import { axisTokens } from '@/styles/fluentTheme';
 
 // =============================================================================
@@ -146,6 +147,14 @@ const useStyles = makeStyles({
   },
   quantityInput: {
     width: '60px',
+  },
+  specLine: {
+    fontSize: tokens.fontSizeBase100,
+    color: tokens.colorNeutralForeground3,
+    marginBottom: '0.25rem',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
   mountRow: {
     display: 'flex',
@@ -321,6 +330,21 @@ function getMountConfidenceBadge(
   }
 }
 
+function getSpecLine(axisModel: string): string | null {
+  try {
+    const spec = lookupSpec(axisModel);
+    if (!spec) return null;
+    const parts: string[] = [];
+    if (spec.maxResolution) parts.push(spec.maxResolution);
+    if (spec.maxFps) parts.push(`${spec.maxFps}fps`);
+    if (spec.codecs.length > 0) parts.push(spec.codecs.join('/'));
+    if (spec.poeTypeClass || spec.powerType) parts.push(spec.poeTypeClass || spec.powerType || '');
+    return parts.length > 0 ? parts.join(' \u2022 ') : null;
+  } catch {
+    return null;
+  }
+}
+
 function getBestResult(item: BatchSearchItem): SearchResult | undefined {
   if (!item.response || item.response.results.length === 0) {
     return undefined;
@@ -421,6 +445,17 @@ export function BatchResults({
                           </Text>
                         )}
                       </div>
+
+                      {/* Spec Summary Line */}
+                      {(() => {
+                        const model = 'axis_replacement' in bestResult.mapping
+                          ? (bestResult.mapping as CompetitorMapping).axis_replacement
+                          : bestResult.mapping.replacement_model;
+                        const specLine = getSpecLine(model);
+                        return specLine ? (
+                          <Text className={styles.specLine}>{specLine}</Text>
+                        ) : null;
+                      })()}
 
                       {/* Mount Pairing */}
                       {item.mountPairing && (
