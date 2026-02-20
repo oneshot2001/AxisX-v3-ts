@@ -6,6 +6,7 @@
  */
 
 import type { QueryType } from '@/types';
+import { normalizeMountType } from '@/core/accessory/mountNormalizer';
 
 // =============================================================================
 // PATTERNS
@@ -65,6 +66,12 @@ export interface ParsedQuery {
   /** Extracted manufacturer (if type is 'manufacturer') */
   readonly manufacturer?: string;
 
+  /** Extracted model for accessory-lookup */
+  readonly accessoryModel?: string;
+
+  /** Extracted placement filter for accessory-lookup */
+  readonly accessoryPlacement?: string;
+
   /** Is the query empty? */
   readonly isEmpty: boolean;
 }
@@ -94,6 +101,19 @@ export function parseQuery(input: string): ParsedQuery {
       raw,
       normalized,
       type: 'axis-browse',
+      isEmpty: false,
+    };
+  }
+
+  // Accessory-lookup detection (before axis-model, since "mounts for P3285" has a model in it)
+  const accessoryMatch = detectAccessoryQuery(lower);
+  if (accessoryMatch) {
+    return {
+      raw,
+      normalized,
+      type: 'accessory-lookup',
+      accessoryModel: accessoryMatch.model,
+      accessoryPlacement: accessoryMatch.placement,
       isEmpty: false,
     };
   }
@@ -213,6 +233,76 @@ function isLikelyLegacyAxisModel(query: string): boolean {
   ];
 
   return legacyPrefixes.some(prefix => normalized.startsWith(prefix));
+}
+
+// =============================================================================
+// ACCESSORY QUERY DETECTION
+// =============================================================================
+
+/**
+ * Model pattern used to extract camera model from accessory queries.
+ * Matches Axis models (P3285-LVE, M4215, Q6135-LE) and series (P32, M42, P14).
+ */
+const ACCESSORY_MODEL_PATTERN = /(?:AXIS\s+)?([PMQFTVWDCA]\d{2,4}(?:-[A-Z0-9]+)*)/i;
+
+/**
+ * Patterns that indicate an accessory-lookup query.
+ * Each pattern extracts a camera model. Some also extract a placement filter.
+ */
+const ACCESSORY_QUERY_PATTERNS: RegExp[] = [
+  // "mounts for P3285-LVE", "accessories for M4215", "mounting for Q6135"
+  /(?:mounts?|accessories?|mounting)\s+(?:for|with)\s+/i,
+  // "what mounts work with P3265-LVE", "what accessories go with M4215"
+  /what\s+(?:mounts?|accessories?)\s+(?:work|go|fit|are compatible)\s+(?:with|on|for)\s+/i,
+  // "show mounts for P3285", "find accessories for M4215"
+  /(?:show|find|list|get)\s+(?:mounts?|accessories?)\s+(?:for|with)\s+/i,
+];
+
+/**
+ * Placement keywords that can appear before "mount for" to indicate a filter.
+ * e.g., "wall mount for P3285-LVE", "pole mount for P14 series"
+ */
+const PLACEMENT_MOUNT_PATTERN = /^(\w+)\s+mount\s+(?:for|with)\s+/i;
+
+interface AccessoryQueryMatch {
+  model: string;
+  placement?: string;
+}
+
+/**
+ * Detect if a query is an accessory-lookup.
+ * Returns the extracted model and optional placement, or null if not an accessory query.
+ */
+function detectAccessoryQuery(query: string): AccessoryQueryMatch | null {
+  // Check placement-specific pattern first: "wall mount for P3285-LVE"
+  const placementMatch = query.match(PLACEMENT_MOUNT_PATTERN);
+  if (placementMatch) {
+    const placementWord = placementMatch[1]!;
+    const placement = normalizeMountType(placementWord);
+    if (placement) {
+      const modelMatch = query.match(ACCESSORY_MODEL_PATTERN);
+      if (modelMatch) {
+        return {
+          model: modelMatch[1]!.toUpperCase(),
+          placement,
+        };
+      }
+    }
+  }
+
+  // Check general accessory patterns
+  for (const pattern of ACCESSORY_QUERY_PATTERNS) {
+    if (pattern.test(query)) {
+      const modelMatch = query.match(ACCESSORY_MODEL_PATTERN);
+      if (modelMatch) {
+        return {
+          model: modelMatch[1]!.toUpperCase(),
+        };
+      }
+    }
+  }
+
+  return null;
 }
 
 // =============================================================================

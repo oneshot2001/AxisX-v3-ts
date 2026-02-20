@@ -22,7 +22,10 @@ import type {
   QueryType,
   CategoryId,
   AxisModelInfo,
+  AccessorySearchResponse,
 } from '@/types';
+
+import { getAccessoryLookup } from '@/core/accessory';
 
 import { scoreMatch, sortByScore, THRESHOLDS, normalizeStrict } from './fuzzy';
 import { parseQuery } from './queryParser';
@@ -186,7 +189,16 @@ export class SearchEngine implements ISearchEngine {
 
     // Route based on query type
     let results: SearchResult[];
+    let accessoryResults: AccessorySearchResponse | undefined;
+
     switch (parsed.type) {
+      case 'accessory-lookup':
+        results = [];
+        accessoryResults = this.handleAccessoryLookup(
+          parsed.accessoryModel!,
+          parsed.accessoryPlacement
+        );
+        break;
       case 'axis-browse':
         results = this.handleAxisBrowse();
         break;
@@ -212,11 +224,15 @@ export class SearchEngine implements ISearchEngine {
     }
 
     // Generate suggestions if few/no results
-    const suggestions = this.config.suggestionsEnabled && results.length < 3
+    const suggestions = this.config.suggestionsEnabled && results.length < 3 && !accessoryResults
       ? this.getSuggestions(parsed.normalized)
       : [];
 
-    return this.buildResponse(query, parsed.type, results, suggestions, startTime);
+    const response = this.buildResponse(query, parsed.type, results, suggestions, startTime);
+    if (accessoryResults) {
+      return { ...response, accessoryResults };
+    }
+    return response;
   }
 
   /**
@@ -386,6 +402,37 @@ export class SearchEngine implements ISearchEngine {
   // ===========================================================================
   // PRIVATE HELPERS
   // ===========================================================================
+
+  private handleAccessoryLookup(
+    model: string,
+    placement?: string
+  ): AccessorySearchResponse {
+    try {
+      const lookup = getAccessoryLookup();
+      const accessories = placement
+        ? lookup.getMountsByPlacement(model, placement as any)
+        : lookup.getCompatible(model);
+
+      return {
+        cameraModel: model,
+        cameraDisplayName: `AXIS ${model}`,
+        accessories,
+        filters: {
+          placement: placement as any,
+        },
+      };
+    } catch {
+      // Accessory data not loaded — return empty
+      return {
+        cameraModel: model,
+        cameraDisplayName: `AXIS ${model}`,
+        accessories: [],
+        filters: {
+          placement: placement as any,
+        },
+      };
+    }
+  }
 
   private handleAxisBrowse(): SearchResult[] {
     // Browse mode — UI renders from static catalog data (axisCatalog.ts)
