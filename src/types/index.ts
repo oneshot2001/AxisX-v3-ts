@@ -898,7 +898,10 @@ export type AxisProductType =
   | 'accessory'
   | 'power'
   | 'storage'
-  | 'lens';
+  | 'lens'
+  | 'sensor-unit'
+  | 'modular-host'
+  | 'body-worn';
 
 /** Camera subcategory by form factor */
 export type CameraSubcategory = 'fixed-dome' | 'fixed-bullet' | 'ptz' | 'panoramic' | 'modular' | 'thermal' | 'body-worn' | 'explosion-protected';
