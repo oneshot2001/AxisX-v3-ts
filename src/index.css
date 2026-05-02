@@ -10,7 +10,7 @@
  *   the full `tailwindcss` package.
  */
 
-@layer theme, utilities;
+@layer theme, base, utilities;
 
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities);
@@ -92,82 +92,87 @@
  * CLASSIC RESET (kept for the existing Fluent UI app — DO NOT remove until the
  * Fluent UI surface is fully retired). Tailwind's preflight is intentionally
  * NOT loaded above so this remains the source of truth for the old app.
+ *
+ * Wrapped in @layer base so Tailwind utilities (which load in the `utilities`
+ * layer) still win in the cascade.
  * =============================================================================
  */
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  font-size: 16px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: var(--font-sans);
-  line-height: 1.5;
-  color: var(--color-ink);
-  background-color: var(--color-surface);
-}
-
-:focus-visible {
-  outline: 2px solid var(--color-axis-yellow);
-  outline-offset: 2px;
-}
-
-button {
-  font-family: inherit;
-  font-size: inherit;
-}
-
-input {
-  font-family: inherit;
-  font-size: inherit;
-}
-
-input:focus {
-  border-color: var(--color-axis-yellow) !important;
-}
-
-a {
-  color: inherit;
-}
-
-::selection {
-  background-color: var(--color-axis-yellow);
-  color: #000000;
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: oklch(0.96 0 0);
-}
-
-::-webkit-scrollbar-thumb {
-  background: oklch(0.85 0 0);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.75 0 0);
-}
-
-@media print {
-  body {
-    background: white;
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
 
-  header, footer, nav, button {
-    display: none !important;
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    color: var(--color-ink);
+    background-color: var(--color-surface);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-axis-yellow);
+    outline-offset: 2px;
+  }
+
+  button {
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  input {
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  input:focus {
+    border-color: var(--color-axis-yellow) !important;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  ::selection {
+    background-color: var(--color-axis-yellow);
+    color: #000000;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: oklch(0.96 0 0);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.85 0 0);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.75 0 0);
+  }
+
+  @media print {
+    body {
+      background: white;
+    }
+
+    header, footer, nav, button {
+      display: none !important;
+    }
   }
 }
 
@@ -203,9 +208,25 @@ a {
   cursor: pointer;
 }
 
+[data-swift] button {
+  background-color: transparent;
+  background-image: none;
+  border: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+[data-swift] a {
+  text-decoration: none;
+}
+
 [data-swift] img,
 [data-swift] svg,
 [data-swift] video {
   display: block;
   max-width: 100%;
+}
+
+[data-swift] svg {
+  display: inline-block;
 }

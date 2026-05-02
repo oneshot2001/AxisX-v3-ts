@@ -19,13 +19,10 @@ import {
   tokens,
 } from '@fluentui/react-components';
 import {
-  Search24Regular,
-  ClipboardBulletListLtrRegular,
-  Info24Regular,
-  DocumentBulletList24Regular,
   ArrowUpload24Regular,
   Dismiss24Regular,
 } from '@fluentui/react-icons';
+import { AppShell, type AppView } from '@/components/AppShell';
 import type {
   ISearchEngine,
   SearchResponse,
@@ -83,51 +80,6 @@ declare global {
 // =============================================================================
 
 const useStyles = makeStyles({
-  app: {
-    minHeight: '100vh',
-    backgroundColor: tokens.colorNeutralBackground1,
-    fontFamily: tokens.fontFamilyBase,
-    color: tokens.colorNeutralForeground1,
-  },
-  header: {
-    padding: '1rem 1.5rem',
-    borderBottom: `1px solid ${tokens.colorNeutralStroke1}`,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  logo: {
-    fontSize: tokens.fontSizeBase600,
-    fontWeight: tokens.fontWeightBold,
-    color: axisTokens.primary,
-    margin: 0,
-  },
-  version: {
-    fontSize: tokens.fontSizeBase200,
-    color: tokens.colorNeutralForeground3,
-    marginLeft: '0.5rem',
-    fontWeight: tokens.fontWeightRegular,
-  },
-  nav: {
-    display: 'flex',
-    gap: '0.5rem',
-  },
-  main: {
-    padding: '1.5rem',
-    maxWidth: '900px',
-    margin: '0 auto',
-  },
-  footer: {
-    padding: '1rem',
-    textAlign: 'center',
-    color: tokens.colorNeutralForeground3,
-    fontSize: tokens.fontSizeBase200,
-    borderTop: `1px solid ${tokens.colorNeutralStroke1}`,
-  },
-  footerBrand: {
-    color: axisTokens.primary,
-    fontWeight: tokens.fontWeightSemibold,
-  },
   loadingScreen: {
     minHeight: '100vh',
     display: 'flex',
@@ -146,9 +98,6 @@ const useStyles = makeStyles({
     fontSize: tokens.fontSizeBase300,
     maxWidth: '560px',
     textAlign: 'center',
-  },
-  searchContainer: {
-    marginBottom: '1.5rem',
   },
   infoSection: {
     maxWidth: '600px',
@@ -283,8 +232,6 @@ interface AxisXAppProps {
 }
 
 function AxisXApp({ engine }: AxisXAppProps) {
-  const styles = useStyles();
-
   // Search hook
   const {
     query,
@@ -331,7 +278,7 @@ function AxisXApp({ engine }: AxisXAppProps) {
   const batchSearch = useBatchSearch(engine);
 
   // View state
-  const [view, setView] = useState<'search' | 'batch' | 'cart' | 'info'>('search');
+  const [view, setView] = useState<AppView>('search');
 
   // Handler to add batch items to cart
   const handleAddBatchToCart = () => {
@@ -397,105 +344,62 @@ function AxisXApp({ engine }: AxisXAppProps) {
   };
 
   return (
-    <div className={styles.app}>
-      {/* Header */}
-      <header className={styles.header}>
-        <h1 className={styles.logo}>
-          AxisX
-          <span className={styles.version}>v3.0</span>
-        </h1>
+    <AppShell
+      view={view}
+      onViewChange={setView}
+      cartCount={cartItems.length}
+      cartTotal={cartItems.length > 0 ? cartSummary.formattedTotal : undefined}
+      onOpenCart={() => setView('cart')}
+    >
+      {view === 'search' && (
+        <SearchView
+          query={query}
+          setQuery={setQuery}
+          results={results}
+          isSearching={isSearching}
+          search={search}
+          clear={clear}
+          voiceSupported={voiceSupported}
+          isListening={isListening}
+          toggleVoice={toggleVoice}
+          onAddToCart={addFromResult}
+          onAddAxisModel={handleAddAxisModel}
+        />
+      )}
 
-        {/* Nav */}
-        <nav className={styles.nav}>
-          <Button
-            appearance={view === 'search' ? 'primary' : 'subtle'}
-            onClick={() => setView('search')}
-            icon={<Search24Regular />}
-          >
-            Search
-          </Button>
-          <Button
-            appearance={view === 'batch' ? 'primary' : 'subtle'}
-            onClick={() => setView('batch')}
-            icon={<DocumentBulletList24Regular />}
-          >
-            Batch
-          </Button>
-          <Button
-            appearance={view === 'cart' ? 'primary' : 'subtle'}
-            onClick={() => setView('cart')}
-            icon={<ClipboardBulletListLtrRegular />}
-          >
-            BOM ({cartItems.length})
-          </Button>
-          <Button
-            appearance={view === 'info' ? 'primary' : 'subtle'}
-            onClick={() => setView('info')}
-            icon={<Info24Regular />}
-          >
-            Info
-          </Button>
-        </nav>
-      </header>
+      {view === 'batch' && (
+        <BatchView
+          rawInput={batchSearch.rawInput}
+          setRawInput={batchSearch.setRawInput}
+          modelCount={batchSearch.modelCount}
+          items={batchSearch.items}
+          isProcessing={batchSearch.isProcessing}
+          progress={batchSearch.progress}
+          selectedCount={batchSearch.selectedCount}
+          onSearch={batchSearch.processBatch}
+          onClear={batchSearch.clear}
+          onToggleSelection={batchSearch.toggleSelection}
+          onSelectAll={batchSearch.selectAll}
+          onDeselectAll={batchSearch.deselectAll}
+          onQuantityChange={batchSearch.updateQuantity}
+          onAddSelectedToCart={handleAddBatchToCart}
+          onImport={() => setIsImportModalOpen(true)}
+        />
+      )}
 
-      {/* Main Content */}
-      <main className={styles.main}>
-        {view === 'search' && (
-          <SearchView
-            query={query}
-            setQuery={setQuery}
-            results={results}
-            isSearching={isSearching}
-            search={search}
-            clear={clear}
-            voiceSupported={voiceSupported}
-            isListening={isListening}
-            toggleVoice={toggleVoice}
-            onAddToCart={addFromResult}
-            onAddAxisModel={handleAddAxisModel}
-          />
-        )}
+      {view === 'cart' && (
+        <Cart
+          items={cartItems}
+          summary={cartSummary}
+          onUpdateQuantity={updateQuantity}
+          onRemoveItem={removeItem}
+          onClear={clearCart}
+          onExportPDF={exportPDF.openDialog}
+          title="BOM"
+        />
+      )}
 
-        {view === 'batch' && (
-          <BatchView
-            rawInput={batchSearch.rawInput}
-            setRawInput={batchSearch.setRawInput}
-            modelCount={batchSearch.modelCount}
-            items={batchSearch.items}
-            isProcessing={batchSearch.isProcessing}
-            progress={batchSearch.progress}
-            selectedCount={batchSearch.selectedCount}
-            onSearch={batchSearch.processBatch}
-            onClear={batchSearch.clear}
-            onToggleSelection={batchSearch.toggleSelection}
-            onSelectAll={batchSearch.selectAll}
-            onDeselectAll={batchSearch.deselectAll}
-            onQuantityChange={batchSearch.updateQuantity}
-            onAddSelectedToCart={handleAddBatchToCart}
-            onImport={() => setIsImportModalOpen(true)}
-          />
-        )}
-
-        {view === 'cart' && (
-          <Cart
-            items={cartItems}
-            summary={cartSummary}
-            onUpdateQuantity={updateQuantity}
-            onRemoveItem={removeItem}
-            onClear={clearCart}
-            onExportPDF={exportPDF.openDialog}
-            title="BOM"
-          />
-        )}
-
-        {view === 'info' && <InfoView />}
-      </main>
-
-      {/* Footer */}
-      <footer className={styles.footer}>
-        <span className={styles.footerBrand}>AxisX</span>
-        {' '}{'\u2014'} Built with TypeScript for Axis partners
-      </footer>
+      {view === 'info' && <InfoView />}
 
       {/* Export PDF Dialog */}
       <ExportDialog
@@ -575,7 +479,7 @@ function AxisXApp({ engine }: AxisXAppProps) {
           </DialogBody>
         </DialogSurface>
       </Dialog>
-    </div>
+    </AppShell>
   );
 }
 
@@ -610,12 +514,10 @@ const SearchView = memo(function SearchView({
   onAddToCart,
   onAddAxisModel,
 }: SearchViewProps) {
-  const styles = useStyles();
-
   return (
     <div>
       {/* Search Input */}
-      <div className={styles.searchContainer}>
+      <div style={{ marginBottom: '1.5rem' }}>
         <SearchInput
           value={query}
           onChange={setQuery}
