@@ -1,90 +1,234 @@
 /**
- * AxisX v3 Base Styles
+ * AxisX v3 — Base Styles + Tailwind v4 + Apple/Swift theme tokens
+ *
+ * COHABITATION STRATEGY:
+ *   We import Tailwind's `theme` and `utilities` layers ONLY (skip the `base`
+ *   layer / preflight) so Tailwind's reset doesn't fight Fluent UI's existing
+ *   resets and CSS-in-JS classes. New shadcn components opt in to a scoped
+ *   `[data-swift]` reset for headings, lists, and form elements.
+ *   When the migration to shadcn completes, restore preflight by importing
+ *   the full `tailwindcss` package.
  */
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@layer theme, base, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+@import 'tw-animate-css';
+
+/* =============================================================================
+ * THEME TOKENS — Apple-style neutrals + restrained Axis yellow
+ * Use OKLCH for perceptual uniformity in neutrals.
+ * shadcn semantic tokens (--background, --foreground, --primary, etc.) map
+ * onto these so generated components inherit the Swift palette automatically.
+ * =============================================================================
+ */
+
+@theme {
+  /* Brand */
+  --color-axis-yellow: #ffcc33;
+  --color-axis-yellow-soft: oklch(0.93 0.12 92);
+  --color-axis-yellow-ink: oklch(0.5 0.16 80);
+
+  /* Apple-style neutrals (light) */
+  --color-canvas: oklch(0.985 0 0);          /* near #f5f5f7 */
+  --color-surface: oklch(1 0 0);             /* white card */
+  --color-surface-2: oklch(0.97 0 0);        /* subtle elevated panel */
+  --color-hairline: oklch(0.92 0 0);         /* 1px divider */
+  --color-ink: oklch(0.18 0 0);              /* primary text */
+  --color-ink-muted: oklch(0.45 0 0);        /* secondary text */
+  --color-ink-faint: oklch(0.62 0 0);        /* tertiary / placeholder */
+
+  /* Status (used as text/icon, rarely as fills) */
+  --color-success: oklch(0.65 0.18 145);
+  --color-warning: oklch(0.78 0.16 75);
+  --color-danger:  oklch(0.62 0.22 25);
+  --color-cloud:   oklch(0.55 0.22 295);
+
+  /* Radii — Apple uses 10-16px on most surfaces */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  /* Type — system font stack with SF Pro Display preference */
+  --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'SF Pro Display',
+    'SF Pro Text', 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+
+  /* Shadows — soft, layered, no harsh black drops */
+  --shadow-flat: 0 0 0 1px oklch(0 0 0 / 0.04);
+  --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.04), 0 1px 1px oklch(0 0 0 / 0.03);
+  --shadow-md: 0 4px 12px oklch(0 0 0 / 0.06), 0 2px 4px oklch(0 0 0 / 0.04);
+  --shadow-lg: 0 12px 32px oklch(0 0 0 / 0.08), 0 4px 8px oklch(0 0 0 / 0.04);
 }
 
-html {
-  font-size: 16px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* shadcn semantic tokens — populated for the light theme */
+:root {
+  --background: var(--color-canvas);
+  --foreground: var(--color-ink);
+  --card: var(--color-surface);
+  --card-foreground: var(--color-ink);
+  --popover: var(--color-surface);
+  --popover-foreground: var(--color-ink);
+  --primary: var(--color-axis-yellow);
+  --primary-foreground: oklch(0.18 0 0);
+  --secondary: var(--color-surface-2);
+  --secondary-foreground: var(--color-ink);
+  --muted: var(--color-surface-2);
+  --muted-foreground: var(--color-ink-muted);
+  --accent: var(--color-surface-2);
+  --accent-foreground: var(--color-ink);
+  --destructive: var(--color-danger);
+  --destructive-foreground: oklch(1 0 0);
+  --border: var(--color-hairline);
+  --input: var(--color-hairline);
+  --ring: var(--color-axis-yellow);
+  --radius: var(--radius-md);
 }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  line-height: 1.5;
-  color: #1a1a1a;
-  background-color: #ffffff;
-}
+/* =============================================================================
+ * CLASSIC RESET (kept for the existing Fluent UI app — DO NOT remove until the
+ * Fluent UI surface is fully retired). Tailwind's preflight is intentionally
+ * NOT loaded above so this remains the source of truth for the old app.
+ *
+ * Wrapped in @layer base so Tailwind utilities (which load in the `utilities`
+ * layer) still win in the cascade.
+ * =============================================================================
+ */
 
-/* Focus styles for accessibility */
-:focus-visible {
-  outline: 2px solid #FFCC33;
-  outline-offset: 2px;
-}
-
-/* Remove default button styles */
-button {
-  font-family: inherit;
-  font-size: inherit;
-}
-
-/* Input styles */
-input {
-  font-family: inherit;
-  font-size: inherit;
-}
-
-input:focus {
-  border-color: #FFCC33 !important;
-}
-
-/* Link styles */
-a {
-  color: inherit;
-}
-
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Selection color */
-::selection {
-  background-color: #FFCC33;
-  color: #000000;
-}
-
-/* Scrollbar styling (webkit) */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a1a1a1;
-}
-
-/* Print styles */
-@media print {
-  body {
-    background: white;
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
-  
-  header, footer, nav, button {
-    display: none !important;
+
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    color: var(--color-ink);
+    background-color: var(--color-surface);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-axis-yellow);
+    outline-offset: 2px;
+  }
+
+  button {
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  input {
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  input:focus {
+    border-color: var(--color-axis-yellow) !important;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  ::selection {
+    background-color: var(--color-axis-yellow);
+    color: #000000;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: oklch(0.96 0 0);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.85 0 0);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.75 0 0);
+  }
+
+  @media print {
+    body {
+      background: white;
+    }
+
+    header, footer, nav, button {
+      display: none !important;
+    }
+  }
+}
+
+/* =============================================================================
+ * SCOPED RESET for new shadcn components.
+ * Wrap new UI in `<div data-swift>` to opt into a Tailwind-style local reset
+ * (heading/list/form normalizations) without affecting Fluent UI surfaces.
+ * Once Fluent UI is removed, replace the classic reset above with Tailwind's
+ * full preflight and delete this block.
+ * =============================================================================
+ */
+
+@layer base {
+  [data-swift] h1,
+  [data-swift] h2,
+  [data-swift] h3,
+  [data-swift] h4,
+  [data-swift] h5,
+  [data-swift] h6 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  [data-swift] ol,
+  [data-swift] ul,
+  [data-swift] menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  [data-swift] button,
+  [data-swift] [role='button'] {
+    cursor: pointer;
+  }
+
+  [data-swift] button {
+    background-color: transparent;
+    background-image: none;
+    border: 0;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  [data-swift] a {
+    text-decoration: none;
+  }
+
+  [data-swift] img,
+  [data-swift] svg,
+  [data-swift] video {
+    display: block;
+    max-width: 100%;
+  }
+
+  [data-swift] svg {
+    display: inline-block;
   }
 }

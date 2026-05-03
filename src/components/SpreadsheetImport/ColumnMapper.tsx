@@ -1,122 +1,26 @@
 /**
- * ColumnMapper Component
+ * ColumnMapper — Apple/Swift visual rewrite (Tailwind v4 + shadcn + Framer
+ * Motion + lucide-react).
  *
- * Allows users to map spreadsheet columns to data fields.
- * Shows preview of data based on current mapping.
+ * Layout:
+ *   [file pill]   Sheet name + row count chip
+ *   [mapping]     Two-column field table — left = field label + req/opt tag,
+ *                 right = `<Select>` populated from the spreadsheet headers
+ *   [preview]     First 5 rows rendered as a compact card-style table.
+ *                 Mapped columns get a soft axis-yellow tint so the user can
+ *                 see exactly what each Select will pull.
+ *   [actions]     Back (ghost) / Validate & Import (yellow primary)
  */
 
-import {
-  Card,
-  Text,
-  Button,
-  Dropdown,
-  Option,
-  makeStyles,
-  tokens,
-} from '@fluentui/react-components';
-import {
-  ArrowLeft24Regular,
-  Checkmark24Regular,
-  Table24Regular,
-} from '@fluentui/react-icons';
-import type { SpreadsheetImportResult, SpreadsheetColumnMapping } from '@/types';
-import { axisTokens } from '@/styles/fluentTheme';
-
-// =============================================================================
-// STYLES
-// =============================================================================
-
-const useStyles = makeStyles({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1.5rem',
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '1rem',
-  },
-  fileInfo: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    padding: '0.5rem 1rem',
-    backgroundColor: tokens.colorNeutralBackground3,
-    borderRadius: tokens.borderRadiusMedium,
-  },
-  fileIcon: {
-    color: axisTokens.primary,
-  },
-  fileName: {
-    fontWeight: tokens.fontWeightSemibold,
-  },
-  rowCount: {
-    color: tokens.colorNeutralForeground3,
-    fontSize: tokens.fontSizeBase200,
-  },
-  mappingSection: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem',
-  },
-  mappingTitle: {
-    fontWeight: tokens.fontWeightSemibold,
-    marginBottom: '0.5rem',
-  },
-  mappingGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-    gap: '1rem',
-  },
-  mappingField: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.25rem',
-  },
-  fieldLabel: {
-    fontSize: tokens.fontSizeBase200,
-    fontWeight: tokens.fontWeightSemibold,
-  },
-  fieldRequired: {
-    color: axisTokens.error,
-  },
-  fieldOptional: {
-    color: tokens.colorNeutralForeground3,
-    fontWeight: tokens.fontWeightRegular,
-  },
-  previewSection: {
-    marginTop: '1rem',
-  },
-  previewTitle: {
-    fontWeight: tokens.fontWeightSemibold,
-    marginBottom: '0.75rem',
-  },
-  previewTable: {
-    width: '100%',
-    borderCollapse: 'collapse',
-    fontSize: tokens.fontSizeBase200,
-  },
-  previewHeader: {
-    backgroundColor: tokens.colorNeutralBackground3,
-    textAlign: 'left',
-    padding: '0.5rem',
-    borderBottom: `1px solid ${tokens.colorNeutralStroke1}`,
-    fontWeight: tokens.fontWeightSemibold,
-  },
-  previewCell: {
-    padding: '0.5rem',
-    borderBottom: `1px solid ${tokens.colorNeutralStroke1}`,
-  },
-  previewHighlight: {
-    backgroundColor: `${axisTokens.primary}15`,
-  },
-  actions: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: '1rem',
-  },
-});
+import { useMemo } from 'react';
+import { ArrowLeft, Check, FileSpreadsheet, Loader2 } from 'lucide-react';
+import type {
+  SpreadsheetImportResult,
+  SpreadsheetColumnMapping,
+} from '@/types';
+import { Button } from '@/components/ui/button';
+import { Select, SelectItem } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 
 // =============================================================================
 // TYPES
@@ -137,6 +41,12 @@ export interface ColumnMapperProps {
   isProcessing?: boolean;
 }
 
+type OptionalKey =
+  | 'quantityColumn'
+  | 'manufacturerColumn'
+  | 'mountTypeColumn'
+  | 'locationColumn';
+
 // =============================================================================
 // COMPONENT
 // =============================================================================
@@ -147,305 +57,294 @@ export function ColumnMapper({
   onMappingChange,
   onProceed,
   onBack,
-  isProcessing,
+  isProcessing = false,
 }: ColumnMapperProps) {
-  const styles = useStyles();
+  // Build option list once per header change.
+  const options = useMemo(
+    () =>
+      data.headers.map((header, index) => ({
+        value: String(index),
+        label: header || `Column ${index + 1}`,
+      })),
+    [data.headers]
+  );
 
-  // Build column options
-  const columnOptions = data.headers.map((header, index) => ({
-    key: String(index),
-    text: header || `Column ${index + 1}`,
-  }));
+  const handleRequiredChange = (next: string) => {
+    onMappingChange({
+      ...mapping,
+      modelColumn: parseInt(next, 10),
+    });
+  };
 
-  // Handle dropdown changes
-  const handleModelColumnChange = (_e: unknown, option: { optionValue?: string } | undefined) => {
-    if (option?.optionValue !== undefined) {
+  const handleOptionalChange = (key: OptionalKey, next: string) => {
+    if (next === 'none') {
+      const updated = { ...mapping };
+      delete (updated as Partial<SpreadsheetColumnMapping>)[key];
+      onMappingChange(updated);
+    } else {
       onMappingChange({
         ...mapping,
-        modelColumn: parseInt(option.optionValue, 10),
+        [key]: parseInt(next, 10),
       });
     }
   };
 
-  const handleQuantityColumnChange = (_e: unknown, option: { optionValue?: string } | undefined) => {
-    if (option?.optionValue === 'none') {
-      onMappingChange({
-        ...mapping,
-        quantityColumn: undefined,
-      });
-    } else if (option?.optionValue !== undefined) {
-      onMappingChange({
-        ...mapping,
-        quantityColumn: parseInt(option.optionValue, 10),
-      });
-    }
-  };
+  // Set of column indices that are currently mapped — drives the preview tint.
+  const mappedColumns = useMemo(() => {
+    const set = new Set<number>([mapping.modelColumn]);
+    if (mapping.quantityColumn !== undefined) set.add(mapping.quantityColumn);
+    if (mapping.manufacturerColumn !== undefined) set.add(mapping.manufacturerColumn);
+    if (mapping.mountTypeColumn !== undefined) set.add(mapping.mountTypeColumn);
+    if (mapping.locationColumn !== undefined) set.add(mapping.locationColumn);
+    return set;
+  }, [mapping]);
 
-  const handleManufacturerColumnChange = (
-    _e: unknown,
-    option: { optionValue?: string } | undefined
-  ) => {
-    if (option?.optionValue === 'none') {
-      onMappingChange({
-        ...mapping,
-        manufacturerColumn: undefined,
-      });
-    } else if (option?.optionValue !== undefined) {
-      onMappingChange({
-        ...mapping,
-        manufacturerColumn: parseInt(option.optionValue, 10),
-      });
-    }
-  };
-
-  const handleMountTypeColumnChange = (
-    _e: unknown,
-    option: { optionValue?: string } | undefined
-  ) => {
-    if (option?.optionValue === 'none') {
-      onMappingChange({
-        ...mapping,
-        mountTypeColumn: undefined,
-      });
-    } else if (option?.optionValue !== undefined) {
-      onMappingChange({
-        ...mapping,
-        mountTypeColumn: parseInt(option.optionValue, 10),
-      });
-    }
-  };
-
-  const handleLocationColumnChange = (
-    _e: unknown,
-    option: { optionValue?: string } | undefined
-  ) => {
-    if (option?.optionValue === 'none') {
-      onMappingChange({
-        ...mapping,
-        locationColumn: undefined,
-      });
-    } else if (option?.optionValue !== undefined) {
-      onMappingChange({
-        ...mapping,
-        locationColumn: parseInt(option.optionValue, 10),
-      });
-    }
-  };
-
-  // Preview rows (first 5)
   const previewRows = data.rows.slice(0, 5);
 
   return (
-    <div className={styles.container}>
-      {/* Header with file info */}
-      <div className={styles.header}>
-        <div className={styles.fileInfo}>
-          <Table24Regular className={styles.fileIcon} />
-          <Text className={styles.fileName}>{data.filename}</Text>
-          <Text className={styles.rowCount}>({data.rowCount} rows)</Text>
-        </div>
+    <div data-swift className="flex flex-col gap-6">
+      {/* File pill */}
+      <div
+        className={cn(
+          'inline-flex w-fit items-center gap-2 rounded-full border border-hairline bg-surface-2 px-3 py-1.5'
+        )}
+      >
+        <FileSpreadsheet className="size-3.5 text-axis-yellow-ink" strokeWidth={1.75} />
+        <span className="text-[13px] font-medium text-ink">{data.filename}</span>
+        <span className="font-mono text-[11px] tabular-nums text-ink-faint">
+          {data.rowCount} rows
+        </span>
       </div>
 
       {/* Mapping section */}
-      <Card>
-        <div className={styles.mappingSection}>
-          <Text className={styles.mappingTitle}>Map Columns</Text>
-
-          <div className={styles.mappingGrid}>
-            {/* Model column (required) */}
-            <div className={styles.mappingField}>
-              <Text className={styles.fieldLabel}>
-                Model Number <span className={styles.fieldRequired}>*</span>
-              </Text>
-              <Dropdown
-                value={columnOptions[mapping.modelColumn]?.text ?? ''}
-                selectedOptions={[String(mapping.modelColumn)]}
-                onOptionSelect={handleModelColumnChange}
-              >
-                {columnOptions.map((opt) => (
-                  <Option key={opt.key} value={opt.key}>
-                    {opt.text}
-                  </Option>
-                ))}
-              </Dropdown>
-            </div>
-
-            {/* Quantity column (optional) */}
-            <div className={styles.mappingField}>
-              <Text className={styles.fieldLabel}>
-                Quantity <span className={styles.fieldOptional}>(optional)</span>
-              </Text>
-              <Dropdown
-                value={
-                  mapping.quantityColumn !== undefined
-                    ? columnOptions[mapping.quantityColumn]?.text ?? ''
-                    : 'None'
-                }
-                selectedOptions={[
-                  mapping.quantityColumn !== undefined
-                    ? String(mapping.quantityColumn)
-                    : 'none',
-                ]}
-                onOptionSelect={handleQuantityColumnChange}
-              >
-                <Option value="none">None (default to 1)</Option>
-                {columnOptions.map((opt) => (
-                  <Option key={opt.key} value={opt.key}>
-                    {opt.text}
-                  </Option>
-                ))}
-              </Dropdown>
-            </div>
-
-            {/* Manufacturer column (optional) */}
-            <div className={styles.mappingField}>
-              <Text className={styles.fieldLabel}>
-                Manufacturer <span className={styles.fieldOptional}>(optional)</span>
-              </Text>
-              <Dropdown
-                value={
-                  mapping.manufacturerColumn !== undefined
-                    ? columnOptions[mapping.manufacturerColumn]?.text ?? ''
-                    : 'None'
-                }
-                selectedOptions={[
-                  mapping.manufacturerColumn !== undefined
-                    ? String(mapping.manufacturerColumn)
-                    : 'none',
-                ]}
-                onOptionSelect={handleManufacturerColumnChange}
-              >
-                <Option value="none">None</Option>
-                {columnOptions.map((opt) => (
-                  <Option key={opt.key} value={opt.key}>
-                    {opt.text}
-                  </Option>
-                ))}
-              </Dropdown>
-            </div>
-
-            {/* Mount Type column (optional) */}
-            <div className={styles.mappingField}>
-              <Text className={styles.fieldLabel}>
-                Mount Type <span className={styles.fieldOptional}>(optional)</span>
-              </Text>
-              <Dropdown
-                value={
-                  mapping.mountTypeColumn !== undefined
-                    ? columnOptions[mapping.mountTypeColumn]?.text ?? ''
-                    : 'None'
-                }
-                selectedOptions={[
-                  mapping.mountTypeColumn !== undefined
-                    ? String(mapping.mountTypeColumn)
-                    : 'none',
-                ]}
-                onOptionSelect={handleMountTypeColumnChange}
-              >
-                <Option value="none">None</Option>
-                {columnOptions.map((opt) => (
-                  <Option key={opt.key} value={opt.key}>
-                    {opt.text}
-                  </Option>
-                ))}
-              </Dropdown>
-            </div>
-
-            {/* Location column (optional) */}
-            <div className={styles.mappingField}>
-              <Text className={styles.fieldLabel}>
-                Location <span className={styles.fieldOptional}>(optional)</span>
-              </Text>
-              <Dropdown
-                value={
-                  mapping.locationColumn !== undefined
-                    ? columnOptions[mapping.locationColumn]?.text ?? ''
-                    : 'None'
-                }
-                selectedOptions={[
-                  mapping.locationColumn !== undefined
-                    ? String(mapping.locationColumn)
-                    : 'none',
-                ]}
-                onOptionSelect={handleLocationColumnChange}
-              >
-                <Option value="none">None</Option>
-                {columnOptions.map((opt) => (
-                  <Option key={opt.key} value={opt.key}>
-                    {opt.text}
-                  </Option>
-                ))}
-              </Dropdown>
-            </div>
-          </div>
+      <section
+        className={cn(
+          'flex flex-col gap-4 rounded-lg border border-hairline bg-surface p-5 shadow-sm'
+        )}
+      >
+        <div className="flex items-baseline justify-between gap-2">
+          <h3 className="text-[15px] font-semibold tracking-tight text-ink">
+            Map columns
+          </h3>
+          <p className="text-[12px] text-ink-muted">
+            Tell AxisX which spreadsheet column holds each field.
+          </p>
         </div>
-      </Card>
 
-      {/* Preview section */}
-      <div className={styles.previewSection}>
-        <Text className={styles.previewTitle}>Preview (first 5 rows)</Text>
-        <Card>
-          <table className={styles.previewTable}>
-            <thead>
-              <tr>
-                <th className={styles.previewHeader}>Row</th>
-                {data.headers.map((header, idx) => (
-                  <th
-                    key={idx}
-                    className={`${styles.previewHeader} ${
-                      idx === mapping.modelColumn ||
-                      idx === mapping.quantityColumn ||
-                      idx === mapping.manufacturerColumn ||
-                      idx === mapping.mountTypeColumn ||
-                      idx === mapping.locationColumn
-                        ? styles.previewHighlight
-                        : ''
-                    }`}
-                  >
-                    {header || `Col ${idx + 1}`}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <FieldRow label="Model Number" required>
+            <Select
+              value={String(mapping.modelColumn)}
+              onValueChange={handleRequiredChange}
+              aria-label="Model Number column"
+            >
+              {options.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </Select>
+          </FieldRow>
+
+          <FieldRow label="Quantity">
+            <Select
+              value={
+                mapping.quantityColumn !== undefined
+                  ? String(mapping.quantityColumn)
+                  : 'none'
+              }
+              onValueChange={(v) => handleOptionalChange('quantityColumn', v)}
+              aria-label="Quantity column"
+            >
+              <SelectItem value="none">None (default to 1)</SelectItem>
+              {options.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </Select>
+          </FieldRow>
+
+          <FieldRow label="Manufacturer">
+            <Select
+              value={
+                mapping.manufacturerColumn !== undefined
+                  ? String(mapping.manufacturerColumn)
+                  : 'none'
+              }
+              onValueChange={(v) => handleOptionalChange('manufacturerColumn', v)}
+              aria-label="Manufacturer column"
+            >
+              <SelectItem value="none">None</SelectItem>
+              {options.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </Select>
+          </FieldRow>
+
+          <FieldRow label="Mount Type">
+            <Select
+              value={
+                mapping.mountTypeColumn !== undefined
+                  ? String(mapping.mountTypeColumn)
+                  : 'none'
+              }
+              onValueChange={(v) => handleOptionalChange('mountTypeColumn', v)}
+              aria-label="Mount Type column"
+            >
+              <SelectItem value="none">None</SelectItem>
+              {options.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </Select>
+          </FieldRow>
+
+          <FieldRow label="Location">
+            <Select
+              value={
+                mapping.locationColumn !== undefined
+                  ? String(mapping.locationColumn)
+                  : 'none'
+              }
+              onValueChange={(v) => handleOptionalChange('locationColumn', v)}
+              aria-label="Location column"
+            >
+              <SelectItem value="none">None</SelectItem>
+              {options.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </Select>
+          </FieldRow>
+        </div>
+      </section>
+
+      {/* Preview */}
+      <section className="flex flex-col gap-2">
+        <div className="flex items-baseline justify-between gap-2">
+          <h3 className="text-[15px] font-semibold tracking-tight text-ink">
+            Preview
+          </h3>
+          <p className="text-[12px] text-ink-muted">
+            Showing first {previewRows.length} of {data.rowCount} rows
+          </p>
+        </div>
+
+        <div
+          className={cn(
+            'overflow-hidden rounded-lg border border-hairline bg-surface shadow-sm'
+          )}
+        >
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-left text-[12px]">
+              <thead>
+                <tr className="bg-surface-2">
+                  <th className="border-b border-hairline px-3 py-2 font-semibold text-ink-muted">
+                    #
                   </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {previewRows.map((row, rowIdx) => (
-                <tr key={rowIdx}>
-                  <td className={styles.previewCell}>{rowIdx + 1}</td>
-                  {row.map((cell, colIdx) => (
-                    <td
-                      key={colIdx}
-                      className={`${styles.previewCell} ${
-                        colIdx === mapping.modelColumn ||
-                        colIdx === mapping.quantityColumn ||
-                        colIdx === mapping.manufacturerColumn
-                          ? styles.previewHighlight
-                          : ''
-                      }`}
+                  {data.headers.map((header, idx) => (
+                    <th
+                      key={idx}
+                      className={cn(
+                        'border-b border-hairline px-3 py-2 font-semibold text-ink',
+                        mappedColumns.has(idx) && 'bg-axis-yellow-soft'
+                      )}
                     >
-                      {cell}
-                    </td>
+                      {header || `Col ${idx + 1}`}
+                    </th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </Card>
-      </div>
+              </thead>
+              <tbody>
+                {previewRows.map((row, rowIdx) => (
+                  <tr key={rowIdx}>
+                    <td className="border-b border-hairline px-3 py-2 text-ink-faint">
+                      {rowIdx + 1}
+                    </td>
+                    {row.map((cell, colIdx) => (
+                      <td
+                        key={colIdx}
+                        className={cn(
+                          'border-b border-hairline px-3 py-2 text-ink',
+                          mappedColumns.has(colIdx) && 'bg-axis-yellow-soft/60'
+                        )}
+                      >
+                        {cell}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
       {/* Actions */}
-      <div className={styles.actions}>
-        <Button appearance="subtle" icon={<ArrowLeft24Regular />} onClick={onBack}>
+      <div className="flex items-center justify-between">
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={onBack}
+          className="gap-1.5"
+        >
+          <ArrowLeft className="size-3.5" />
           Back
         </Button>
         <Button
-          appearance="primary"
-          icon={<Checkmark24Regular />}
+          type="button"
+          size="sm"
           onClick={onProceed}
           disabled={isProcessing}
+          className="h-9 gap-1.5 bg-axis-yellow text-ink shadow-sm hover:brightness-105 active:brightness-95"
         >
-          {isProcessing ? 'Validating...' : 'Validate & Import'}
+          {isProcessing ? (
+            <>
+              <Loader2 className="size-3.5 animate-spin" />
+              Validating…
+            </>
+          ) : (
+            <>
+              <Check className="size-3.5" />
+              Validate &amp; Import
+            </>
+          )}
         </Button>
       </div>
     </div>
+  );
+}
+
+// =============================================================================
+// FIELD ROW
+// =============================================================================
+
+interface FieldRowProps {
+  label: string;
+  required?: boolean;
+  children: React.ReactNode;
+}
+
+function FieldRow({ label, required = false, children }: FieldRowProps) {
+  return (
+    <label className="flex flex-col gap-1.5">
+      <span className="flex items-center gap-1 text-[12px] font-semibold text-ink">
+        {label}
+        {required ? (
+          <span className="text-danger" aria-hidden>
+            *
+          </span>
+        ) : (
+          <span className="font-normal text-ink-faint">(optional)</span>
+        )}
+      </span>
+      {children}
+    </label>
   );
 }

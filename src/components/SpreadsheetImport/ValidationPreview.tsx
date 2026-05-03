@@ -1,132 +1,30 @@
 /**
- * ValidationPreview Component
+ * ValidationPreview — Apple/Swift visual rewrite (Tailwind v4 + shadcn +
+ * Framer Motion + lucide-react).
  *
- * Shows validation results with status indicators for each row.
- * Allows filtering by status and provides summary stats.
+ * Layout:
+ *   [progress]  Animated axis-yellow fill bar driven by Framer Motion width
+ *               while validation is in flight.
+ *   [filters]   Status pills with counts (All / Found / Not Found / Duplicate
+ *               / Invalid). LayoutGroup gives an Apple-style sliding pill.
+ *   [list]      Row list with leading status icon, row number, input model,
+ *               replacement model, and quantity badge.
  */
 
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
 import {
-  Card,
-  Text,
-  ProgressBar,
-  makeStyles,
-  tokens,
-  mergeClasses,
-} from '@fluentui/react-components';
-import {
-  CheckmarkCircle24Filled,
-  DismissCircle24Filled,
-  Warning24Filled,
-  Copy24Regular,
-} from '@fluentui/react-icons';
-import type { SpreadsheetValidationResult, SpreadsheetValidationStatus } from '@/types';
-import { axisTokens } from '@/styles/fluentTheme';
-
-// =============================================================================
-// STYLES
-// =============================================================================
-
-const useStyles = makeStyles({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem',
-  },
-  progressSection: {
-    padding: '1rem',
-    backgroundColor: tokens.colorNeutralBackground3,
-    borderRadius: tokens.borderRadiusMedium,
-  },
-  progressText: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: '0.5rem',
-    fontSize: tokens.fontSizeBase200,
-    color: tokens.colorNeutralForeground3,
-  },
-  filterBar: {
-    display: 'flex',
-    gap: '0.5rem',
-    flexWrap: 'wrap',
-  },
-  filterButton: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.25rem',
-    padding: '0.375rem 0.75rem',
-    borderRadius: tokens.borderRadiusMedium,
-    border: `1px solid ${tokens.colorNeutralStroke1}`,
-    backgroundColor: 'transparent',
-    cursor: 'pointer',
-    fontSize: tokens.fontSizeBase200,
-    ':hover': {
-      backgroundColor: tokens.colorNeutralBackground3,
-    },
-  },
-  filterButtonActive: {
-    backgroundColor: tokens.colorNeutralBackground3,
-    border: `1px solid ${axisTokens.primary}`,
-  },
-  filterCount: {
-    fontWeight: tokens.fontWeightSemibold,
-  },
-  resultsList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.5rem',
-    maxHeight: '400px',
-    overflowY: 'auto',
-  },
-  resultRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.75rem',
-    padding: '0.75rem',
-    borderRadius: tokens.borderRadiusMedium,
-    backgroundColor: tokens.colorNeutralBackground2,
-  },
-  statusIcon: {
-    flexShrink: 0,
-  },
-  statusFound: {
-    color: axisTokens.success,
-  },
-  statusNotFound: {
-    color: tokens.colorNeutralForeground3,
-  },
-  statusDuplicate: {
-    color: axisTokens.cloud,
-  },
-  statusInvalid: {
-    color: axisTokens.error,
-  },
-  rowNumber: {
-    color: tokens.colorNeutralForeground3,
-    fontSize: tokens.fontSizeBase200,
-    minWidth: '40px',
-  },
-  inputModel: {
-    flex: 1,
-    fontWeight: tokens.fontWeightSemibold,
-    fontFamily: 'monospace',
-  },
-  replacement: {
-    color: axisTokens.primary,
-    fontSize: tokens.fontSizeBase200,
-  },
-  quantity: {
-    color: tokens.colorNeutralForeground3,
-    fontSize: tokens.fontSizeBase200,
-    minWidth: '50px',
-    textAlign: 'right',
-  },
-  emptyState: {
-    textAlign: 'center',
-    padding: '2rem',
-    color: tokens.colorNeutralForeground3,
-  },
-});
+  CheckCircle2,
+  XCircle,
+  Copy,
+  AlertTriangle,
+  ArrowRight,
+} from 'lucide-react';
+import type {
+  SpreadsheetValidationResult,
+  SpreadsheetValidationStatus,
+} from '@/types';
+import { cn } from '@/lib/utils';
 
 // =============================================================================
 // TYPES
@@ -143,20 +41,27 @@ export interface ValidationPreviewProps {
 
 type FilterType = 'all' | SpreadsheetValidationStatus;
 
+interface FilterDef {
+  id: FilterType;
+  label: string;
+  icon: typeof CheckCircle2 | null;
+  iconClass?: string;
+}
+
 // =============================================================================
 // HELPERS
 // =============================================================================
 
-function getStatusIcon(status: SpreadsheetValidationStatus, styles: ReturnType<typeof useStyles>) {
+function statusVisual(status: SpreadsheetValidationStatus) {
   switch (status) {
     case 'found':
-      return <CheckmarkCircle24Filled className={mergeClasses(styles.statusIcon, styles.statusFound)} />;
+      return { Icon: CheckCircle2, className: 'text-success' };
     case 'not-found':
-      return <DismissCircle24Filled className={mergeClasses(styles.statusIcon, styles.statusNotFound)} />;
+      return { Icon: XCircle, className: 'text-ink-faint' };
     case 'duplicate':
-      return <Copy24Regular className={mergeClasses(styles.statusIcon, styles.statusDuplicate)} />;
+      return { Icon: Copy, className: 'text-cloud' };
     case 'invalid':
-      return <Warning24Filled className={mergeClasses(styles.statusIcon, styles.statusInvalid)} />;
+      return { Icon: AlertTriangle, className: 'text-danger' };
   }
 }
 
@@ -183,129 +88,177 @@ export function ValidationPreview({
   isProcessing,
   progress,
 }: ValidationPreviewProps) {
-  const styles = useStyles();
   const [filter, setFilter] = useState<FilterType>('all');
 
-  // Count by status
   const counts = useMemo(() => {
-    const counts = {
+    const initial: Record<FilterType, number> = {
       all: results.length,
       found: 0,
       'not-found': 0,
       duplicate: 0,
       invalid: 0,
     };
-
-    results.forEach((r) => {
-      counts[r.status]++;
-    });
-
-    return counts;
+    for (const r of results) {
+      initial[r.status]++;
+    }
+    return initial;
   }, [results]);
 
-  // Filtered results
   const filteredResults = useMemo(() => {
     if (filter === 'all') return results;
     return results.filter((r) => r.status === filter);
   }, [results, filter]);
 
+  const filters: readonly FilterDef[] = [
+    { id: 'all', label: 'All', icon: null },
+    { id: 'found', label: 'Found', icon: CheckCircle2, iconClass: 'text-success' },
+    { id: 'not-found', label: 'Not Found', icon: XCircle, iconClass: 'text-ink-faint' },
+    { id: 'duplicate', label: 'Duplicate', icon: Copy, iconClass: 'text-cloud' },
+    { id: 'invalid', label: 'Invalid', icon: AlertTriangle, iconClass: 'text-danger' },
+  ];
+
   return (
-    <div className={styles.container}>
-      {/* Progress bar (during processing) */}
+    <div data-swift className="flex flex-col gap-4">
+      {/* Progress bar */}
       {isProcessing && (
-        <div className={styles.progressSection}>
-          <div className={styles.progressText}>
-            <span>Validating models...</span>
-            <span>
+        <section
+          className={cn(
+            'flex flex-col gap-2 rounded-lg border border-hairline bg-surface-2 px-4 py-3'
+          )}
+          aria-live="polite"
+        >
+          <div className="flex items-baseline justify-between text-[12px] text-ink-muted">
+            <span>Validating models…</span>
+            <span className="font-mono tabular-nums">
               {progress.current} / {progress.total} ({progress.percent}%)
             </span>
           </div>
-          <ProgressBar value={progress.percent / 100} />
-        </div>
+
+          <div
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={progress.percent}
+            className="h-1.5 w-full overflow-hidden rounded-full bg-hairline/60"
+          >
+            <motion.div
+              className="h-full rounded-full bg-axis-yellow"
+              initial={{ width: 0 }}
+              animate={{ width: `${progress.percent}%` }}
+              transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+            />
+          </div>
+        </section>
       )}
 
-      {/* Filter bar */}
+      {/* Filter pills */}
       {!isProcessing && results.length > 0 && (
-        <div className={styles.filterBar}>
-          <button
-            className={mergeClasses(
-              styles.filterButton,
-              filter === 'all' && styles.filterButtonActive
-            )}
-            onClick={() => setFilter('all')}
+        <LayoutGroup id="validation-filter">
+          <div
+            role="tablist"
+            aria-label="Filter by status"
+            className="flex flex-wrap gap-1 rounded-full border border-hairline bg-surface-2 p-1"
           >
-            All <span className={styles.filterCount}>{counts.all}</span>
-          </button>
-          <button
-            className={mergeClasses(
-              styles.filterButton,
-              filter === 'found' && styles.filterButtonActive
-            )}
-            onClick={() => setFilter('found')}
-          >
-            <CheckmarkCircle24Filled className={styles.statusFound} style={{ width: 16, height: 16 }} />
-            Found <span className={styles.filterCount}>{counts.found}</span>
-          </button>
-          <button
-            className={mergeClasses(
-              styles.filterButton,
-              filter === 'not-found' && styles.filterButtonActive
-            )}
-            onClick={() => setFilter('not-found')}
-          >
-            <DismissCircle24Filled className={styles.statusNotFound} style={{ width: 16, height: 16 }} />
-            Not Found <span className={styles.filterCount}>{counts['not-found']}</span>
-          </button>
-          <button
-            className={mergeClasses(
-              styles.filterButton,
-              filter === 'duplicate' && styles.filterButtonActive
-            )}
-            onClick={() => setFilter('duplicate')}
-          >
-            <Copy24Regular className={styles.statusDuplicate} style={{ width: 16, height: 16 }} />
-            Duplicate <span className={styles.filterCount}>{counts.duplicate}</span>
-          </button>
-          <button
-            className={mergeClasses(
-              styles.filterButton,
-              filter === 'invalid' && styles.filterButtonActive
-            )}
-            onClick={() => setFilter('invalid')}
-          >
-            <Warning24Filled className={styles.statusInvalid} style={{ width: 16, height: 16 }} />
-            Invalid <span className={styles.filterCount}>{counts.invalid}</span>
-          </button>
-        </div>
+            {filters.map((f) => {
+              const isActive = filter === f.id;
+              const Icon = f.icon;
+              return (
+                <button
+                  key={f.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setFilter(f.id)}
+                  className={cn(
+                    'relative inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-[12px] font-medium',
+                    'transition-colors duration-150',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-yellow/60 focus-visible:ring-offset-1 focus-visible:ring-offset-surface',
+                    isActive ? 'text-ink' : 'text-ink-muted hover:text-ink'
+                  )}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="validation-filter-active"
+                      className="absolute inset-0 -z-10 rounded-full bg-surface shadow-sm"
+                      transition={{ type: 'spring', stiffness: 520, damping: 38 }}
+                    />
+                  )}
+                  {Icon && <Icon className={cn('size-3.5', f.iconClass)} />}
+                  <span>{f.label}</span>
+                  <span
+                    className={cn(
+                      'rounded-full px-1.5 py-0 text-[11px] font-semibold tabular-nums',
+                      isActive ? 'bg-axis-yellow-soft text-axis-yellow-ink' : 'bg-secondary text-ink-muted'
+                    )}
+                  >
+                    {counts[f.id]}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </LayoutGroup>
       )}
 
       {/* Results list */}
       {!isProcessing && filteredResults.length > 0 && (
-        <Card>
-          <div className={styles.resultsList}>
+        <ul
+          className={cn(
+            'flex max-h-[400px] flex-col gap-1.5 overflow-y-auto rounded-lg border border-hairline bg-surface p-2 shadow-sm'
+          )}
+        >
+          <AnimatePresence initial={false}>
             {filteredResults.map((result, idx) => {
               const replacement = getReplacementModel(result);
-
+              const { Icon, className } = statusVisual(result.status);
               return (
-                <div key={idx} className={styles.resultRow}>
-                  {getStatusIcon(result.status, styles)}
-                  <Text className={styles.rowNumber}>#{result.row}</Text>
-                  <Text className={styles.inputModel}>{result.input}</Text>
-                  {replacement && (
-                    <Text className={styles.replacement}>{'\u2192'} {replacement}</Text>
+                <motion.li
+                  key={`${result.row}-${result.input}-${idx}`}
+                  layout
+                  initial={{ opacity: 0, y: -2 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ type: 'spring', stiffness: 480, damping: 36 }}
+                  className={cn(
+                    'flex items-center gap-3 rounded-md bg-surface-2 px-3 py-2'
                   )}
-                  <Text className={styles.quantity}>x{result.quantity}</Text>
-                </div>
+                >
+                  <Icon className={cn('size-4 shrink-0', className)} />
+                  <span className="font-mono text-[11px] tabular-nums text-ink-faint w-10">
+                    #{result.row}
+                  </span>
+                  <span className="flex-1 truncate font-mono text-[13px] font-semibold text-ink">
+                    {result.input}
+                  </span>
+                  {replacement && (
+                    <span className="hidden items-center gap-1 text-[12px] text-axis-yellow-ink sm:inline-flex">
+                      <ArrowRight className="size-3" />
+                      <span className="font-mono">{replacement}</span>
+                    </span>
+                  )}
+                  <span
+                    className={cn(
+                      'inline-flex h-5 min-w-7 items-center justify-center rounded-full px-1.5',
+                      'bg-secondary text-[11px] font-semibold tabular-nums text-ink-muted'
+                    )}
+                  >
+                    × {result.quantity}
+                  </span>
+                </motion.li>
               );
             })}
-          </div>
-        </Card>
+          </AnimatePresence>
+        </ul>
       )}
 
-      {/* Empty state */}
+      {/* Empty state for active filter */}
       {!isProcessing && filteredResults.length === 0 && filter !== 'all' && (
-        <div className={styles.emptyState}>
-          <Text>No items match the selected filter.</Text>
+        <div
+          className={cn(
+            'rounded-lg border border-dashed border-hairline bg-surface-2 px-4 py-8 text-center',
+            'text-[13px] text-ink-muted'
+          )}
+        >
+          No items match the selected filter.
         </div>
       )}
     </div>

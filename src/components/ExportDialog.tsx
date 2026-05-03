@@ -1,54 +1,28 @@
 /**
- * ExportDialog Component
+ * ExportDialog — Apple/Swift visual rewrite (Tailwind v4 + Radix Dialog + Framer Motion).
  *
- * Fluent UI dialog that prompts for project name and customer name
- * before generating a Battle Card PDF.
+ * Modal that captures Project Name + Customer Name before generating a Battle
+ * Card PDF. Replaces the previous Fluent UI Dialog with the shadcn-style Radix
+ * Dialog primitive in `components/ui/dialog.tsx`.
+ *
+ * Public API (`ExportDialogProps`) is unchanged from the Fluent version.
  */
 
 import { useState, useCallback } from 'react';
+import { FileText, Loader2 } from 'lucide-react';
+import type { ExportMetadata } from '@/types';
 import {
   Dialog,
-  DialogSurface,
-  DialogBody,
-  DialogTitle,
   DialogContent,
-  DialogActions,
-  Button,
-  Input,
-  Label,
-  makeStyles,
-  tokens,
-} from '@fluentui/react-components';
-import { DocumentPdf24Regular, Dismiss24Regular } from '@fluentui/react-icons';
-import type { ExportMetadata } from '@/types';
-import { axisTokens } from '@/styles/fluentTheme';
-
-// =============================================================================
-// STYLES
-// =============================================================================
-
-const useStyles = makeStyles({
-  content: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem',
-  },
-  field: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.25rem',
-  },
-  label: {
-    fontWeight: tokens.fontWeightSemibold,
-  },
-  generateButton: {
-    backgroundColor: axisTokens.primary,
-    color: '#000',
-    ':hover': {
-      backgroundColor: axisTokens.primaryDark,
-    },
-  },
-});
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 
 // =============================================================================
 // TYPES
@@ -78,7 +52,6 @@ export function ExportDialog({
   onGenerate,
   isGenerating = false,
 }: ExportDialogProps) {
-  const styles = useStyles();
   const [projectName, setProjectName] = useState('');
   const [customerName, setCustomerName] = useState('');
 
@@ -98,71 +71,88 @@ export function ExportDialog({
   return (
     <Dialog
       open={open}
-      onOpenChange={(_event, data) => {
-        if (!data.open) handleClose();
+      onOpenChange={(next) => {
+        if (!next) handleClose();
       }}
     >
-      <DialogSurface>
-        <DialogBody>
-          <DialogTitle
-            action={
-              <Button
-                appearance="subtle"
-                aria-label="Close"
-                icon={<Dismiss24Regular />}
-                onClick={handleClose}
-              />
-            }
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <div className="flex items-center gap-2">
+            <span
+              className={cn(
+                'inline-flex size-8 items-center justify-center rounded-md',
+                'bg-axis-yellow-soft text-axis-yellow-ink'
+              )}
+              aria-hidden
+            >
+              <FileText className="size-4" strokeWidth={2} />
+            </span>
+            <DialogTitle>Export Battle Card PDF</DialogTitle>
+          </div>
+          <DialogDescription>
+            Add project metadata to brand the generated PDF header.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="mt-5 flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="export-project-name">Project Name</Label>
+            <Input
+              id="export-project-name"
+              placeholder="e.g., Acme Corp Camera Upgrade"
+              value={projectName}
+              onChange={(e) => setProjectName(e.target.value)}
+              autoComplete="off"
+              spellCheck={false}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="export-customer-name">Customer Name</Label>
+            <Input
+              id="export-customer-name"
+              placeholder="e.g., John Smith"
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+              autoComplete="off"
+              spellCheck={false}
+            />
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={handleClose}
+            className="h-9"
           >
-            <DocumentPdf24Regular style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />
-            Export Battle Card PDF
-          </DialogTitle>
-
-          <DialogContent className={styles.content}>
-            <div className={styles.field}>
-              <Label className={styles.label} htmlFor="export-project-name">
-                Project Name
-              </Label>
-              <Input
-                id="export-project-name"
-                placeholder="e.g., Acme Corp Camera Upgrade"
-                value={projectName}
-                onChange={(_e, data) => setProjectName(data.value)}
-              />
-            </div>
-
-            <div className={styles.field}>
-              <Label className={styles.label} htmlFor="export-customer-name">
-                Customer Name
-              </Label>
-              <Input
-                id="export-customer-name"
-                placeholder="e.g., John Smith"
-                value={customerName}
-                onChange={(_e, data) => setCustomerName(data.value)}
-              />
-            </div>
-          </DialogContent>
-
-          <DialogActions>
-            <Button
-              appearance="secondary"
-              onClick={handleClose}
-            >
-              Cancel
-            </Button>
-            <Button
-              appearance="primary"
-              className={styles.generateButton}
-              onClick={handleGenerate}
-              disabled={isGenerating}
-              icon={<DocumentPdf24Regular />}
-            >
-              {isGenerating ? 'Generating...' : 'Generate PDF'}
-            </Button>
-          </DialogActions>
-        </DialogBody>
-      </DialogSurface>
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            onClick={handleGenerate}
+            disabled={isGenerating}
+            className={cn(
+              'h-9 gap-1.5 bg-axis-yellow text-ink shadow-sm',
+              'hover:brightness-105 active:brightness-95',
+              'disabled:pointer-events-none disabled:opacity-60'
+            )}
+          >
+            {isGenerating ? (
+              <>
+                <Loader2 className="size-3.5 animate-spin" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <FileText className="size-3.5" />
+                Generate PDF
+              </>
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
     </Dialog>
   );
 }

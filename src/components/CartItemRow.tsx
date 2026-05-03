@@ -1,104 +1,17 @@
-/**
- * CartItemRow Component
- *
- * Displays a single cart item with quantity controls, line total, and remove button.
- * Migrated to Fluent UI components.
- */
-
-import {
-  Card,
-  Button,
-  Text,
-  makeStyles,
-  tokens,
-} from '@fluentui/react-components';
-import { Dismiss24Regular, Add24Regular, Subtract24Regular } from '@fluentui/react-icons';
+import { Minus, Plus, X, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import type { CartItem } from '@/types';
 import { getFormattedPrice } from '@/core/msrp';
-
-// =============================================================================
-// STYLES
-// =============================================================================
-
-const useStyles = makeStyles({
-  card: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '1rem',
-    padding: '1rem',
-  },
-  modelInfo: {
-    flex: 1,
-    minWidth: 0,
-  },
-  modelName: {
-    fontWeight: tokens.fontWeightSemibold,
-  },
-  replacesText: {
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-  unitPrice: {
-    marginTop: '0.25rem',
-  },
-  quantityControls: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.25rem',
-    backgroundColor: tokens.colorNeutralBackground3,
-    borderRadius: tokens.borderRadiusMedium,
-    padding: '0.25rem',
-  },
-  quantityButton: {
-    minWidth: '32px',
-    width: '32px',
-    height: '32px',
-  },
-  quantityText: {
-    minWidth: '2rem',
-    textAlign: 'center',
-    fontWeight: tokens.fontWeightSemibold,
-  },
-  lineTotal: {
-    minWidth: '5rem',
-    textAlign: 'right',
-    fontWeight: tokens.fontWeightSemibold,
-  },
-  removeButton: {
-    minWidth: '32px',
-    width: '32px',
-    height: '32px',
-  },
-});
-
-// =============================================================================
-// TYPES
-// =============================================================================
+import { cn } from '@/lib/utils';
 
 export interface CartItemRowProps {
-  /** The cart item to display */
   item: CartItem;
-
-  /** Callback when quantity changes */
   onQuantityChange: (quantity: number) => void;
-
-  /** Callback when item is removed */
   onRemove: () => void;
 }
 
-// =============================================================================
-// HELPERS
-// =============================================================================
-
-/**
- * Format line total (msrp x quantity) or "TBD"
- */
 function formatLineTotal(msrp: number | null, quantity: number): string {
-  if (msrp === null) {
-    return 'TBD';
-  }
-
+  if (msrp === null) return 'TBD';
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -106,75 +19,98 @@ function formatLineTotal(msrp: number | null, quantity: number): string {
   }).format(msrp * quantity);
 }
 
-// =============================================================================
-// COMPONENT
-// =============================================================================
-
 export function CartItemRow({ item, onQuantityChange, onRemove }: CartItemRowProps) {
-  const styles = useStyles();
   const unitPrice = getFormattedPrice(item.model);
   const lineTotal = formatLineTotal(item.msrp, item.quantity);
+  const isAccessory = item.source === 'accessory';
 
   return (
-    <Card className={styles.card} appearance="outline">
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, height: 0 }}
+      transition={{ type: 'spring', stiffness: 460, damping: 36 }}
+      className={cn(
+        'group flex items-center gap-3 rounded-lg border border-hairline bg-surface px-3 py-2.5',
+        'shadow-sm transition-shadow hover:shadow-md',
+        isAccessory && 'ml-5 bg-surface-2'
+      )}
+    >
       {/* Model info */}
-      <div className={styles.modelInfo}>
-        <Text className={styles.modelName} block>
-          {item.model}
-        </Text>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-baseline gap-2">
+          <span className="truncate font-mono text-[13px] font-semibold tracking-tight text-ink">
+            {item.model}
+          </span>
+          {isAccessory && (
+            <span className="rounded-full bg-secondary px-1.5 text-[10px] font-medium uppercase tracking-wide text-ink-faint">
+              accessory
+            </span>
+          )}
+        </div>
         {item.competitorModel && (
-          <Text size={200} className={styles.replacesText} block>
-            Replaces: {item.competitorModel}
-            {item.competitorManufacturer && ` (${item.competitorManufacturer})`}
-          </Text>
+          <div className="mt-0.5 flex items-center gap-1 truncate text-[11px] text-ink-faint">
+            <span>Replaces</span>
+            <ArrowRight className="size-3 shrink-0" />
+            <span className="truncate">
+              {item.competitorModel}
+              {item.competitorManufacturer ? ` · ${item.competitorManufacturer}` : ''}
+            </span>
+          </div>
         )}
-        <Text size={100} className={styles.unitPrice} block>
+        <div className="mt-0.5 text-[11px] tabular-nums text-ink-muted">
           {unitPrice} each
-        </Text>
+        </div>
       </div>
 
-      {/* Quantity controls */}
-      <div className={styles.quantityControls}>
-        <Button
+      {/* Quantity stepper */}
+      <div className="inline-flex items-center gap-1 rounded-full border border-hairline bg-surface-2 p-0.5">
+        <button
+          type="button"
           onClick={() => onQuantityChange(item.quantity - 1)}
           disabled={item.quantity <= 1}
           aria-label="Decrease quantity"
-          appearance="subtle"
-          size="small"
-          icon={<Subtract24Regular />}
-          className={styles.quantityButton}
-        />
-        <Text className={styles.quantityText}>
+          className={cn(
+            'inline-flex h-7 w-7 items-center justify-center rounded-full text-ink-muted',
+            'transition-colors hover:bg-surface hover:text-ink',
+            'disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent'
+          )}
+        >
+          <Minus className="size-3.5" />
+        </button>
+        <span className="min-w-6 text-center text-[13px] font-semibold tabular-nums">
           {item.quantity}
-        </Text>
-        <Button
+        </span>
+        <button
+          type="button"
           onClick={() => onQuantityChange(item.quantity + 1)}
           aria-label="Increase quantity"
-          appearance="subtle"
-          size="small"
-          icon={<Add24Regular />}
-          className={styles.quantityButton}
-        />
+          className="inline-flex h-7 w-7 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-surface hover:text-ink"
+        >
+          <Plus className="size-3.5" />
+        </button>
       </div>
 
       {/* Line total */}
-      <Text
-        className={styles.lineTotal}
-        style={{ color: item.msrp !== null ? undefined : tokens.colorNeutralForeground3 }}
+      <div
+        className={cn(
+          'min-w-[5rem] text-right text-[13px] font-semibold tabular-nums',
+          item.msrp === null ? 'text-ink-faint' : 'text-ink'
+        )}
       >
         {lineTotal}
-      </Text>
+      </div>
 
-      {/* Remove button */}
-      <Button
+      {/* Remove */}
+      <button
+        type="button"
         onClick={onRemove}
         aria-label="Remove item"
-        appearance="subtle"
-        size="small"
-        icon={<Dismiss24Regular />}
-        className={styles.removeButton}
-        style={{ color: tokens.colorPaletteRedForeground1 }}
-      />
-    </Card>
+        className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-ink-faint opacity-0 transition-all hover:bg-danger/10 hover:text-danger group-hover:opacity-100 focus-visible:opacity-100"
+      >
+        <X className="size-3.5" />
+      </button>
+    </motion.div>
   );
 }

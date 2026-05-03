@@ -1,85 +1,24 @@
 /**
- * BatchInput Component
+ * BatchInput — Apple/Swift visual rewrite (Tailwind v4 + shadcn + Framer Motion).
  *
- * Multi-line textarea for entering multiple camera models at once.
- * Shows model count and provides batch search trigger.
+ * Public API is unchanged — this drop-in replacement of the Fluent-UI version
+ * keeps `BatchInputProps` identical so `App.tsx` doesn't need to change.
+ *
+ * Layout:
+ *   [textarea]   large, hairline border, monospace, axis-yellow focus ring
+ *   [progress]   spring-animated bar (only while isProcessing)
+ *   [actions]    [model count chip] · [Search All] · [Clear]   + keyboard hint
  */
 
-import {
-  Textarea,
-  Button,
-  Text,
-  ProgressBar,
-  makeStyles,
-  tokens,
-} from '@fluentui/react-components';
-import { Search24Regular, Dismiss24Regular } from '@fluentui/react-icons';
+import type { KeyboardEvent } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Search, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import type { BatchProgress } from '@/types';
-import { axisTokens } from '@/styles/fluentTheme';
 
 // =============================================================================
-// STYLES
-// =============================================================================
-
-const useStyles = makeStyles({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.75rem',
-  },
-  textareaWrapper: {
-    position: 'relative',
-  },
-  textarea: {
-    width: '100%',
-    minHeight: '150px',
-    fontFamily: 'monospace',
-    fontSize: tokens.fontSizeBase300,
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  title: {
-    fontWeight: tokens.fontWeightSemibold,
-  },
-  modelCount: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-  },
-  countBadge: {
-    backgroundColor: axisTokens.primary,
-    color: '#000',
-    padding: '0.25rem 0.5rem',
-    borderRadius: tokens.borderRadiusCircular,
-    fontSize: tokens.fontSizeBase100,
-    fontWeight: tokens.fontWeightSemibold,
-  },
-  actions: {
-    display: 'flex',
-    gap: '0.5rem',
-  },
-  progressContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.5rem',
-  },
-  progressText: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    fontSize: tokens.fontSizeBase200,
-    color: tokens.colorNeutralForeground3,
-  },
-  hint: {
-    fontSize: tokens.fontSizeBase200,
-    color: tokens.colorNeutralForeground3,
-  },
-});
-
-// =============================================================================
-// TYPES
+// TYPES (unchanged from Fluent version)
 // =============================================================================
 
 export interface BatchInputProps {
@@ -108,6 +47,9 @@ export interface BatchInputProps {
   placeholder?: string;
 }
 
+const DEFAULT_PLACEHOLDER =
+  'Enter camera models, one per line...\n\nExample:\nDS-2CD2143G2-I\nHNM-4221R\nIPC-HFW2831E-S';
+
 // =============================================================================
 // COMPONENT
 // =============================================================================
@@ -120,80 +62,137 @@ export function BatchInput({
   modelCount,
   isProcessing,
   progress,
-  placeholder = 'Enter camera models, one per line...\n\nExample:\nDS-2CD2143G2-I\nHNM-4221R\nIPC-HFW2831E-S',
+  placeholder = DEFAULT_PLACEHOLDER,
 }: BatchInputProps) {
-  const styles = useStyles();
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    // Ctrl/Cmd + Enter to search
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    // Cmd/Ctrl + Enter to search
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
       e.preventDefault();
       onSearch();
     }
   };
 
+  const canSearch = modelCount > 0 && !isProcessing;
+  const canClear = value.length > 0 && !isProcessing;
+
   return (
-    <div className={styles.container}>
-      {/* Header */}
-      <div className={styles.header}>
-        <Text className={styles.title}>Batch Search</Text>
-        <div className={styles.modelCount}>
-          <Text size={200}>Models detected:</Text>
-          <span className={styles.countBadge}>{modelCount}</span>
+    <div data-swift className="flex flex-col gap-3">
+      {/* Header row */}
+      <div className="flex items-center justify-between">
+        <div className="flex flex-col">
+          <h2 className="text-[15px] font-semibold tracking-tight text-ink">
+            Batch Search
+          </h2>
+          <p className="text-[12px] text-ink-faint">
+            One model per line. Cmd+Enter to search.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[12px] text-ink-muted">Models detected</span>
+          <motion.span
+            key={modelCount}
+            initial={{ scale: 0.85, opacity: 0.6 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: 'spring', stiffness: 520, damping: 32 }}
+            className={cn(
+              'inline-flex h-6 min-w-7 items-center justify-center rounded-full px-2',
+              'text-[12px] font-semibold tabular-nums',
+              modelCount > 0
+                ? 'bg-axis-yellow-soft text-axis-yellow-ink'
+                : 'bg-secondary text-ink-faint'
+            )}
+            aria-live="polite"
+          >
+            {modelCount}
+          </motion.span>
         </div>
       </div>
 
       {/* Textarea */}
-      <div className={styles.textareaWrapper}>
-        <Textarea
+      <div className="relative">
+        <textarea
           value={value}
-          onChange={(_e, data) => onChange(data.value)}
+          onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className={styles.textarea}
           disabled={isProcessing}
-          resize="vertical"
           aria-label="Enter camera models for batch search"
+          className={cn(
+            'block w-full resize-y rounded-lg border border-hairline bg-surface',
+            'min-h-[180px] px-3.5 py-3 font-mono text-[13px] leading-relaxed text-ink',
+            'placeholder:font-mono placeholder:text-ink-faint',
+            'shadow-sm transition-all duration-150 ease-out',
+            'focus:outline-none focus:border-axis-yellow focus:ring-2 focus:ring-axis-yellow/40',
+            'disabled:cursor-not-allowed disabled:opacity-60'
+          )}
         />
       </div>
 
-      {/* Progress */}
-      {isProcessing && (
-        <div className={styles.progressContainer}>
-          <ProgressBar value={progress.percent / 100} />
-          <div className={styles.progressText}>
-            <span>Processing...</span>
-            <span>
-              {progress.current} / {progress.total} ({progress.percent}%)
-            </span>
-          </div>
-        </div>
-      )}
+      {/* Progress bar */}
+      <AnimatePresence initial={false}>
+        {isProcessing && (
+          <motion.div
+            key="progress"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+            style={{ overflow: 'hidden' }}
+            className="flex flex-col gap-1.5"
+            role="status"
+            aria-live="polite"
+          >
+            <div
+              className="relative h-1.5 w-full overflow-hidden rounded-full bg-secondary"
+              role="progressbar"
+              aria-valuenow={progress.percent}
+              aria-valuemin={0}
+              aria-valuemax={100}
+            >
+              <motion.div
+                className="absolute inset-y-0 left-0 rounded-full bg-axis-yellow"
+                initial={false}
+                animate={{ width: `${Math.min(100, Math.max(0, progress.percent))}%` }}
+                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+              />
+            </div>
+            <div className="flex items-center justify-between text-[12px] text-ink-muted">
+              <span>Processing...</span>
+              <span className="font-mono tabular-nums">
+                {progress.current} / {progress.total} ({progress.percent}%)
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Actions */}
-      <div className={styles.actions}>
+      <div className="flex flex-wrap items-center gap-2">
         <Button
-          appearance="primary"
-          icon={<Search24Regular />}
+          type="button"
           onClick={onSearch}
-          disabled={modelCount === 0 || isProcessing}
+          disabled={!canSearch}
+          size="default"
+          className={cn(
+            'h-9 gap-1.5 bg-axis-yellow text-ink shadow-sm',
+            'hover:brightness-105 active:brightness-95'
+          )}
         >
+          <Search className="size-4" />
           Search All ({modelCount})
         </Button>
         <Button
-          appearance="outline"
-          icon={<Dismiss24Regular />}
+          type="button"
+          variant="outline"
           onClick={onClear}
-          disabled={value.length === 0 || isProcessing}
+          disabled={!canClear}
+          size="default"
+          className="h-9 gap-1.5"
         >
+          <X className="size-4" />
           Clear
         </Button>
       </div>
-
-      {/* Hint */}
-      <Text className={styles.hint}>
-        Tip: Press Ctrl+Enter to start search. One model per line.
-      </Text>
     </div>
   );
 }

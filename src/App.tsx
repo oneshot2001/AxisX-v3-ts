@@ -6,26 +6,17 @@
  */
 
 import { memo, useCallback, useEffect, useState } from 'react';
+import { Loader2, Upload } from 'lucide-react';
+import { toast } from 'sonner';
+import { AppShell, type AppView } from '@/components/AppShell';
+import { BomDrawer } from '@/components/BomDrawer';
+import { Button as UIButton } from '@/components/ui/button';
 import {
-  Button,
-  Text,
-  Spinner,
   Dialog,
-  DialogSurface,
-  DialogBody,
-  DialogTitle,
   DialogContent,
-  makeStyles,
-  tokens,
-} from '@fluentui/react-components';
-import {
-  Search24Regular,
-  ClipboardBulletListLtrRegular,
-  Info24Regular,
-  DocumentBulletList24Regular,
-  ArrowUpload24Regular,
-  Dismiss24Regular,
-} from '@fluentui/react-icons';
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import type {
   ISearchEngine,
   SearchResponse,
@@ -57,7 +48,6 @@ import { useExportPDF } from '@/hooks/useExportPDF';
 import {
   SearchInput,
   SearchResults,
-  Cart,
   BatchInput,
   BatchResults,
   FileUploader,
@@ -67,9 +57,6 @@ import {
   ExportDialog,
 } from '@/components';
 
-// Theme
-import { axisTokens } from '@/styles/fluentTheme';
-
 declare global {
   interface Window {
     lookupSpec?: typeof lookupSpec;
@@ -77,90 +64,6 @@ declare global {
     hasSpec?: typeof hasSpec;
   }
 }
-
-// =============================================================================
-// STYLES
-// =============================================================================
-
-const useStyles = makeStyles({
-  app: {
-    minHeight: '100vh',
-    backgroundColor: tokens.colorNeutralBackground1,
-    fontFamily: tokens.fontFamilyBase,
-    color: tokens.colorNeutralForeground1,
-  },
-  header: {
-    padding: '1rem 1.5rem',
-    borderBottom: `1px solid ${tokens.colorNeutralStroke1}`,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  logo: {
-    fontSize: tokens.fontSizeBase600,
-    fontWeight: tokens.fontWeightBold,
-    color: axisTokens.primary,
-    margin: 0,
-  },
-  version: {
-    fontSize: tokens.fontSizeBase200,
-    color: tokens.colorNeutralForeground3,
-    marginLeft: '0.5rem',
-    fontWeight: tokens.fontWeightRegular,
-  },
-  nav: {
-    display: 'flex',
-    gap: '0.5rem',
-  },
-  main: {
-    padding: '1.5rem',
-    maxWidth: '900px',
-    margin: '0 auto',
-  },
-  footer: {
-    padding: '1rem',
-    textAlign: 'center',
-    color: tokens.colorNeutralForeground3,
-    fontSize: tokens.fontSizeBase200,
-    borderTop: `1px solid ${tokens.colorNeutralStroke1}`,
-  },
-  footerBrand: {
-    color: axisTokens.primary,
-    fontWeight: tokens.fontWeightSemibold,
-  },
-  loadingScreen: {
-    minHeight: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    gap: '1rem',
-    backgroundColor: '#1A1A1A',
-  },
-  loadingText: {
-    color: axisTokens.primary,
-    fontSize: tokens.fontSizeBase500,
-  },
-  errorText: {
-    color: tokens.colorPaletteRedForeground1,
-    fontSize: tokens.fontSizeBase300,
-    maxWidth: '560px',
-    textAlign: 'center',
-  },
-  searchContainer: {
-    marginBottom: '1.5rem',
-  },
-  infoSection: {
-    maxWidth: '600px',
-  },
-  infoHeading: {
-    marginTop: '1.5rem',
-    marginBottom: '0.5rem',
-  },
-  infoList: {
-    lineHeight: 1.8,
-  },
-});
 
 // =============================================================================
 // APP COMPONENT
@@ -254,22 +157,25 @@ export default function App() {
 // =============================================================================
 
 function LoadingScreen() {
-  const styles = useStyles();
-
   return (
-    <div className={styles.loadingScreen}>
-      <Spinner size="large" style={{ color: axisTokens.primary }} />
-      <Text className={styles.loadingText}>Loading AxisX...</Text>
+    <div
+      data-swift
+      className="flex min-h-screen flex-col items-center justify-center gap-4 bg-canvas font-sans text-ink antialiased"
+    >
+      <Loader2 className="size-7 animate-spin text-axis-yellow-ink" />
+      <span className="text-[15px] text-ink-muted">Loading AxisX…</span>
     </div>
   );
 }
 
 function InitializationError({ message }: { message: string }) {
-  const styles = useStyles();
-
   return (
-    <div className={styles.loadingScreen}>
-      <Text className={styles.errorText}>{message}</Text>
+    <div
+      data-swift
+      className="flex min-h-screen flex-col items-center justify-center gap-3 bg-canvas px-6 font-sans antialiased"
+    >
+      <span className="text-[15px] font-semibold text-ink">Couldn't load AxisX</span>
+      <p className="max-w-[560px] text-center text-[13px] text-danger">{message}</p>
     </div>
   );
 }
@@ -283,8 +189,6 @@ interface AxisXAppProps {
 }
 
 function AxisXApp({ engine }: AxisXAppProps) {
-  const styles = useStyles();
-
   // Search hook
   const {
     query,
@@ -316,10 +220,41 @@ function AxisXApp({ engine }: AxisXAppProps) {
     clear: clearCart,
   } = useCart();
 
-  // Handler for adding Axis models directly from browse view
-  const handleAddAxisModel = useCallback((model: string, quantity: number) => {
-    addItem(model, { quantity, source: 'direct' });
-  }, [addItem]);
+  // BOM drawer state — opens via the BOM trigger in the header.
+  const [bomOpen, setBomOpen] = useState(false);
+
+  // Wrapped add-handlers that fire a toast confirmation alongside the cart mutation.
+  const addFromResultWithToast = useCallback(
+    (result: SearchResult, quantity?: number) => {
+      addFromResult(result, quantity);
+      const mapping = result.mapping;
+      const axisModel = 'axis_replacement' in mapping
+        ? (mapping as CompetitorMapping).axis_replacement
+        : mapping.replacement_model;
+      const qty = quantity ?? 1;
+      toast.success(`${axisModel} added to BOM`, {
+        description: qty > 1 ? `Quantity ${qty}` : undefined,
+        action: { label: 'Open BOM', onClick: () => setBomOpen(true) },
+      });
+    },
+    [addFromResult]
+  );
+
+  const handleAddAxisModel = useCallback(
+    (model: string, quantity: number) => {
+      addItem(model, { quantity, source: 'direct' });
+      toast.success(`${model} added to BOM`, {
+        description: quantity > 1 ? `Quantity ${quantity}` : undefined,
+        action: { label: 'Open BOM', onClick: () => setBomOpen(true) },
+      });
+    },
+    [addItem]
+  );
+
+  const handleClearCart = useCallback(() => {
+    clearCart();
+    toast('BOM cleared');
+  }, [clearCart]);
 
   // PDF export hook
   const exportPDF = useExportPDF({
@@ -331,7 +266,7 @@ function AxisXApp({ engine }: AxisXAppProps) {
   const batchSearch = useBatchSearch(engine);
 
   // View state
-  const [view, setView] = useState<'search' | 'batch' | 'cart' | 'info'>('search');
+  const [view, setView] = useState<AppView>('search');
 
   // Handler to add batch items to cart
   const handleAddBatchToCart = () => {
@@ -397,49 +332,15 @@ function AxisXApp({ engine }: AxisXAppProps) {
   };
 
   return (
-    <div className={styles.app}>
-      {/* Header */}
-      <header className={styles.header}>
-        <h1 className={styles.logo}>
-          AxisX
-          <span className={styles.version}>v3.0</span>
-        </h1>
-
-        {/* Nav */}
-        <nav className={styles.nav}>
-          <Button
-            appearance={view === 'search' ? 'primary' : 'subtle'}
-            onClick={() => setView('search')}
-            icon={<Search24Regular />}
-          >
-            Search
-          </Button>
-          <Button
-            appearance={view === 'batch' ? 'primary' : 'subtle'}
-            onClick={() => setView('batch')}
-            icon={<DocumentBulletList24Regular />}
-          >
-            Batch
-          </Button>
-          <Button
-            appearance={view === 'cart' ? 'primary' : 'subtle'}
-            onClick={() => setView('cart')}
-            icon={<ClipboardBulletListLtrRegular />}
-          >
-            BOM ({cartItems.length})
-          </Button>
-          <Button
-            appearance={view === 'info' ? 'primary' : 'subtle'}
-            onClick={() => setView('info')}
-            icon={<Info24Regular />}
-          >
-            Info
-          </Button>
-        </nav>
-      </header>
-
-      {/* Main Content */}
-      <main className={styles.main}>
+    <>
+      <AppShell
+        view={view}
+        onViewChange={setView}
+        cartCount={cartItems.length}
+        cartTotal={cartItems.length > 0 ? cartSummary.formattedTotal : undefined}
+        bomOpen={bomOpen}
+        onOpenCart={() => setBomOpen(true)}
+      >
         {view === 'search' && (
           <SearchView
             query={query}
@@ -451,7 +352,7 @@ function AxisXApp({ engine }: AxisXAppProps) {
             voiceSupported={voiceSupported}
             isListening={isListening}
             toggleVoice={toggleVoice}
-            onAddToCart={addFromResult}
+            onAddToCart={addFromResultWithToast}
             onAddAxisModel={handleAddAxisModel}
           />
         )}
@@ -476,106 +377,86 @@ function AxisXApp({ engine }: AxisXAppProps) {
           />
         )}
 
-        {view === 'cart' && (
-          <Cart
-            items={cartItems}
-            summary={cartSummary}
-            onUpdateQuantity={updateQuantity}
-            onRemoveItem={removeItem}
-            onClear={clearCart}
-            onExportPDF={exportPDF.openDialog}
-            title="BOM"
-          />
-        )}
-
         {view === 'info' && <InfoView />}
-      </main>
 
-      {/* Footer */}
-      <footer className={styles.footer}>
-        <span className={styles.footerBrand}>AxisX</span>
-        {' '}{'\u2014'} Built with TypeScript for Axis partners
-      </footer>
-
-      {/* Export PDF Dialog */}
-      <ExportDialog
-        open={exportPDF.isDialogOpen}
-        onClose={exportPDF.closeDialog}
-        onGenerate={exportPDF.generatePDF}
-        isGenerating={exportPDF.isGenerating}
-      />
+        {/* Export PDF Dialog */}
+        <ExportDialog
+          open={exportPDF.isDialogOpen}
+          onClose={exportPDF.closeDialog}
+          onGenerate={exportPDF.generatePDF}
+          isGenerating={exportPDF.isGenerating}
+        />
 
       {/* Import Modal */}
       <Dialog
         open={isImportModalOpen}
-        onOpenChange={(_e, data) => {
-          if (!data.open) {
+        onOpenChange={(open) => {
+          if (!open) {
             setIsImportModalOpen(false);
             spreadsheetImport.reset();
           }
         }}
       >
-        <DialogSurface style={{ maxWidth: '800px', width: '90vw' }}>
-          <DialogBody>
-            <DialogTitle
-              action={
-                <Button
-                  appearance="subtle"
-                  icon={<Dismiss24Regular />}
-                  onClick={() => {
-                    setIsImportModalOpen(false);
-                    spreadsheetImport.reset();
-                  }}
-                />
-              }
-            >
-              Import from Spreadsheet
-            </DialogTitle>
-            <DialogContent>
-              {spreadsheetImport.step === 'upload' && (
-                <FileUploader
-                  onFileSelect={spreadsheetImport.uploadFile}
-                  isLoading={spreadsheetImport.isProcessing}
-                  error={spreadsheetImport.error}
-                />
-              )}
+        <DialogContent className="max-w-[800px]">
+          <DialogHeader>
+            <DialogTitle>Import from Spreadsheet</DialogTitle>
+          </DialogHeader>
 
-              {spreadsheetImport.step === 'mapping' && spreadsheetImport.spreadsheetData && spreadsheetImport.columnMapping && (
-                <ColumnMapper
-                  data={spreadsheetImport.spreadsheetData}
-                  mapping={spreadsheetImport.columnMapping}
-                  onMappingChange={spreadsheetImport.setColumnMapping}
-                  onProceed={spreadsheetImport.runValidation}
-                  onBack={spreadsheetImport.goBack}
-                  isProcessing={spreadsheetImport.isProcessing}
-                />
-              )}
+          {spreadsheetImport.step === 'upload' && (
+            <FileUploader
+              onFileSelect={spreadsheetImport.uploadFile}
+              isLoading={spreadsheetImport.isProcessing}
+              error={spreadsheetImport.error}
+            />
+          )}
 
-              {(spreadsheetImport.step === 'validation' || spreadsheetImport.step === 'complete') && (
-                <>
-                  <ValidationPreview
-                    results={spreadsheetImport.validationResults}
-                    isProcessing={spreadsheetImport.isProcessing}
-                    progress={spreadsheetImport.progress}
+          {spreadsheetImport.step === 'mapping' && spreadsheetImport.spreadsheetData && spreadsheetImport.columnMapping && (
+            <ColumnMapper
+              data={spreadsheetImport.spreadsheetData}
+              mapping={spreadsheetImport.columnMapping}
+              onMappingChange={spreadsheetImport.setColumnMapping}
+              onProceed={spreadsheetImport.runValidation}
+              onBack={spreadsheetImport.goBack}
+              isProcessing={spreadsheetImport.isProcessing}
+            />
+          )}
+
+          {(spreadsheetImport.step === 'validation' || spreadsheetImport.step === 'complete') && (
+            <>
+              <ValidationPreview
+                results={spreadsheetImport.validationResults}
+                isProcessing={spreadsheetImport.isProcessing}
+                progress={spreadsheetImport.progress}
+              />
+
+              {spreadsheetImport.step === 'complete' && (
+                <div className="mt-6">
+                  <ImportSummary
+                    summary={spreadsheetImport.summary}
+                    onAddToBatch={handleAddSpreadsheetToBatch}
+                    onBack={spreadsheetImport.goBack}
+                    onReset={spreadsheetImport.reset}
                   />
-
-                  {spreadsheetImport.step === 'complete' && (
-                    <div style={{ marginTop: '1.5rem' }}>
-                      <ImportSummary
-                        summary={spreadsheetImport.summary}
-                        onAddToBatch={handleAddSpreadsheetToBatch}
-                        onBack={spreadsheetImport.goBack}
-                        onReset={spreadsheetImport.reset}
-                      />
-                    </div>
-                  )}
-                </>
+                </div>
               )}
-            </DialogContent>
-          </DialogBody>
-        </DialogSurface>
+            </>
+          )}
+        </DialogContent>
       </Dialog>
-    </div>
+      </AppShell>
+
+      {/* Persistent BOM drawer — opens via the header BOM trigger. */}
+      <BomDrawer
+        open={bomOpen}
+        onOpenChange={setBomOpen}
+        items={cartItems}
+        summary={cartSummary}
+        onUpdateQuantity={updateQuantity}
+        onRemoveItem={removeItem}
+        onClear={handleClearCart}
+        onExportPDF={exportPDF.openDialog}
+      />
+    </>
   );
 }
 
@@ -610,12 +491,10 @@ const SearchView = memo(function SearchView({
   onAddToCart,
   onAddAxisModel,
 }: SearchViewProps) {
-  const styles = useStyles();
-
   return (
     <div>
       {/* Search Input */}
-      <div className={styles.searchContainer}>
+      <div style={{ marginBottom: '1.5rem' }}>
         <SearchInput
           value={query}
           onChange={setQuery}
@@ -684,16 +563,18 @@ const BatchView = memo(function BatchView({
   onImport,
 }: BatchViewProps) {
   return (
-    <div>
+    <div data-swift>
       {/* Import Button */}
-      <div style={{ marginBottom: '1rem' }}>
-        <Button
-          appearance="outline"
-          icon={<ArrowUpload24Regular />}
+      <div className="mb-4">
+        <UIButton
+          variant="outline"
+          size="sm"
           onClick={onImport}
+          className="gap-1.5"
         >
+          <Upload className="size-3.5" />
           Import from Spreadsheet
-        </Button>
+        </UIButton>
       </div>
 
       {/* Batch Input */}
@@ -709,7 +590,7 @@ const BatchView = memo(function BatchView({
 
       {/* Batch Results */}
       {items.length > 0 && (
-        <div style={{ marginTop: '1.5rem' }}>
+        <div className="mt-6">
           <BatchResults
             items={items}
             onToggleSelection={onToggleSelection}
@@ -730,38 +611,44 @@ const BatchView = memo(function BatchView({
 // =============================================================================
 
 function InfoView() {
-  const styles = useStyles();
-
   return (
-    <div className={styles.infoSection}>
-      <Text as="h2" size={600} weight="semibold">
-        About AxisX v3
-      </Text>
-      <Text block>
-        AxisX is the industry's most comprehensive camera cross-reference tool,
+    <div data-swift className="mx-auto max-w-2xl">
+      <h2 className="text-2xl font-semibold tracking-tight text-ink">About AxisX</h2>
+      <p className="mt-3 text-[15px] leading-relaxed text-ink-muted">
+        AxisX is the industry's most comprehensive camera cross-reference tool —
         helping security professionals find the perfect Axis replacement for any
         competitor camera.
-      </Text>
+      </p>
 
-      <Text as="h3" size={500} weight="semibold" className={styles.infoHeading}>
-        New in v3
-      </Text>
-      <ul className={styles.infoList}>
-        <li><strong>TypeScript</strong> - 100% typed for reliability</li>
-        <li><strong>Fluent UI</strong> - Modern Axis-branded interface</li>
-        <li><strong>Voice Search</strong> - Hands-free model lookup</li>
-        <li><strong>Verified URLs</strong> - No more broken Axis.com links</li>
-        <li><strong>Improved Search</strong> - Smarter fuzzy matching</li>
-        <li><strong>Faster</strong> - Indexed lookups, instant results</li>
+      <h3 className="mt-8 text-[13px] font-semibold uppercase tracking-wider text-ink-faint">
+        Capabilities
+      </h3>
+      <ul className="mt-3 space-y-2 text-[14px] text-ink">
+        {[
+          ['Voice search', 'Hands-free model lookup with Web Speech API'],
+          ['Batch lookup', 'Paste a list, search them all in one pass'],
+          ['Spreadsheet import', 'Upload a CSV or XLSX to seed a BOM'],
+          ['BOM export', 'One-click PDF for proposals'],
+          ['Accessory pairing', 'Auto-pair mounts and power for 156+ models'],
+          ['NDAA awareness', 'Section 889 status surfaced on every result'],
+        ].map(([title, body]) => (
+          <li key={title} className="flex gap-3">
+            <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-axis-yellow" />
+            <div>
+              <span className="font-medium text-ink">{title}</span>
+              <span className="text-ink-muted"> — {body}</span>
+            </div>
+          </li>
+        ))}
       </ul>
 
-      <Text as="h3" size={500} weight="semibold" className={styles.infoHeading}>
+      <h3 className="mt-8 text-[13px] font-semibold uppercase tracking-wider text-ink-faint">
         Manufacturers Covered
-      </Text>
-      <Text block>
-        Hikvision, Dahua, Uniview, Verkada, Rhombus, Hanwha Vision,
-        i-PRO, Avigilon, Pelco, Vivotek, Bosch, Sony, and more.
-      </Text>
+      </h3>
+      <p className="mt-3 text-[14px] leading-relaxed text-ink-muted">
+        Hikvision, Dahua, Uniview, Verkada, Rhombus, Hanwha Vision, i-PRO,
+        Avigilon, Pelco, Vivotek, Bosch, Sony, and more.
+      </p>
     </div>
   );
 }

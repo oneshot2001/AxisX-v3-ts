@@ -1,113 +1,26 @@
 /**
- * SearchResults Component
+ * SearchResults — Tailwind v4 + Framer Motion (Apple/Swift visual language).
  *
  * Displays search results grouped by match quality:
- * - Exact Matches (score >= 90)
- * - Partial Matches (70-89)
- * - Similar Matches (50-69)
+ *   - Exact Matches  (score >= 90)   — success-green count chip
+ *   - Partial Matches (70-89)        — warning-amber count chip
+ *   - Similar Matches (50-69)        — neutral count chip
  *
- * Includes optional category filtering via CategoryFilter component.
- * Sections are collapsible with expandable headers using Fluent UI Accordion.
+ * Each section renders as a low-key disclosure row (chevron + name + count
+ * chip). The thick yellow left-border from the Fluent version is gone —
+ * sections are flat, with subtle hover states only.
  *
- * Migrated to Fluent UI components.
+ * Public API is unchanged from the Fluent UI version.
  */
 
 import { useState, useMemo, useEffect } from 'react';
-import {
-  Accordion,
-  AccordionItem,
-  AccordionHeader,
-  AccordionPanel,
-  Button,
-  Text,
-  makeStyles,
-  tokens,
-  mergeClasses,
-} from '@fluentui/react-components';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDown } from 'lucide-react';
 import type { SearchResponse, SearchResult, CategoryId } from '@/types';
 import { ResultCard } from './ResultCard';
 import { CategoryFilter } from './CategoryFilter';
 import { AxisBrowseResults } from './AxisBrowseResults';
-import { axisTokens } from '@/styles/fluentTheme';
-
-// =============================================================================
-// STYLES
-// =============================================================================
-
-const useStyles = makeStyles({
-  container: {},
-  metadata: {
-    marginBottom: '1rem',
-    fontSize: tokens.fontSizeBase200,
-    color: tokens.colorNeutralForeground3,
-  },
-  noResults: {
-    textAlign: 'center',
-    padding: '2rem',
-    color: tokens.colorNeutralForeground3,
-  },
-  noResultsTitle: {
-    fontSize: tokens.fontSizeBase500,
-    marginBottom: '0.5rem',
-  },
-  suggestionButton: {
-    marginLeft: '0.5rem',
-    textDecoration: 'underline',
-  },
-  accordionItem: {
-    marginBottom: '1rem',
-  },
-  accordionHeader: {
-    borderLeftWidth: '4px',
-    borderLeftStyle: 'solid',
-    borderRadius: tokens.borderRadiusSmall,
-    backgroundColor: tokens.colorNeutralBackground3,
-  },
-  headerExact: {
-    borderLeftColor: axisTokens.success,
-  },
-  headerPartial: {
-    borderLeftColor: axisTokens.warning,
-  },
-  headerSimilar: {
-    borderLeftColor: tokens.colorNeutralForeground3,
-  },
-  headerContent: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-  },
-  headerTitle: {
-    fontWeight: tokens.fontWeightSemibold,
-  },
-  countBadge: {
-    color: '#fff',
-    padding: '0.125rem 0.5rem',
-    borderRadius: tokens.borderRadiusCircular,
-    fontSize: tokens.fontSizeBase100,
-    fontWeight: tokens.fontWeightSemibold,
-  },
-  countBadgeExact: {
-    backgroundColor: axisTokens.success,
-  },
-  countBadgePartial: {
-    backgroundColor: axisTokens.warning,
-  },
-  countBadgeSimilar: {
-    backgroundColor: tokens.colorNeutralForeground3,
-  },
-  accordionPanel: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.75rem',
-    paddingTop: '0.75rem',
-  },
-  filteredEmpty: {
-    textAlign: 'center',
-    padding: '2rem',
-    color: tokens.colorNeutralForeground3,
-  },
-});
+import { cn } from '@/lib/utils';
 
 // =============================================================================
 // TYPES
@@ -130,14 +43,41 @@ export interface SearchResultsProps {
   showCategoryFilter?: boolean;
 }
 
+type SectionKey = 'exact' | 'partial' | 'similar';
+
+interface SectionMeta {
+  key: SectionKey;
+  title: string;
+  /** Tailwind classes for the count chip — color-coded by tier. */
+  chipClass: string;
+}
+
+const SECTION_META: Record<SectionKey, SectionMeta> = {
+  exact: {
+    key: 'exact',
+    title: 'Exact Matches',
+    chipClass: 'bg-success/10 text-success',
+  },
+  partial: {
+    key: 'partial',
+    title: 'Partial Matches',
+    chipClass: 'bg-warning/12 text-warning',
+  },
+  similar: {
+    key: 'similar',
+    title: 'Similar Matches',
+    chipClass: 'bg-secondary text-ink-muted',
+  },
+};
+
 // =============================================================================
 // HELPERS
 // =============================================================================
 
-/**
- * Calculate category counts from results
- */
-function getCategoryCounts(results: readonly SearchResult[]): Record<CategoryId, number> {
+/** Calculate category counts from results. */
+function getCategoryCounts(
+  results: readonly SearchResult[]
+): Record<CategoryId, number> {
   const counts: Record<CategoryId, number> = {
     all: results.length,
     ndaa: 0,
@@ -164,12 +104,14 @@ function getCategoryCounts(results: readonly SearchResult[]): Record<CategoryId,
 
 function getResultKey(result: SearchResult, index: number): string {
   const mapping = result.mapping;
-  const fromModel = 'competitor_model' in mapping
-    ? mapping.competitor_model
-    : mapping.legacy_model;
-  const toModel = 'axis_replacement' in mapping
-    ? mapping.axis_replacement
-    : mapping.replacement_model;
+  const fromModel =
+    'competitor_model' in mapping
+      ? mapping.competitor_model
+      : mapping.legacy_model;
+  const toModel =
+    'axis_replacement' in mapping
+      ? mapping.axis_replacement
+      : mapping.replacement_model;
 
   return `${result.isLegacy ? 'legacy' : 'competitor'}:${fromModel}:${toModel}:${index}`;
 }
@@ -185,8 +127,6 @@ export function SearchResults({
   onAddAxisModel,
   showCategoryFilter = true,
 }: SearchResultsProps) {
-  const styles = useStyles();
-
   // Category filter state
   const [activeCategory, setActiveCategory] = useState<CategoryId>('all');
 
@@ -227,23 +167,25 @@ export function SearchResults({
   const partialMatches = groupedResults.partial;
   const similarMatches = groupedResults.similar;
 
-  const hasExactOrPartial = exactMatches.length > 0 || partialMatches.length > 0;
+  const hasExactOrPartial =
+    exactMatches.length > 0 || partialMatches.length > 0;
 
-  // Accordion open items - similar collapsed by default if better matches exist
-  const [openItems, setOpenItems] = useState<string[]>(() => {
-    const initial: string[] = [];
-    if (exactMatches.length > 0) initial.push('exact');
-    if (partialMatches.length > 0) initial.push('partial');
-    if (!hasExactOrPartial && similarMatches.length > 0) initial.push('similar');
+  // Section open/closed state — mirrors the Fluent Accordion behaviour:
+  // similar collapsed by default if there are better matches.
+  const [openSections, setOpenSections] = useState<Set<SectionKey>>(() => {
+    const initial = new Set<SectionKey>();
+    if (exactMatches.length > 0) initial.add('exact');
+    if (partialMatches.length > 0) initial.add('partial');
+    if (!hasExactOrPartial && similarMatches.length > 0) initial.add('similar');
     return initial;
   });
 
   useEffect(() => {
-    const nextOpenItems: string[] = [];
-    if (exactMatches.length > 0) nextOpenItems.push('exact');
-    if (partialMatches.length > 0) nextOpenItems.push('partial');
-    if (!hasExactOrPartial && similarMatches.length > 0) nextOpenItems.push('similar');
-    setOpenItems(nextOpenItems);
+    const next = new Set<SectionKey>();
+    if (exactMatches.length > 0) next.add('exact');
+    if (partialMatches.length > 0) next.add('partial');
+    if (!hasExactOrPartial && similarMatches.length > 0) next.add('similar');
+    setOpenSections(next);
   }, [
     response.query,
     activeCategory,
@@ -253,43 +195,67 @@ export function SearchResults({
     hasExactOrPartial,
   ]);
 
-  // Axis Browse mode — show portfolio catalog instead of search results
-  // (placed after all hooks to satisfy React Rules of Hooks)
+  const toggleSection = (key: SectionKey) => {
+    setOpenSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
+      return next;
+    });
+  };
+
+  // Axis Browse mode — show portfolio catalog instead of search results.
+  // (Placed after all hooks to satisfy React Rules of Hooks.)
   if (response.queryType === 'axis-browse' && onAddAxisModel) {
     return <AxisBrowseResults onAddToCart={onAddAxisModel} />;
   }
 
-  // No results at all
+  // -------------------------------------------------------------------------
+  // No results at all — empty state with did-you-mean suggestions
+  // -------------------------------------------------------------------------
   if (response.results.length === 0) {
     return (
-      <div className={styles.noResults}>
-        <Text className={styles.noResultsTitle} block>
+      <div
+        data-swift
+        className="flex flex-col items-center justify-center px-6 py-16 text-center"
+      >
+        <div className="text-[17px] font-semibold tracking-tight text-ink">
           No matches found
-        </Text>
-        <Text block>Try a different model number or manufacturer</Text>
+        </div>
+        <div className="mt-1.5 text-[13px] text-ink-muted">
+          Try a different model number or manufacturer.
+        </div>
 
         {response.suggestions.length > 0 && (
-          <Text block style={{ marginTop: '1rem' }}>
-            Did you mean:{' '}
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-x-1.5 gap-y-2 text-[13px] text-ink-muted">
+            <span>Did you mean</span>
             {response.suggestions.map((suggestion, i) => (
-              <Button
-                key={i}
+              <button
+                key={`${suggestion}-${i}`}
+                type="button"
                 onClick={() => onSuggestionClick(suggestion)}
-                appearance="transparent"
-                className={styles.suggestionButton}
-                style={{ color: axisTokens.primary }}
+                className={cn(
+                  'inline-flex h-7 items-center rounded-full px-2.5 font-medium text-axis-yellow-ink',
+                  'underline decoration-axis-yellow-ink/30 underline-offset-4',
+                  'transition-colors hover:bg-axis-yellow-soft hover:decoration-axis-yellow-ink',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-yellow/60 focus-visible:ring-offset-1 focus-visible:ring-offset-canvas'
+                )}
               >
                 {suggestion}
-              </Button>
+              </button>
             ))}
-          </Text>
+            <span className="text-ink-faint">?</span>
+          </div>
         )}
       </div>
     );
   }
 
   return (
-    <div className={styles.container}>
+    <div data-swift className="flex flex-col">
       {/* Category Filter */}
       {showCategoryFilter && (
         <CategoryFilter
@@ -300,108 +266,164 @@ export function SearchResults({
       )}
 
       {/* Results metadata */}
-      <Text className={styles.metadata} block>
-        {filteredResults.length} results
-        {activeCategory !== 'all' && ` (filtered from ${response.results.length})`}
-        {' '}\u2022 {response.confidence} confidence \u2022 {response.durationMs.toFixed(1)}ms
-      </Text>
+      <div className="mb-4 text-[12px] tabular-nums text-ink-muted">
+        <span className="font-medium text-ink">{filteredResults.length}</span>
+        {' results'}
+        {activeCategory !== 'all' && (
+          <span className="text-ink-faint">
+            {' '}(filtered from {response.results.length})
+          </span>
+        )}
+        <span className="mx-1.5 opacity-40">•</span>
+        <span className="capitalize">{response.confidence}</span>
+        {' confidence'}
+        <span className="mx-1.5 opacity-40">•</span>
+        {response.durationMs.toFixed(1)}ms
+      </div>
 
       {/* No results after filtering */}
       {filteredResults.length === 0 && (
-        <div className={styles.filteredEmpty}>
-          <Text block>No results in this category</Text>
-          <Button
+        <div className="flex flex-col items-center justify-center px-6 py-12 text-center">
+          <div className="text-[14px] text-ink-muted">
+            No results in this category.
+          </div>
+          <button
+            type="button"
             onClick={() => setActiveCategory('all')}
-            appearance="transparent"
-            style={{ marginTop: '0.5rem', color: axisTokens.primary, textDecoration: 'underline' }}
+            className={cn(
+              'mt-2 inline-flex h-7 items-center rounded-full px-2.5 text-[13px] font-medium text-axis-yellow-ink underline decoration-axis-yellow-ink/30 underline-offset-4',
+              'transition-colors hover:bg-axis-yellow-soft hover:decoration-axis-yellow-ink',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-yellow/60 focus-visible:ring-offset-1 focus-visible:ring-offset-canvas'
+            )}
           >
             Show all results
-          </Button>
+          </button>
         </div>
       )}
 
-      {/* Grouped sections using Accordion */}
-      <Accordion
-        multiple
-        collapsible
-        openItems={openItems}
-        onToggle={(_, data) => setOpenItems(data.openItems as string[])}
-      >
-        {/* Exact Matches */}
+      {/* Grouped sections */}
+      <div className="flex flex-col gap-2">
         {exactMatches.length > 0 && (
-          <AccordionItem value="exact" className={styles.accordionItem}>
-            <AccordionHeader
-              className={mergeClasses(styles.accordionHeader, styles.headerExact)}
-            >
-              <div className={styles.headerContent}>
-                <Text className={styles.headerTitle}>Exact Matches</Text>
-                <span className={mergeClasses(styles.countBadge, styles.countBadgeExact)}>
-                  {exactMatches.length}
-                </span>
-              </div>
-            </AccordionHeader>
-            <AccordionPanel className={styles.accordionPanel}>
-              {exactMatches.map((result, index) => (
-                <ResultCard
-                  key={getResultKey(result, index)}
-                  result={result}
-                  onAddToCart={onAddToCart}
-                />
-              ))}
-            </AccordionPanel>
-          </AccordionItem>
+          <ResultSection
+            meta={SECTION_META.exact}
+            count={exactMatches.length}
+            isOpen={openSections.has('exact')}
+            onToggle={() => toggleSection('exact')}
+          >
+            {exactMatches.map((result, index) => (
+              <ResultCard
+                key={getResultKey(result, index)}
+                result={result}
+                onAddToCart={onAddToCart}
+              />
+            ))}
+          </ResultSection>
         )}
 
-        {/* Partial Matches */}
         {partialMatches.length > 0 && (
-          <AccordionItem value="partial" className={styles.accordionItem}>
-            <AccordionHeader
-              className={mergeClasses(styles.accordionHeader, styles.headerPartial)}
-            >
-              <div className={styles.headerContent}>
-                <Text className={styles.headerTitle}>Partial Matches</Text>
-                <span className={mergeClasses(styles.countBadge, styles.countBadgePartial)}>
-                  {partialMatches.length}
-                </span>
-              </div>
-            </AccordionHeader>
-            <AccordionPanel className={styles.accordionPanel}>
-              {partialMatches.map((result, index) => (
-                <ResultCard
-                  key={getResultKey(result, index)}
-                  result={result}
-                  onAddToCart={onAddToCart}
-                />
-              ))}
-            </AccordionPanel>
-          </AccordionItem>
+          <ResultSection
+            meta={SECTION_META.partial}
+            count={partialMatches.length}
+            isOpen={openSections.has('partial')}
+            onToggle={() => toggleSection('partial')}
+          >
+            {partialMatches.map((result, index) => (
+              <ResultCard
+                key={getResultKey(result, index)}
+                result={result}
+                onAddToCart={onAddToCart}
+              />
+            ))}
+          </ResultSection>
         )}
 
-        {/* Similar Matches */}
         {similarMatches.length > 0 && (
-          <AccordionItem value="similar" className={styles.accordionItem}>
-            <AccordionHeader
-              className={mergeClasses(styles.accordionHeader, styles.headerSimilar)}
-            >
-              <div className={styles.headerContent}>
-                <Text className={styles.headerTitle}>Similar Matches</Text>
-                <span className={mergeClasses(styles.countBadge, styles.countBadgeSimilar)}>
-                  {similarMatches.length}
-                </span>
-              </div>
-            </AccordionHeader>
-            <AccordionPanel className={styles.accordionPanel}>
-              {similarMatches.map((result, index) => (
-                <ResultCard
-                  key={getResultKey(result, index)}
-                  result={result}
-                  onAddToCart={onAddToCart}
-                />
-              ))}
-            </AccordionPanel>
-          </AccordionItem>
+          <ResultSection
+            meta={SECTION_META.similar}
+            count={similarMatches.length}
+            isOpen={openSections.has('similar')}
+            onToggle={() => toggleSection('similar')}
+          >
+            {similarMatches.map((result, index) => (
+              <ResultCard
+                key={getResultKey(result, index)}
+                result={result}
+                onAddToCart={onAddToCart}
+              />
+            ))}
+          </ResultSection>
         )}
-      </Accordion>
+      </div>
     </div>
+  );
+}
+
+// =============================================================================
+// SECTION — disclosure row + animated reveal
+// =============================================================================
+
+interface ResultSectionProps {
+  meta: SectionMeta;
+  count: number;
+  isOpen: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+}
+
+function ResultSection({
+  meta,
+  count,
+  isOpen,
+  onToggle,
+  children,
+}: ResultSectionProps) {
+  return (
+    <section className="flex flex-col">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        className={cn(
+          'group flex h-10 w-full items-center gap-2 rounded-md px-2 text-left',
+          'transition-colors duration-150 hover:bg-secondary',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-yellow/60 focus-visible:ring-offset-1 focus-visible:ring-offset-canvas'
+        )}
+      >
+        <motion.span
+          aria-hidden
+          animate={{ rotate: isOpen ? 0 : -90 }}
+          transition={{ type: 'spring', stiffness: 480, damping: 34 }}
+          className="inline-flex text-ink-faint group-hover:text-ink-muted"
+        >
+          <ChevronDown className="size-3.5" strokeWidth={2.25} />
+        </motion.span>
+        <span className="text-[13px] font-semibold tracking-tight text-ink">
+          {meta.title}
+        </span>
+        <span
+          className={cn(
+            'inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-semibold tabular-nums leading-none',
+            meta.chipClass
+          )}
+        >
+          {count}
+        </span>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            key="panel"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 420, damping: 36 }}
+            style={{ overflow: 'hidden' }}
+          >
+            <div className="flex flex-col gap-3 px-1 pb-2 pt-3">{children}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
   );
 }

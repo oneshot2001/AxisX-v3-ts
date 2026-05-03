@@ -78,7 +78,8 @@ describe('ResultCard', () => {
     it('renders Axis features as pill badges', () => {
       render(<ResultCard result={mockResult} onAddToCart={onAddToCart} />);
 
-      // Features now appear with "+" prefix in pill badges
+      // Features now live inside the progressive-disclosure "Show details" panel.
+      fireEvent.click(screen.getByRole('button', { name: /show details/i }));
       expect(screen.getByText(/\+ Lightfinder 2\.0/)).toBeInTheDocument();
       expect(screen.getByText(/\+ Forensic WDR/)).toBeInTheDocument();
     });
@@ -121,6 +122,8 @@ describe('ResultCard', () => {
     it('renders notes when present', () => {
       render(<ResultCard result={mockResult} onAddToCart={onAddToCart} />);
 
+      // Notes live inside the progressive-disclosure "Show details" panel.
+      fireEvent.click(screen.getByRole('button', { name: /show details/i }));
       expect(screen.getByText(/NDAA-compliant replacement/)).toBeInTheDocument();
       expect(screen.getByText(/Migration Note/)).toBeInTheDocument();
     });

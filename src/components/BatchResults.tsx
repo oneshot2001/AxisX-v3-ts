@@ -1,240 +1,44 @@
 /**
- * BatchResults Component
+ * BatchResults — Apple/Swift visual rewrite (Tailwind v4 + shadcn + Framer Motion).
  *
- * Displays batch search results in a grid format with selection checkboxes,
- * confidence badges, and quantity controls.
+ * Public API is unchanged — this drop-in replacement of the Fluent-UI version
+ * keeps `BatchResultsProps` identical so `App.tsx` doesn't need to change.
+ *
+ * Layout:
+ *   [action bar]    found N of M  ·  [select all / deselect all]
+ *                                         [Add N selected to BOM] (yellow)
+ *   [rows]          one Card-style row per BatchSearchItem:
+ *                     [☐]  competitor input  →  [img] AXIS replacement   [qty -/+]
+ *                     spec line · mount pairing chip · location
+ *   [footer]        selected stats + sticky add-to-bom CTA
  */
 
+import { useRef, useState, type KeyboardEvent } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Card,
-  Button,
-  Checkbox,
-  Text,
-  Input,
-  makeStyles,
-  tokens,
-  mergeClasses,
-} from '@fluentui/react-components';
-import {
-  CheckmarkCircle24Filled,
-  Warning24Filled,
-  ErrorCircle24Regular,
-  Search24Regular,
-  Add24Regular,
-} from '@fluentui/react-icons';
-import type { BatchSearchItem, SearchResult, CompetitorMapping, MountPairingResult } from '@/types';
+  ArrowRight,
+  Check,
+  AlertTriangle,
+  XCircle,
+  Search,
+  Plus,
+  Minus,
+  Loader2,
+  CircleDashed,
+} from 'lucide-react';
+import type {
+  BatchSearchItem,
+  SearchResult,
+  CompetitorMapping,
+  MountPairingResult,
+} from '@/types';
 import { lookupSpec } from '@/core/specs';
-import { axisTokens } from '@/styles/fluentTheme';
+import { getCameraImage, CAMERA_PLACEHOLDER_SVG } from '@/lib/cameraImage';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 // =============================================================================
-// STYLES
-// =============================================================================
-
-const useStyles = makeStyles({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem',
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '0.75rem 1rem',
-    backgroundColor: tokens.colorNeutralBackground3,
-    borderRadius: tokens.borderRadiusMedium,
-  },
-  headerLeft: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.75rem',
-  },
-  selectionActions: {
-    display: 'flex',
-    gap: '0.5rem',
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-    gap: '0.75rem',
-  },
-  itemCard: {
-    padding: '0.75rem',
-  },
-  itemCardSelected: {
-    border: `2px solid ${axisTokens.primary}`,
-  },
-  itemCardError: {
-    border: `1px solid ${axisTokens.error}`,
-    opacity: 0.7,
-  },
-  itemHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    marginBottom: '0.5rem',
-  },
-  checkbox: {
-    flexShrink: 0,
-  },
-  inputModel: {
-    fontWeight: tokens.fontWeightSemibold,
-    flex: 1,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-  statusBadge: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.25rem',
-    padding: '0.125rem 0.375rem',
-    borderRadius: tokens.borderRadiusSmall,
-    fontSize: tokens.fontSizeBase100,
-    fontWeight: tokens.fontWeightSemibold,
-  },
-  statusPending: {
-    backgroundColor: tokens.colorNeutralBackground3,
-    color: tokens.colorNeutralForeground3,
-  },
-  statusSearching: {
-    backgroundColor: axisTokens.primary,
-    color: '#000',
-  },
-  statusComplete: {
-    backgroundColor: axisTokens.success,
-    color: '#fff',
-  },
-  statusError: {
-    backgroundColor: axisTokens.error,
-    color: '#fff',
-  },
-  statusNotFound: {
-    backgroundColor: tokens.colorNeutralForeground3,
-    color: '#fff',
-  },
-  resultContent: {
-    marginLeft: '1.75rem',
-  },
-  replacementRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    marginBottom: '0.5rem',
-  },
-  arrow: {
-    color: axisTokens.primary,
-    fontWeight: tokens.fontWeightBold,
-  },
-  axisModel: {
-    fontWeight: tokens.fontWeightSemibold,
-    color: axisTokens.primary,
-  },
-  msrp: {
-    color: tokens.colorNeutralForeground3,
-    fontSize: tokens.fontSizeBase200,
-    marginLeft: 'auto',
-  },
-  quantityRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    marginTop: '0.5rem',
-  },
-  quantityLabel: {
-    fontSize: tokens.fontSizeBase200,
-    color: tokens.colorNeutralForeground3,
-  },
-  quantityInput: {
-    width: '60px',
-  },
-  specLine: {
-    fontSize: tokens.fontSizeBase100,
-    color: tokens.colorNeutralForeground3,
-    marginBottom: '0.25rem',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-  mountRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    marginTop: '0.25rem',
-    padding: '0.25rem 0.5rem',
-    backgroundColor: tokens.colorNeutralBackground3,
-    borderRadius: tokens.borderRadiusSmall,
-    fontSize: tokens.fontSizeBase200,
-  },
-  mountLabel: {
-    color: tokens.colorNeutralForeground3,
-    fontSize: tokens.fontSizeBase100,
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.5px',
-  },
-  mountModel: {
-    fontWeight: tokens.fontWeightSemibold,
-  },
-  mountBadgeExact: {
-    display: 'inline-flex',
-    padding: '0 0.25rem',
-    borderRadius: tokens.borderRadiusSmall,
-    fontSize: tokens.fontSizeBase100,
-    backgroundColor: axisTokens.success,
-    color: '#fff',
-  },
-  mountBadgeFallback: {
-    display: 'inline-flex',
-    padding: '0 0.25rem',
-    borderRadius: tokens.borderRadiusSmall,
-    fontSize: tokens.fontSizeBase100,
-    backgroundColor: axisTokens.primary,
-    color: '#000',
-  },
-  mountBadgeNone: {
-    display: 'inline-flex',
-    padding: '0 0.25rem',
-    borderRadius: tokens.borderRadiusSmall,
-    fontSize: tokens.fontSizeBase100,
-    backgroundColor: tokens.colorNeutralForeground3,
-    color: '#fff',
-  },
-  locationLabel: {
-    fontSize: tokens.fontSizeBase100,
-    color: tokens.colorNeutralForeground3,
-    marginLeft: 'auto',
-  },
-  noResults: {
-    color: tokens.colorNeutralForeground3,
-    fontStyle: 'italic',
-    fontSize: tokens.fontSizeBase200,
-  },
-  errorText: {
-    color: axisTokens.error,
-    fontSize: tokens.fontSizeBase200,
-  },
-  footer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '1rem',
-    backgroundColor: tokens.colorNeutralBackground3,
-    borderRadius: tokens.borderRadiusMedium,
-  },
-  footerStats: {
-    display: 'flex',
-    gap: '1rem',
-    fontSize: tokens.fontSizeBase200,
-    color: tokens.colorNeutralForeground3,
-  },
-  statValue: {
-    fontWeight: tokens.fontWeightSemibold,
-    color: tokens.colorNeutralForeground1,
-  },
-});
-
-// =============================================================================
-// TYPES
+// TYPES (unchanged from Fluent version)
 // =============================================================================
 
 export interface BatchResultsProps {
@@ -264,70 +68,18 @@ export interface BatchResultsProps {
 // HELPERS
 // =============================================================================
 
-function getStatusBadge(item: BatchSearchItem, styles: ReturnType<typeof useStyles>) {
-  switch (item.status) {
-    case 'pending':
-      return (
-        <span className={mergeClasses(styles.statusBadge, styles.statusPending)}>
-          Pending
-        </span>
-      );
-    case 'searching':
-      return (
-        <span className={mergeClasses(styles.statusBadge, styles.statusSearching)}>
-          <Search24Regular style={{ width: 12, height: 12 }} />
-          Searching
-        </span>
-      );
-    case 'complete': {
-      if (!item.response || item.response.results.length === 0) {
-        return (
-          <span className={mergeClasses(styles.statusBadge, styles.statusNotFound)}>
-            Not Found
-          </span>
-        );
-      }
-      const firstResult = item.response.results[0];
-      const score = firstResult?.score ?? 0;
-      if (score >= 85) {
-        return (
-          <span className={mergeClasses(styles.statusBadge, styles.statusComplete)}>
-            <CheckmarkCircle24Filled style={{ width: 12, height: 12 }} />
-            Match
-          </span>
-        );
-      }
-      return (
-        <span className={mergeClasses(styles.statusBadge, styles.statusSearching)}>
-          <Warning24Filled style={{ width: 12, height: 12 }} />
-          Partial
-        </span>
-      );
-    }
-    case 'error':
-      return (
-        <span className={mergeClasses(styles.statusBadge, styles.statusError)}>
-          <ErrorCircle24Regular style={{ width: 12, height: 12 }} />
-          Error
-        </span>
-      );
+function getReplacementModel(result: SearchResult): string {
+  if ('axis_replacement' in result.mapping) {
+    return (result.mapping as CompetitorMapping).axis_replacement;
   }
+  return result.mapping.replacement_model;
 }
 
-function getMountConfidenceBadge(
-  pairing: MountPairingResult,
-  styles: ReturnType<typeof useStyles>
-) {
-  switch (pairing.mountConfidence) {
-    case 'exact':
-      return <span className={styles.mountBadgeExact}>Exact</span>;
-    case 'series-fallback':
-      return <span className={styles.mountBadgeFallback}>Series</span>;
-    case 'form-factor-default':
-      return <span className={styles.mountBadgeFallback}>Suggested</span>;
-    case 'none':
-      return <span className={styles.mountBadgeNone}>No Match</span>;
+function getBestResult(item: BatchSearchItem): SearchResult | undefined {
+  if (!item.response || item.response.results.length === 0) {
+    return undefined;
   }
+  return item.response.results[0];
 }
 
 function getSpecLine(axisModel: string): string | null {
@@ -338,22 +90,265 @@ function getSpecLine(axisModel: string): string | null {
     if (spec.maxResolution) parts.push(spec.maxResolution);
     if (spec.maxFps) parts.push(`${spec.maxFps}fps`);
     if (spec.codecs.length > 0) parts.push(spec.codecs.join('/'));
-    if (spec.poeTypeClass || spec.powerType) parts.push(spec.poeTypeClass || spec.powerType || '');
-    return parts.length > 0 ? parts.join(' \u2022 ') : null;
+    if (spec.poeTypeClass || spec.powerType) {
+      parts.push(spec.poeTypeClass || spec.powerType || '');
+    }
+    return parts.length > 0 ? parts.join(' • ') : null;
   } catch {
     return null;
   }
 }
 
-function getBestResult(item: BatchSearchItem): SearchResult | undefined {
-  if (!item.response || item.response.results.length === 0) {
-    return undefined;
+// =============================================================================
+// STATUS BADGE
+// =============================================================================
+
+function StatusBadge({ item }: { item: BatchSearchItem }) {
+  const base =
+    'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium leading-none whitespace-nowrap';
+
+  switch (item.status) {
+    case 'pending':
+      return (
+        <span className={cn(base, 'bg-secondary text-ink-faint')}>
+          <CircleDashed className="size-3" />
+          Pending
+        </span>
+      );
+    case 'searching':
+      return (
+        <span className={cn(base, 'bg-axis-yellow-soft text-axis-yellow-ink')}>
+          <Loader2 className="size-3 animate-spin" />
+          Searching
+        </span>
+      );
+    case 'complete': {
+      if (!item.response || item.response.results.length === 0) {
+        return (
+          <span className={cn(base, 'bg-secondary text-ink-muted')}>
+            <Search className="size-3" />
+            Not found
+          </span>
+        );
+      }
+      const score = item.response.results[0]?.score ?? 0;
+      if (score >= 85) {
+        return (
+          <span className={cn(base, 'bg-success/10 text-success')}>
+            <Check className="size-3" strokeWidth={2.5} />
+            Match
+          </span>
+        );
+      }
+      return (
+        <span className={cn(base, 'bg-warning/15 text-warning')}>
+          <AlertTriangle className="size-3" />
+          Partial
+        </span>
+      );
+    }
+    case 'error':
+      return (
+        <span className={cn(base, 'bg-danger/10 text-danger')}>
+          <XCircle className="size-3" />
+          Error
+        </span>
+      );
   }
-  return item.response.results[0];
 }
 
 // =============================================================================
-// COMPONENT
+// MOUNT PAIRING CHIP
+// =============================================================================
+
+function MountConfidenceChip({ pairing }: { pairing: MountPairingResult }) {
+  const base =
+    'inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide';
+
+  switch (pairing.mountConfidence) {
+    case 'exact':
+      return (
+        <span className={cn(base, 'bg-success/10 text-success')}>Exact</span>
+      );
+    case 'series-fallback':
+      return (
+        <span className={cn(base, 'bg-axis-yellow-soft text-axis-yellow-ink')}>
+          Series
+        </span>
+      );
+    case 'form-factor-default':
+      return (
+        <span className={cn(base, 'bg-axis-yellow-soft text-axis-yellow-ink')}>
+          Suggested
+        </span>
+      );
+    case 'none':
+      return (
+        <span className={cn(base, 'bg-secondary text-ink-faint')}>None</span>
+      );
+  }
+}
+
+// =============================================================================
+// CAMERA THUMBNAIL
+// =============================================================================
+
+function CameraThumb({ axisModel }: { axisModel: string }) {
+  const [failed, setFailed] = useState(false);
+  return (
+    <div
+      className={cn(
+        'relative flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-md bg-surface-2',
+        'shadow-[inset_0_0_0_1px_oklch(0_0_0/0.04),inset_0_2px_4px_oklch(0_0_0/0.03)]'
+      )}
+    >
+      {failed ? (
+        <img
+          src={CAMERA_PLACEHOLDER_SVG}
+          alt=""
+          className="size-7 opacity-60"
+          aria-hidden="true"
+        />
+      ) : (
+        <img
+          src={getCameraImage(axisModel)}
+          alt={`AXIS ${axisModel}`}
+          loading="lazy"
+          onError={() => setFailed(true)}
+          className="size-full object-contain p-1"
+        />
+      )}
+    </div>
+  );
+}
+
+// =============================================================================
+// QUANTITY STEPPER
+// =============================================================================
+
+interface QuantityStepperProps {
+  value: number;
+  onChange: (next: number) => void;
+  disabled?: boolean;
+}
+
+function QuantityStepper({ value, onChange, disabled }: QuantityStepperProps) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [draft, setDraft] = useState<string>(String(value));
+
+  // Keep local draft in sync when prop changes (parent-driven updates).
+  if (!disabled && inputRef.current && document.activeElement !== inputRef.current && draft !== String(value)) {
+    setDraft(String(value));
+  }
+
+  const commit = (raw: string) => {
+    const next = parseInt(raw, 10);
+    if (!isNaN(next) && next > 0) {
+      onChange(next);
+      setDraft(String(next));
+    } else {
+      setDraft(String(value));
+    }
+  };
+
+  const handleKey = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      e.currentTarget.blur();
+    }
+  };
+
+  return (
+    <div
+      className={cn(
+        'inline-flex items-center rounded-md border border-hairline bg-surface',
+        'shadow-sm overflow-hidden',
+        disabled && 'opacity-50 pointer-events-none'
+      )}
+      aria-label="Quantity"
+    >
+      <button
+        type="button"
+        onClick={() => onChange(Math.max(1, value - 1))}
+        disabled={disabled || value <= 1}
+        aria-label="Decrease quantity"
+        className={cn(
+          'inline-flex h-7 w-7 items-center justify-center text-ink-muted',
+          'transition-colors hover:bg-secondary hover:text-ink disabled:opacity-40 disabled:hover:bg-transparent'
+        )}
+      >
+        <Minus className="size-3.5" />
+      </button>
+      <input
+        ref={inputRef}
+        type="text"
+        inputMode="numeric"
+        pattern="[0-9]*"
+        value={draft}
+        onChange={(e) => setDraft(e.target.value.replace(/[^0-9]/g, ''))}
+        onBlur={(e) => commit(e.target.value)}
+        onKeyDown={handleKey}
+        disabled={disabled}
+        aria-label="Quantity value"
+        className={cn(
+          'h-7 w-10 border-x border-hairline bg-transparent text-center font-mono text-[12px] tabular-nums text-ink',
+          'focus:outline-none focus:bg-axis-yellow-soft/40'
+        )}
+      />
+      <button
+        type="button"
+        onClick={() => onChange(value + 1)}
+        disabled={disabled}
+        aria-label="Increase quantity"
+        className={cn(
+          'inline-flex h-7 w-7 items-center justify-center text-ink-muted',
+          'transition-colors hover:bg-secondary hover:text-ink disabled:opacity-40 disabled:hover:bg-transparent'
+        )}
+      >
+        <Plus className="size-3.5" />
+      </button>
+    </div>
+  );
+}
+
+// =============================================================================
+// SELECTION CHECKBOX
+// =============================================================================
+
+interface SelectCheckboxProps {
+  checked: boolean;
+  disabled?: boolean;
+  onChange: () => void;
+  label: string;
+}
+
+function SelectCheckbox({ checked, disabled, onChange, label }: SelectCheckboxProps) {
+  return (
+    <label
+      className={cn(
+        'inline-flex size-5 shrink-0 cursor-pointer items-center justify-center rounded-md border transition-all',
+        'shadow-sm',
+        checked
+          ? 'bg-axis-yellow border-axis-yellow text-ink'
+          : 'bg-surface border-hairline text-transparent hover:border-ink-faint',
+        disabled && 'cursor-not-allowed opacity-40'
+      )}
+    >
+      <input
+        type="checkbox"
+        className="sr-only"
+        checked={checked}
+        disabled={disabled}
+        onChange={onChange}
+        aria-label={label}
+      />
+      <Check className="size-3.5" strokeWidth={3} aria-hidden="true" />
+    </label>
+  );
+}
+
+// =============================================================================
+// MAIN COMPONENT
 // =============================================================================
 
 export function BatchResults({
@@ -365,182 +360,258 @@ export function BatchResults({
   onAddSelectedToCart,
   selectedCount,
 }: BatchResultsProps) {
-  const styles = useStyles();
+  if (items.length === 0) return null;
 
   const completedItems = items.filter((item) => item.status === 'complete');
   const foundItems = completedItems.filter(
     (item) => item.response && item.response.results.length > 0
   );
 
-  if (items.length === 0) {
-    return null;
-  }
+  const totalSelectedQty = items
+    .filter((item) => item.selected && item.status === 'complete')
+    .reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className={styles.container}>
-      {/* Header */}
-      <div className={styles.header}>
-        <div className={styles.headerLeft}>
-          <Text weight="semibold">Results</Text>
-          <Text size={200}>
-            {foundItems.length} of {completedItems.length} found
-          </Text>
+    <div data-swift className="flex flex-col gap-3">
+      {/* Action bar */}
+      <div
+        className={cn(
+          'flex flex-wrap items-center justify-between gap-3 rounded-lg border border-hairline bg-surface-2 px-4 py-2.5'
+        )}
+      >
+        <div className="flex items-center gap-3 text-[13px]">
+          <span className="font-semibold text-ink">Results</span>
+          <span className="text-ink-muted">
+            <span className="font-mono tabular-nums text-ink">
+              {foundItems.length}
+            </span>{' '}
+            of{' '}
+            <span className="font-mono tabular-nums text-ink">
+              {completedItems.length}
+            </span>{' '}
+            found
+          </span>
         </div>
-        <div className={styles.selectionActions}>
-          <Button appearance="subtle" size="small" onClick={onSelectAll}>
-            Select All
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onSelectAll}
+            className="h-7 px-2 text-[12px]"
+          >
+            Select all
           </Button>
-          <Button appearance="subtle" size="small" onClick={onDeselectAll}>
-            Deselect All
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onDeselectAll}
+            className="h-7 px-2 text-[12px]"
+          >
+            Deselect all
+          </Button>
+          <Button
+            type="button"
+            onClick={onAddSelectedToCart}
+            disabled={selectedCount === 0}
+            size="sm"
+            className={cn(
+              'h-8 gap-1.5 bg-axis-yellow text-ink shadow-sm',
+              'hover:brightness-105 active:brightness-95'
+            )}
+          >
+            <Plus className="size-3.5" />
+            Add {selectedCount > 0 ? `${selectedCount} ` : ''}selected to BOM
           </Button>
         </div>
       </div>
 
-      {/* Results Grid */}
-      <div className={styles.grid}>
-        {items.map((item) => {
-          const bestResult = getBestResult(item);
-          const canSelect =
-            item.status === 'complete' && item.response && item.response.results.length > 0;
+      {/* Rows */}
+      <div className="flex flex-col gap-2">
+        <AnimatePresence initial={false}>
+          {items.map((item) => {
+            const bestResult = getBestResult(item);
+            const canSelect =
+              item.status === 'complete' &&
+              !!item.response &&
+              item.response.results.length > 0;
+            const replacement = bestResult ? getReplacementModel(bestResult) : null;
+            const specLine = replacement ? getSpecLine(replacement) : null;
+            const notes =
+              bestResult && 'notes' in bestResult.mapping
+                ? bestResult.mapping.notes
+                : undefined;
 
-          return (
-            <Card
-              key={item.id}
-              className={mergeClasses(
-                styles.itemCard,
-                item.selected && canSelect ? styles.itemCardSelected : undefined,
-                item.status === 'error' ? styles.itemCardError : undefined
-              )}
-              appearance="outline"
-            >
-              {/* Item Header */}
-              <div className={styles.itemHeader}>
-                <Checkbox
-                  className={styles.checkbox}
-                  checked={item.selected}
-                  disabled={!canSelect}
-                  onChange={() => onToggleSelection(item.id)}
-                />
-                <Text className={styles.inputModel}>{item.input}</Text>
-                {getStatusBadge(item, styles)}
-              </div>
+            return (
+              <motion.div
+                key={item.id}
+                layout
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                whileHover={{ y: -1 }}
+                className={cn(
+                  'group relative rounded-lg border bg-surface px-4 py-3 shadow-sm',
+                  'transition-all duration-150 ease-out',
+                  'hover:border-[oklch(0.86_0_0)] hover:shadow-md',
+                  item.selected && canSelect
+                    ? 'border-axis-yellow/60 ring-1 ring-axis-yellow/30'
+                    : 'border-hairline',
+                  item.status === 'error' && 'border-danger/30 bg-danger/4'
+                )}
+              >
+                {/* Top row */}
+                <div className="flex items-center gap-3">
+                  <SelectCheckbox
+                    checked={item.selected}
+                    disabled={!canSelect}
+                    onChange={() => onToggleSelection(item.id)}
+                    label={`Select ${item.input}`}
+                  />
 
-              {/* Result Content */}
-              {item.status === 'complete' && (
-                <div className={styles.resultContent}>
-                  {bestResult ? (
-                    <>
-                      {/* Replacement Info */}
-                      <div className={styles.replacementRow}>
-                        <span className={styles.arrow}>{'\u2192'}</span>
-                        <Text className={styles.axisModel}>
-                          {'axis_replacement' in bestResult.mapping
-                            ? (bestResult.mapping as CompetitorMapping).axis_replacement
-                            : bestResult.mapping.replacement_model}
-                        </Text>
-                        {'notes' in bestResult.mapping && bestResult.mapping.notes && (
-                          <Text className={styles.msrp}>
-                            {bestResult.mapping.notes.slice(0, 30)}
-                            {bestResult.mapping.notes.length > 30 ? '...' : ''}
-                          </Text>
+                  {/* Input model */}
+                  <div className="flex min-w-0 flex-col">
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-faint">
+                      Input
+                    </span>
+                    <span className="truncate font-mono text-[14px] font-semibold text-ink">
+                      {item.input}
+                    </span>
+                  </div>
+
+                  {/* Arrow */}
+                  {bestResult && (
+                    <ArrowRight
+                      className="size-4 shrink-0 text-ink-faint"
+                      strokeWidth={2}
+                      aria-hidden="true"
+                    />
+                  )}
+
+                  {/* Replacement */}
+                  {bestResult && replacement && (
+                    <div className="flex min-w-0 flex-1 items-center gap-3">
+                      <CameraThumb axisModel={replacement} />
+                      <div className="flex min-w-0 flex-col">
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-axis-yellow-ink">
+                          Axis
+                        </span>
+                        <span className="truncate font-mono text-[14px] font-semibold text-ink">
+                          {replacement}
+                        </span>
+                        {specLine && (
+                          <span className="truncate text-[11px] text-ink-muted">
+                            {specLine}
+                          </span>
                         )}
                       </div>
-
-                      {/* Spec Summary Line */}
-                      {(() => {
-                        const model = 'axis_replacement' in bestResult.mapping
-                          ? (bestResult.mapping as CompetitorMapping).axis_replacement
-                          : bestResult.mapping.replacement_model;
-                        const specLine = getSpecLine(model);
-                        return specLine ? (
-                          <Text className={styles.specLine}>{specLine}</Text>
-                        ) : null;
-                      })()}
-
-                      {/* Mount Pairing */}
-                      {item.mountPairing && (
-                        <div className={styles.mountRow}>
-                          <span className={styles.mountLabel}>Mount:</span>
-                          {item.mountPairing.mount ? (
-                            <>
-                              <Text className={styles.mountModel}>
-                                {item.mountPairing.mount.displayName}
-                              </Text>
-                              {getMountConfidenceBadge(item.mountPairing, styles)}
-                            </>
-                          ) : (
-                            <>
-                              <Text className={styles.noResults}>
-                                No {item.mountType} mount found
-                              </Text>
-                              {getMountConfidenceBadge(item.mountPairing, styles)}
-                            </>
-                          )}
-                          {item.location && (
-                            <span className={styles.locationLabel}>{item.location}</span>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Quantity Control */}
-                      {canSelect && (
-                        <div className={styles.quantityRow}>
-                          <Text className={styles.quantityLabel}>Qty:</Text>
-                          <Input
-                            type="number"
-                            min={1}
-                            value={String(item.quantity)}
-                            onChange={(_e, data) => {
-                              const qty = parseInt(data.value, 10);
-                              if (!isNaN(qty) && qty > 0) {
-                                onQuantityChange(item.id, qty);
-                              }
-                            }}
-                            className={styles.quantityInput}
-                            size="small"
-                          />
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <Text className={styles.noResults}>No matching Axis model found</Text>
+                    </div>
                   )}
-                </div>
-              )}
 
-              {/* Error Message */}
-              {item.status === 'error' && item.error && (
-                <div className={styles.resultContent}>
-                  <Text className={styles.errorText}>{item.error}</Text>
+                  {/* Empty/searching/error filler keeps the right side stable */}
+                  {!bestResult && <div className="flex-1" />}
+
+                  {/* Right cluster: status + quantity */}
+                  <div className="ml-auto flex shrink-0 items-center gap-2">
+                    <StatusBadge item={item} />
+                    {canSelect && (
+                      <QuantityStepper
+                        value={item.quantity}
+                        onChange={(q) => onQuantityChange(item.id, q)}
+                      />
+                    )}
+                  </div>
                 </div>
-              )}
-            </Card>
-          );
-        })}
+
+                {/* Mount pairing / location / notes — secondary row */}
+                {item.status === 'complete' && bestResult && (
+                  <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 pl-8 text-[12px] text-ink-muted">
+                    {item.mountPairing && (
+                      <span className="inline-flex items-center gap-1.5">
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-faint">
+                          Mount
+                        </span>
+                        {item.mountPairing.mount ? (
+                          <span className="font-medium text-ink">
+                            {item.mountPairing.mount.displayName}
+                          </span>
+                        ) : (
+                          <span className="italic text-ink-faint">
+                            no {item.mountType ?? ''} mount found
+                          </span>
+                        )}
+                        <MountConfidenceChip pairing={item.mountPairing} />
+                      </span>
+                    )}
+                    {item.location && (
+                      <span className="inline-flex items-center gap-1">
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-faint">
+                          Location
+                        </span>
+                        <span>{item.location}</span>
+                      </span>
+                    )}
+                    {notes && (
+                      <span className="line-clamp-1 italic text-ink-faint">
+                        {notes}
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                {/* No-result message */}
+                {item.status === 'complete' && !bestResult && (
+                  <p className="mt-2 pl-8 text-[12px] italic text-ink-faint">
+                    No matching Axis model found.
+                  </p>
+                )}
+
+                {/* Error message */}
+                {item.status === 'error' && item.error && (
+                  <p className="mt-2 pl-8 text-[12px] text-danger">
+                    {item.error}
+                  </p>
+                )}
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </div>
 
-      {/* Footer */}
-      <div className={styles.footer}>
-        <div className={styles.footerStats}>
+      {/* Footer stats */}
+      <div
+        className={cn(
+          'flex flex-wrap items-center justify-between gap-3 rounded-lg border border-hairline bg-surface-2 px-4 py-2.5 text-[13px]'
+        )}
+      >
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-ink-muted">
           <span>
-            Selected: <span className={styles.statValue}>{selectedCount}</span>
+            Selected:{' '}
+            <span className="font-mono font-semibold tabular-nums text-ink">
+              {selectedCount}
+            </span>
           </span>
           <span>
-            Total Qty:{' '}
-            <span className={styles.statValue}>
-              {items
-                .filter((item) => item.selected && item.status === 'complete')
-                .reduce((sum, item) => sum + item.quantity, 0)}
+            Total qty:{' '}
+            <span className="font-mono font-semibold tabular-nums text-ink">
+              {totalSelectedQty}
             </span>
           </span>
         </div>
         <Button
-          appearance="primary"
-          icon={<Add24Regular />}
+          type="button"
           onClick={onAddSelectedToCart}
           disabled={selectedCount === 0}
+          size="sm"
+          className={cn(
+            'h-8 gap-1.5 bg-axis-yellow text-ink shadow-sm',
+            'hover:brightness-105 active:brightness-95'
+          )}
         >
-          Add Selected to BOM ({selectedCount})
+          <Plus className="size-3.5" />
+          Add {selectedCount > 0 ? `${selectedCount} ` : ''}selected to BOM
         </Button>
       </div>
     </div>
