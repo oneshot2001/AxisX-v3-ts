@@ -303,7 +303,7 @@ export function SearchResults({
       <Text className={styles.metadata} block>
         {filteredResults.length} results
         {activeCategory !== 'all' && ` (filtered from ${response.results.length})`}
-        {' '}\u2022 {response.confidence} confidence \u2022 {response.durationMs.toFixed(1)}ms
+        {` \u2022 ${response.confidence} confidence \u2022 ${response.durationMs.toFixed(1)}ms`}
       </Text>
 
       {/* No results after filtering */}

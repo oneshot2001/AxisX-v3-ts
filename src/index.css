@@ -185,48 +185,50 @@
  * =============================================================================
  */
 
-[data-swift] h1,
-[data-swift] h2,
-[data-swift] h3,
-[data-swift] h4,
-[data-swift] h5,
-[data-swift] h6 {
-  font-size: inherit;
-  font-weight: inherit;
-}
+@layer base {
+  [data-swift] h1,
+  [data-swift] h2,
+  [data-swift] h3,
+  [data-swift] h4,
+  [data-swift] h5,
+  [data-swift] h6 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
 
-[data-swift] ol,
-[data-swift] ul,
-[data-swift] menu {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
+  [data-swift] ol,
+  [data-swift] ul,
+  [data-swift] menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
 
-[data-swift] button,
-[data-swift] [role='button'] {
-  cursor: pointer;
-}
+  [data-swift] button,
+  [data-swift] [role='button'] {
+    cursor: pointer;
+  }
 
-[data-swift] button {
-  background-color: transparent;
-  background-image: none;
-  border: 0;
-  -webkit-appearance: none;
-  appearance: none;
-}
+  [data-swift] button {
+    background-color: transparent;
+    background-image: none;
+    border: 0;
+    -webkit-appearance: none;
+    appearance: none;
+  }
 
-[data-swift] a {
-  text-decoration: none;
-}
+  [data-swift] a {
+    text-decoration: none;
+  }
 
-[data-swift] img,
-[data-swift] svg,
-[data-swift] video {
-  display: block;
-  max-width: 100%;
-}
+  [data-swift] img,
+  [data-swift] svg,
+  [data-swift] video {
+    display: block;
+    max-width: 100%;
+  }
 
-[data-swift] svg {
-  display: inline-block;
+  [data-swift] svg {
+    display: inline-block;
+  }
 }
