@@ -5,18 +5,19 @@ import { SegmentedNav, type SegmentedItem } from '@/components/ui/segmented-nav'
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-export type AppView = 'search' | 'batch' | 'cart' | 'info';
+export type AppView = 'search' | 'batch' | 'info';
 
 interface AppShellProps {
   view: AppView;
   onViewChange: (view: AppView) => void;
   cartCount: number;
   cartTotal?: string;
+  bomOpen: boolean;
   onOpenCart: () => void;
   children: ReactNode;
 }
 
-const NAV_ITEMS: ReadonlyArray<SegmentedItem<Exclude<AppView, 'cart'>>> = [
+const NAV_ITEMS: ReadonlyArray<SegmentedItem<AppView>> = [
   { value: 'search', label: 'Search', icon: Search },
   { value: 'batch', label: 'Batch', icon: ListChecks },
   { value: 'info', label: 'About', icon: Info },
@@ -27,11 +28,10 @@ export function AppShell({
   onViewChange,
   cartCount,
   cartTotal,
+  bomOpen,
   onOpenCart,
   children,
 }: AppShellProps) {
-  // Cart is its own surface (button on the right), not a segment.
-  const segmentValue: Exclude<AppView, 'cart'> = view === 'cart' ? 'search' : view;
 
   return (
     <div data-swift className="flex min-h-screen flex-col bg-canvas font-sans text-ink antialiased">
@@ -44,7 +44,7 @@ export function AppShell({
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-3 px-5">
           <Logo />
           <SegmentedNav
-            value={segmentValue}
+            value={view}
             onValueChange={onViewChange}
             items={NAV_ITEMS}
             ariaLabel="Primary navigation"
@@ -52,7 +52,7 @@ export function AppShell({
           <CartTrigger
             count={cartCount}
             total={cartTotal}
-            active={view === 'cart'}
+            active={bomOpen}
             onClick={onOpenCart}
           />
         </div>

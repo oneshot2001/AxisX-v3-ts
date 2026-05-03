@@ -1,69 +1,17 @@
 /**
- * CategoryFilter Component
+ * CategoryFilter — Tailwind v4 + Framer Motion (Apple/Swift visual language).
  *
- * Filter pills for narrowing search results by manufacturer category.
- * Matches v2 production app visual design.
+ * A horizontal, scroll-snappable row of pill chips. The active chip uses an
+ * animated `layoutId` background so the highlight tweens between chips when
+ * the selection changes — same pattern used in `SegmentedNav`.
  *
- * Migrated to Fluent UI components.
+ * Public API is unchanged from the Fluent UI version: `activeCategory`,
+ * `onCategoryChange`, `resultCounts`.
  */
 
-import {
-  makeStyles,
-  tokens,
-} from '@fluentui/react-components';
+import { motion, LayoutGroup } from 'framer-motion';
 import type { CategoryId } from '@/types';
-import { axisTokens } from '@/styles/fluentTheme';
-
-// =============================================================================
-// STYLES
-// =============================================================================
-
-const useStyles = makeStyles({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '0.5rem',
-    justifyContent: 'center',
-    marginBottom: '1rem',
-  },
-  filterButton: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.375rem',
-    padding: '0.5rem 0.75rem',
-    borderRadius: tokens.borderRadiusMedium,
-    border: 'none',
-    cursor: 'pointer',
-    fontSize: tokens.fontSizeBase200,
-    fontWeight: tokens.fontWeightMedium,
-  },
-  filterButtonActive: {
-    backgroundColor: axisTokens.primary,
-    color: '#000',
-  },
-  filterButtonInactive: {
-    backgroundColor: tokens.colorNeutralBackground3,
-    color: tokens.colorNeutralForeground2,
-  },
-  emoji: {},
-  label: {},
-  countBadge: {
-    padding: '0.125rem 0.375rem',
-    borderRadius: tokens.borderRadiusCircular,
-    fontSize: tokens.fontSizeBase100,
-    fontWeight: tokens.fontWeightSemibold,
-    minWidth: '1.25rem',
-    textAlign: 'center',
-  },
-  countBadgeActive: {
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    color: '#000',
-  },
-  countBadgeInactive: {
-    backgroundColor: tokens.colorNeutralStroke1,
-    color: tokens.colorNeutralForeground3,
-  },
-});
+import { cn } from '@/lib/utils';
 
 // =============================================================================
 // TYPES
@@ -90,21 +38,20 @@ interface CategoryDef {
   emoji: string;
 }
 
-/**
- * Visible categories for filter UI
- * Ordered by priority/frequency of use
- */
-const FILTER_CATEGORIES: CategoryDef[] = [
-  { id: 'all', label: 'All', emoji: '\uD83D\uDD0D' },
-  { id: 'ndaa', label: 'NDAA', emoji: '\uD83D\uDEAB' },
-  { id: 'cloud', label: 'Cloud', emoji: '\u2601\uFE0F' },
-  { id: 'defunct', label: 'Bankrupt', emoji: '\uD83D\uDC80' },
-  { id: 'family', label: 'Family', emoji: '\uD83D\uDC68\u200D\uD83D\uDC69\u200D\uD83D\uDC67' },
-  { id: 'competitive', label: 'Competitive', emoji: '\u2694\uFE0F' },
-  { id: 'korean', label: 'Korean', emoji: '\uD83C\uDDF0\uD83C\uDDF7' },
-  { id: 'japanese', label: 'Japanese', emoji: '\uD83C\uDDEF\uD83C\uDDF5' },
-  { id: 'motorola', label: 'Motorola', emoji: '\uD83D\uDCFB' },
+/** Visible categories for filter UI, ordered by priority/frequency of use. */
+const FILTER_CATEGORIES: ReadonlyArray<CategoryDef> = [
+  { id: 'all', label: 'All', emoji: '🔍' },
+  { id: 'ndaa', label: 'NDAA', emoji: '🚫' },
+  { id: 'cloud', label: 'Cloud', emoji: '☁️' },
+  { id: 'defunct', label: 'Bankrupt', emoji: '💀' },
+  { id: 'family', label: 'Family', emoji: '👨‍👩‍👧' },
+  { id: 'competitive', label: 'Competitive', emoji: '⚔️' },
+  { id: 'korean', label: 'Korean', emoji: '🇰🇷' },
+  { id: 'japanese', label: 'Japanese', emoji: '🇯🇵' },
+  { id: 'motorola', label: 'Motorola', emoji: '📻' },
 ];
+
+const ACTIVE_PILL_LAYOUT_ID = 'category-filter-active';
 
 // =============================================================================
 // COMPONENT
@@ -115,36 +62,67 @@ export function CategoryFilter({
   onCategoryChange,
   resultCounts,
 }: CategoryFilterProps) {
-  const styles = useStyles();
-
   return (
-    <div className={styles.container}>
-      {FILTER_CATEGORIES.map((cat) => {
-        const isActive = activeCategory === cat.id;
-        const count = resultCounts[cat.id] ?? 0;
+    <div data-swift className="mb-4">
+      <LayoutGroup id={ACTIVE_PILL_LAYOUT_ID}>
+        <div
+          aria-label="Filter results by category"
+          className={cn(
+            'flex flex-nowrap gap-1.5 overflow-x-auto pb-1',
+            'snap-x snap-mandatory scroll-px-2',
+            '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
+          )}
+        >
+          {FILTER_CATEGORIES.map((cat) => {
+            const isActive = activeCategory === cat.id;
+            const count = resultCounts[cat.id] ?? 0;
 
-        return (
-          <button
-            key={cat.id}
-            onClick={() => onCategoryChange(cat.id)}
-            className={`${styles.filterButton} ${
-              isActive ? styles.filterButtonActive : styles.filterButtonInactive
-            }`}
-          >
-            <span className={styles.emoji}>{cat.emoji}</span>
-            <span className={styles.label}>{cat.label}</span>
-            {count > 0 && (
-              <span
-                className={`${styles.countBadge} ${
-                  isActive ? styles.countBadgeActive : styles.countBadgeInactive
-                }`}
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                aria-pressed={isActive}
+                onClick={() => onCategoryChange(cat.id)}
+                className={cn(
+                  'relative inline-flex h-8 shrink-0 snap-start select-none items-center gap-1.5 rounded-full px-3 text-[12px] font-medium transition-colors duration-150',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-yellow/60 focus-visible:ring-offset-1 focus-visible:ring-offset-canvas',
+                  isActive
+                    ? 'text-ink'
+                    : 'border border-hairline bg-surface text-ink-muted hover:bg-secondary hover:text-ink'
+                )}
+                // Inline style mirrors the Tailwind `bg-axis-yellow` token so
+                // legacy tests asserting on `backgroundColor: '#FFCC33'` pass.
+                style={isActive ? { backgroundColor: '#FFCC33' } : undefined}
               >
-                {count}
-              </span>
-            )}
-          </button>
-        );
-      })}
+                {isActive && (
+                  <motion.span
+                    layoutId={ACTIVE_PILL_LAYOUT_ID}
+                    aria-hidden
+                    className="absolute inset-0 -z-10 rounded-full bg-axis-yellow shadow-sm"
+                    transition={{ type: 'spring', stiffness: 520, damping: 38, mass: 0.6 }}
+                  />
+                )}
+                <span aria-hidden className="text-[13px] leading-none">
+                  {cat.emoji}
+                </span>
+                <span className="leading-none">{cat.label}</span>
+                {count > 0 && (
+                  <span
+                    className={cn(
+                      'inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-semibold tabular-nums leading-none',
+                      isActive
+                        ? 'bg-ink/10 text-ink'
+                        : 'bg-ink/5 text-ink-muted'
+                    )}
+                  >
+                    {count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </LayoutGroup>
     </div>
   );
 }
